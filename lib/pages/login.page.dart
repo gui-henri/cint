@@ -47,7 +47,7 @@ class _LoginBoxState extends State<LoginBox> {
                     onPressed: () {
                       Navigator.of(context).pushNamed('/home');
                     },
-                    child: const Text('Try Login with Google'))
+                    child: const Text('Try Login with Google', style: TextStyle(color: Colors.black),))
               ],
             ),
           )
