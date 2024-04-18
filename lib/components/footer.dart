@@ -38,7 +38,7 @@ class Footer extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushNamed('/home');
+                      Navigator.of(context).pushNamed('/perfil');
                     },
                     child: const Icon(Icons.person_outline_outlined, color: Colors.white, size: 38,), 
                   ),
