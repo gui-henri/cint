@@ -1,21 +1,21 @@
+import 'package:cint/routes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: ElevatedButton(
-              onPressed: () {}, child: const Text("Hello World")),
+        title: 'C-int',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: const Color(0xFF28730E),
         ),
-      ),
-    );
+        initialRoute: '/',
+        routes: instanceRoutes(context));
   }
 }
