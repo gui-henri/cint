@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter/material.dart';
 import '../components/main_title.dart';
 import '../components/org_button.dart';
@@ -95,6 +96,46 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+
+        floatingActionButton: SpeedDial(
+        foregroundColor: Colors.white,
+        buttonSize: const Size(60, 60),
+        childrenButtonSize: const Size(60, 60),
+        overlayOpacity: 0,
+        spacing: 10,
+        spaceBetweenChildren: 0,
+        icon: Icons.widgets_outlined,
+        activeIcon: Icons.close,
+        backgroundColor: const Color(0xFF6EB855),
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.post_add_outlined),
+            label: 'Criar oferta',
+            onTap: () => {},
+            shape: const CircleBorder(),
+            labelStyle: const TextStyle(fontSize: 12,),
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.receipt_long_outlined),
+            label: 'Minhas ofertas',
+            onTap: () => {},
+            shape: const CircleBorder(),
+            labelStyle: const TextStyle(fontSize: 12,),
+          ),
+        ],
+      ),
+
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+    
+        //       },
+        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+
+        //   backgroundColor: const Color(0xFF6EB855),
+        //   tooltip: 'Mais ações',
+        //   child:  const Icon(Icons.widgets_outlined, color: Colors.white, size: 32,),
+        // ),
+
       );
   }
 }
