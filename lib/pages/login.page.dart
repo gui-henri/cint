@@ -37,24 +37,26 @@ class _LoginBoxState extends State<LoginBox> {
   bool buttonclicked = false;
   @override
   Widget build(BuildContext context) {
-    return (!buttonclicked)
-        ? Center(
+    return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/images/logo-1.png'),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/home');
-                    },
-                    child: const Text('Try Login with Google', style: TextStyle(color: Colors.black),))
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/home');
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(right: 20, left: 20, top: 10, bottom: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: const Color(0xFF28730E)
+                      ),
+                    child: const Text('Try Login with Google', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                    ),
+                ),
               ],
             ),
-          )
-        : Container(
-            color: Colors.white,
-            height: 100,
-            width: 80,
           );
   }
 }

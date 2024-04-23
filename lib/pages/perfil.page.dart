@@ -38,15 +38,15 @@ class _PerfilPageState extends State<PerfilPage> {
                     children: [
                       Text(
                         userName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 0.2), // Espaçamento entre o nome e o título
+                      const SizedBox(height: 0.2), // Espaçamento entre o nome e o título
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Título: ',
                             style: TextStyle(
                               fontSize: 16,
@@ -57,16 +57,16 @@ class _PerfilPageState extends State<PerfilPage> {
                             children: [
                               Text(
                                 userTitle,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
                               ),
-                              SizedBox(width: 5), // Espaçamento entre o texto e o ícone
+                              const SizedBox(width: 5), // Espaçamento entre o texto e o ícone
                               Container(
                                 width: 30, // Largura do ícone
                                 height: 30, // Altura do ícone
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   image: DecorationImage(
                                     image: AssetImage('assets/images/icone_doador.png'),
                                     fit: BoxFit.contain,
@@ -77,18 +77,18 @@ class _PerfilPageState extends State<PerfilPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 0.2), // Espaçamento entre o título e a avaliação
+                      const SizedBox(height: 0.2), // Espaçamento entre o título e a avaliação
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.star,
                             color: Colors.amber,
                             size: 20,
                           ),
-                          SizedBox(width: 5), // Espaçamento entre o ícone e o número
+                          const SizedBox(width: 5), // Espaçamento entre o ícone e o número
                           Text(
                             userAvaliation,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                             ),
@@ -98,7 +98,7 @@ class _PerfilPageState extends State<PerfilPage> {
                     ],
                   ),
                 ),
-                SizedBox(width: 10), // Espaçamento entre o nome e a foto de perfil
+                const SizedBox(width: 10), // Espaçamento entre o nome e a foto de perfil
                 CircleAvatar(
                   radius: 44,
                   backgroundImage: AssetImage(userProfileImage),
