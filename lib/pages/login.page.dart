@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -38,37 +37,30 @@ class _LoginBoxState extends State<LoginBox> {
   bool buttonclicked = false;
   @override
   Widget build(BuildContext context) {
-    return (!buttonclicked)
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/logo-1.png'),
-                ElevatedButton.icon(
-                  style: const ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(Color(0xFF28730E)),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/ApresentacaoPage');
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/icons/google.svg',
-                    height: 20,
-                    width: 20,
-                  ),
-                  label: const Text(
-                    'Try Login com o Google',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/images/logo-1.png'),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed('/ApresentacaoPage');
+            },
+            child: Container(
+              padding: const EdgeInsets.only(
+                  right: 20, left: 20, top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color(0xFF28730E)),
+              child: const Text('Try Login with Google',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)),
             ),
-          )
-        : Container(
-            color: Colors.white,
-            height: 100,
-            width: 80,
-          );
+          ),
+        ],
+      ),
+    );
   }
 }
