@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-  
+
   static const routeName = '/';
 
   @override
@@ -43,11 +44,24 @@ class _LoginBoxState extends State<LoginBox> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/images/logo-1.png'),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/home');
-                    },
-                    child: const Text('Try Login with Google', style: TextStyle(color: Colors.black),))
+                ElevatedButton.icon(
+                  style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(Color(0xFF28730E)),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  icon: SvgPicture.asset(
+                    'assets/icons/google.svg',
+                    height: 20,
+                    width: 20,
+                  ),
+                  label: const Text(
+                    'Try Login com o Google',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ],
             ),
           )
