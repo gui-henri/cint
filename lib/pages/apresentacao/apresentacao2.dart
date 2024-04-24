@@ -24,12 +24,12 @@ class _Apresentacao2State extends State<Apresentacao2> {
             ),
           ),
           Container(
-            width: 300,
-            margin: const EdgeInsets.only(left: 30),
-            child: const Text(
+            width: MediaQuery.of(context).size.width * 2,
+            margin: const EdgeInsets.only(left: 40),
+            child: Text(
               'Encontre ONG’s por recomendação personalizada e perto de você!',
               style: TextStyle(
-                fontSize: 32,
+                fontSize: MediaQuery.of(context).size.width * 0.09,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF28730E),
               ),

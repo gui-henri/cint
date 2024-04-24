@@ -24,12 +24,12 @@ class _Apresentacao1State extends State<Apresentacao1> {
             ),
           ),
           Container(
-            width: 300,
-            margin: const EdgeInsets.only(left: 30),
-            child: const Text(
+            width: MediaQuery.of(context).size.width * 2,
+            margin: const EdgeInsets.only(left: 40),
+            child: Text(
               'Aqui você sabe exatamente as necessidades de cada instituição!',
               style: TextStyle(
-                fontSize: 32,
+                fontSize: MediaQuery.of(context).size.width * 0.09,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF28730E),
               ),
