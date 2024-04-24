@@ -50,7 +50,7 @@ class _LoginBoxState extends State<LoginBox> {
                         MaterialStatePropertyAll(Color(0xFF28730E)),
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamed(context, '/ApresentacaoPage');
                   },
                   icon: SvgPicture.asset(
                     'assets/icons/google.svg',
