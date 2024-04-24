@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   carousel_slider: 4.2.1
+  google_fonts: ^6.2.1
   flutter_speed_dial: ^7.0.0
 
 dev_dependencies:
@@ -21,3 +22,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/
