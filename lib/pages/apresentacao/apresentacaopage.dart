@@ -77,7 +77,9 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
             duration: const Duration(milliseconds: 300),
           );
         },
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+        ),
       );
     } else {
       return Container();
