@@ -12,6 +12,8 @@ dependencies:
   carousel_slider: 4.2.1
   google_fonts: ^6.2.1
   flutter_speed_dial: ^7.0.0
+  supabase_flutter: ^2.5.1
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
