@@ -7,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   await dotenv.load(fileName: '.env');
   await Supabase.initialize(
-    url: 'https://vjenejdvtvletpfewufb.supabase.co/',
+    url: 'https://vjenejdvtvletpfewufb.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqZW5lamR2dHZsZXRwZmV3dWZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI4Mjc5NzgsImV4cCI6MjAyODQwMzk3OH0.0kgGcARjWRbSu4qYxKPcY9kHAoaE8ZzK71psTwmw-8g',
   );

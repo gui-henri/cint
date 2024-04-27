@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacaopage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cint/main.dart';
 import 'package:cint/pages/perfil.page.dart';
+import 'package:google_sign_in_web/web_only.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +23,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String? _userId;
   @override
   void initState() {
     _setupAuthListener();
@@ -25,10 +32,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void _setupAuthListener() {
     supabase.auth.onAuthStateChange.listen((data) {
-      final event = data.event;
-      if (event == AuthChangeEvent.signedIn) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const ApresentacaoPage()));
+      setState(() {
+        _userId = data.session?.user.id;
+      });
+      if (_userId != null) {
+        Navigator.pushNamed(context, '/ApresentacaoPage');
+      } else {
+        print('null!!!!');
       }
     });
   }
@@ -38,9 +48,8 @@ class _LoginPageState extends State<LoginPage> {
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
       clientId: webClientId,
-      //serverClientId: webClientId,
     );
-    final googleUser = await googleSignIn.signIn();
+    final googleUser = await googleSignIn.signInSilently();
     final googleAuth = await googleUser!.authentication;
     final accessToken = googleAuth.accessToken;
     final idToken = googleAuth.idToken;
@@ -74,10 +83,14 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(_userId ?? 'não logado'),
                 Image.asset('assets/images/logo-1.png'),
                 GestureDetector(
-                  onTap: () {
-                    _googleSignIn();
+                  onTap: () async {
+                    if (!kIsWeb && (Platform.isAndroid)) {
+                      await _googleSignIn();
+                    }
+                    await supabase.auth.signInWithOAuth(OAuthProvider.google);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
