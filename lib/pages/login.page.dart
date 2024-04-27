@@ -83,7 +83,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(_userId ?? 'não logado'),
                 Image.asset('assets/images/logo-1.png'),
                 GestureDetector(
                   onTap: () async {
