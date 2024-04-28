@@ -1,6 +1,10 @@
 import 'package:cint/components/footer.dart';
 import 'package:cint/components/header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cint/main.dart';
+import 'package:cint/pages/login.page.dart';
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
@@ -14,8 +18,10 @@ class PerfilPage extends StatefulWidget {
 class _PerfilPageState extends State<PerfilPage> {
   // Dados do usuário
   String userName = 'Natália Oliveira';
-  String userProfileImage = 'assets/images/perfil.png'; // Caminho da imagem de perfil
-  String userTitle = 'Iniciante Generoso'; // Título que o usuário terá (pode ser mudado)
+  String userProfileImage =
+      'assets/images/perfil.png'; // Caminho da imagem de perfil
+  String userTitle =
+      'Iniciante Generoso'; // Título que o usuário terá (pode ser mudado)
   String userAvaliation = '5.0'; // Avaliação do usuário (pode ser mudado)
 
   @override
@@ -23,12 +29,12 @@ class _PerfilPageState extends State<PerfilPage> {
     return Scaffold(
       appBar: const Header(),
       bottomNavigationBar: const Footer(),
-
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(26.0, 42.0, 35.0, 0), // Espaçamento ajustado
+            padding: const EdgeInsets.fromLTRB(
+                26.0, 42.0, 35.0, 0), // Espaçamento ajustado
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -43,7 +49,8 @@ class _PerfilPageState extends State<PerfilPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 0.2), // Espaçamento entre o nome e o título
+                      const SizedBox(
+                          height: 0.2), // Espaçamento entre o nome e o título
                       Row(
                         children: [
                           const Text(
@@ -62,13 +69,16 @@ class _PerfilPageState extends State<PerfilPage> {
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(width: 5), // Espaçamento entre o texto e o ícone
+                              const SizedBox(
+                                  width:
+                                      5), // Espaçamento entre o texto e o ícone
                               Container(
                                 width: 30, // Largura do ícone
                                 height: 30, // Altura do ícone
                                 decoration: const BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage('assets/images/icone_doador.png'),
+                                    image: AssetImage(
+                                        'assets/images/icone_doador.png'),
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -77,7 +87,9 @@ class _PerfilPageState extends State<PerfilPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 0.2), // Espaçamento entre o título e a avaliação
+                      const SizedBox(
+                          height:
+                              0.2), // Espaçamento entre o título e a avaliação
                       Row(
                         children: [
                           const Icon(
@@ -85,7 +97,8 @@ class _PerfilPageState extends State<PerfilPage> {
                             color: Colors.amber,
                             size: 20,
                           ),
-                          const SizedBox(width: 5), // Espaçamento entre o ícone e o número
+                          const SizedBox(
+                              width: 5), // Espaçamento entre o ícone e o número
                           Text(
                             userAvaliation,
                             style: const TextStyle(
@@ -98,12 +111,34 @@ class _PerfilPageState extends State<PerfilPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 10), // Espaçamento entre o nome e a foto de perfil
+                const SizedBox(
+                    width: 10), // Espaçamento entre o nome e a foto de perfil
                 CircleAvatar(
                   radius: 44,
                   backgroundImage: AssetImage(userProfileImage),
                 ),
               ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () async {
+              await supabase.auth.signOut();
+              if (context.mounted) {
+                Navigator.pushNamed(context, '/');
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.only(
+                  right: 20, left: 20, top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0), color: Colors.red),
+              child: const Text(
+                'Desconectar',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

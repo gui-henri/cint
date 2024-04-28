@@ -1,10 +1,20 @@
 import 'package:cint/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
+  await Supabase.initialize(
+    url: 'https://vjenejdvtvletpfewufb.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqZW5lamR2dHZsZXRwZmV3dWZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI4Mjc5NzgsImV4cCI6MjAyODQwMzk3OH0.0kgGcARjWRbSu4qYxKPcY9kHAoaE8ZzK71psTwmw-8g',
+  );
   runApp(const MyApp());
 }
+
+final supabase = Supabase.instance.client;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
