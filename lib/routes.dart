@@ -4,6 +4,7 @@ import 'package:cint/pages/apresentacao/apresentacao2.dart';
 import 'package:cint/pages/apresentacao/apresentacao3.dart';
 import 'package:cint/pages/home.page.dart';
 import 'package:cint/pages/perfil.page.dart';
+import 'package:cint/pages/posts/minhas_ofertas.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/pages/login.page.dart';
 
@@ -15,4 +16,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       Apresentacao1.routeName: (context) => const Apresentacao1(),
       Apresentacao2.routeName: (context) => const Apresentacao2(),
       Apresentacao3.routeName: (context) => const Apresentacao3(),
+      MinhasOfertas.routeName: (context) => const MinhasOfertas(),
     };
