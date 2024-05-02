@@ -3,6 +3,7 @@ import 'package:cint/routes.dart';
 
 import '../../components/footer.dart';
 import '../../components/header.dart';
+import 'anuncio_form.dart';
 
 class MinhasOfertas extends StatefulWidget {
   const MinhasOfertas({super.key});
@@ -32,7 +33,12 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
         width: 60,
         height: 60,
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AnuncioForm()),
+            );
+          },
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6EB855),
           child: Icon(Icons.add),

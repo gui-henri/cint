@@ -5,6 +5,7 @@ import '../components/main_title.dart';
 import '../components/org_button.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
+import 'posts/anuncio_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -149,7 +150,12 @@ class _HomePageState extends State<HomePage> {
           SpeedDialChild(
             child: const Icon(Icons.post_add_outlined),
             label: 'Criar oferta',
-            onTap: () => {},
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AnuncioForm()),
+              ),
+            },
             shape: const CircleBorder(),
             labelStyle: const TextStyle(
               fontSize: 12,
