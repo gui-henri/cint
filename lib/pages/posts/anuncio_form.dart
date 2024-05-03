@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../../components/campo_texto.dart';
+
 class AnuncioForm extends StatefulWidget {
   const AnuncioForm({super.key});
+
+  static const routeName = '/anuncio_form';
 
   @override
   State<AnuncioForm> createState() => _AnuncioFormState();
@@ -154,52 +158,4 @@ class _AnuncioFormState extends State<AnuncioForm> {
       },
     );
   }
-}
-
-Widget CampoTexto(String label, bool obrigatorio,
-    {int size = 200, var keyboard = TextInputType.text}) {
-  return Column(children: [
-    Row(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: const Color(0xFF28730E),
-          ),
-        ),
-        (obrigatorio)
-            ? Text(
-                '*',
-                style: TextStyle(color: Colors.red),
-              )
-            : Text(''),
-      ],
-    ),
-    TextFormField(
-      keyboardType: TextInputType.number,
-      maxLines: null,
-      maxLength: size,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-      ),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          if (obrigatorio == true) {
-            return "* Campo obrigatório";
-          }
-        }
-        return null;
-      },
-    ),
-  ]);
 }
