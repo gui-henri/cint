@@ -94,7 +94,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   void enviarForm() {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/nova_oferta');
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:cint/routes.dart';
 
@@ -25,7 +27,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           color: const Color(0xFFF6F4EB),
           child: (posts.isEmpty)
               ? Column(children: [
-                  titleOfertas(),
+                  titleBack(context, 'Minhas Ofertas', '/home'),
                   semOfertas(),
                 ])
               : Container()),
@@ -49,14 +51,16 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
   }
 }
 
-Widget titleOfertas() {
+Widget titleBack(BuildContext context, String text, String route) {
   return Padding(
     padding: const EdgeInsets.all(15.0),
     child: Row(children: [
       Padding(
         padding: EdgeInsets.only(right: 10),
         child: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, route);
+          },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black,
@@ -70,8 +74,8 @@ Widget titleOfertas() {
           ))),
         ),
       ),
-      const Text(
-        'Minhas Ofertas',
+      Text(
+        text,
         style: TextStyle(fontSize: 26, color: Colors.black),
       ),
     ]),
