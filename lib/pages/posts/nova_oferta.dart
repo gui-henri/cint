@@ -21,186 +21,324 @@ class _NovaOfertaState extends State<NovaOferta> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const Header(),
-      bottomNavigationBar: const Footer(),
-      body: Container(
-        color: const Color(0xFFF6F4EB),
-        child: FractionallySizedBox(
-          heightFactor: 1,
-          widthFactor: 1,
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Column(
+        appBar: const Header(),
+        bottomNavigationBar: const Footer(),
+        body: Container(
+            color: const Color(0xFFF6F4EB),
+            child: FractionallySizedBox(
+              heightFactor: 1,
+              widthFactor: 1,
+              child: SingleChildScrollView(
+                child: Stack(
                   children: [
-                    titleBack(context, 'Nova oferta', '/anuncio_form'),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    FractionallySizedBox(
-                      widthFactor: 0.9,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                  top: 20, bottom: 20, left: 20, right: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: const Color(0xFF28730E),
+                    Column(children: [
+                      titleBack(context, 'Nova oferta', '/anuncio_form'),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: 0.9,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                    top: 20, bottom: 20, left: 20, right: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: const Color(0xFF28730E),
+                                  ),
+                                  color: Colors.white,
                                 ),
-                                color: Colors.white,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Spacer(),
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          border: Border.all(
-                                            color: const Color(0xFF28730E),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Spacer(),
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            border: Border.all(
+                                              color: const Color(0xFF28730E),
+                                            ),
+                                            color: Colors.white,
                                           ),
-                                          color: Colors.white,
+                                          child: selectedIcon,
                                         ),
-                                        child: selectedIcon,
-                                      ),
-                                    ],
-                                  ),
-                                  CampoTexto(
-                                    '',
-                                    false,
-                                    keyboard: TextInputType.multiline,
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    CampoTexto(
+                                      '',
+                                      false,
+                                      keyboard: TextInputType.multiline,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    FractionallySizedBox(
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      FractionallySizedBox(
                         widthFactor: 0.9,
-                        child: Column(children: [
-                          Row(
-                            children: [
-                              SquareGesture(
-                                name: 'Saúde',
-                                icon:
-                                    '../../../assets/icons/saude-icon/saude-green.png',
-                                iconSelected:
-                                    '../../../assets/icons/saude-icon/saude-white.png',
-                                onTap: () {
-                                  setState(() {
-                                    selectedIconURL =
-                                        '../../../assets/icons/saude-icon/saude-green.png';
-                                    selectedIcon = Image.asset(selectedIconURL);
-                                  });
-                                },
-                                isSelected: selectedIconURL ==
-                                    '../../../assets/icons/saude-icon/saude-green.png',
-                              ),
-                              const Spacer(),
-                              SquareGesture(
-                                name: 'Educação',
-                                icon:
-                                    '../../../assets/icons/educacao-icon/educacao_green.png',
-                                iconSelected:
-                                    '../../../assets/icons/educacao-icon/educacao_white.png',
-                                onTap: () {
-                                  setState(() {
-                                    selectedIconURL =
-                                        '../../../assets/icons/educacao-icon/educacao_green.png';
-                                    selectedIcon = Image.asset(selectedIconURL);
-                                  });
-                                },
-                                isSelected: selectedIconURL ==
-                                    '../../../assets/icons/educacao-icon/educacao_green.png',
-                              ),
-                              /*const Spacer(),
-                              const SquareGesture(
-                                name: 'Crianças',
-                                isSelected: false,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Row(
-                            children: [
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                              Spacer(),
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                              Spacer(),
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Row(
-                            children: [
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                              Spacer(),
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                              Spacer(),
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Row(
-                            children: [
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                              Spacer(),
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                              Spacer(),
-                              SquareGesture(
-                                isSelected: false,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ), */
-                            ],
-                          ),
-                        ])),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                SquareGesture(
+                                  name: 'Saúde',
+                                  icon:
+                                      '../../../assets/icons/saude-icon/saude-green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/saude-icon/saude-white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/saude-icon/saude-green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/saude-icon/saude-green.png',
+                                ),
+                                const Spacer(),
+                                SquareGesture(
+                                  name: 'Educação',
+                                  icon:
+                                      '../../../assets/icons/educacao-icon/educacao_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/educacao-icon/educacao_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/educacao-icon/educacao_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/educacao-icon/educacao_green.png',
+                                ),
+                                const Spacer(),
+                                SquareGesture(
+                                  name: 'Crianças',
+                                  icon:
+                                      '../../../assets/icons/criancas-icon/criancas_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/criancas-icon/criancas_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/criancas-icon/criancas_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/criancas-icon/criancas_green.png',
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                SquareGesture(
+                                  name: 'Idosos',
+                                  icon:
+                                      '../../../assets/icons/idosos-icon/idosos_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/idosos-icon/idosos_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/idosos-icon/idosos_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/idosos-icon/idosos_green.png',
+                                ),
+                                Spacer(),
+                                SquareGesture(
+                                  name: 'Sem-teto',
+                                  icon:
+                                      '../../../assets/icons/sem-teto-icon/sem-teto_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/sem-teto-icon/sem-teto_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/sem-teto-icon/sem-teto_green.png',
+                                ),
+                                Spacer(),
+                                SquareGesture(
+                                  name: 'Mulheres',
+                                  icon:
+                                      '../../../assets/icons/mulheres-icon/mulheres_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/mulheres-icon/mulheres_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/mulheres-icon/mulheres_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/mulheres-icon/mulheres_green.png',
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                SquareGesture(
+                                  name: 'Religiosas',
+                                  icon:
+                                      '../../../assets/icons/religiosas-icon/religiosas_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/religiosas-icon/religiosas_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/religiosas-icon/religiosas_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/religiosas-icon/religiosas_green.png',
+                                ),
+                                Spacer(),
+                                SquareGesture(
+                                  name: 'Minorias',
+                                  icon:
+                                      '../../../assets/icons/minorias-icon/minorias_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/minorias-icon/minorias_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/minorias-icon/minorias_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/minorias-icon/minorias_green.png',
+                                ),
+                                Spacer(),
+                                SquareGesture(
+                                  name: 'Ambientais',
+                                  icon:
+                                      '../../../assets/icons/ambientais-icon/ambientais_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/ambientais-icon/ambientais_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/ambientais-icon/ambientais_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/ambientais-icon/ambientais_green.png',
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                SquareGesture(
+                                  name: 'Culturais',
+                                  icon:
+                                      '../../../assets/icons/culturais-icon/culturais_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/culturais-icon/culturais_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/culturais-icon/culturais_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/culturais-icon/culturais_green.png',
+                                ),
+                                Spacer(),
+                                SquareGesture(
+                                  name: 'Reabilitação',
+                                  icon:
+                                      '../../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/reabilitacao-icon/reabilitacao_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/reabilitacao-icon/reabilitacao_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
+                                ),
+                                Spacer(),
+                                SquareGesture(
+                                  name: 'Refugiados',
+                                  icon:
+                                      '../../../assets/icons/refugiados-icon/refugiados_green.png',
+                                  iconSelected:
+                                      '../../../assets/icons/refugiados-icon/refugiados_white.png',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIconURL =
+                                          '../../../assets/icons/refugiados-icon/refugiados_green.png';
+                                      selectedIcon =
+                                          Image.asset(selectedIconURL);
+                                    });
+                                  },
+                                  isSelected: selectedIconURL ==
+                                      '../../../assets/icons/refugiados-icon/refugiados_green.png',
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ])
                   ],
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                ),
+              ),
+            )));
   }
 }
 
