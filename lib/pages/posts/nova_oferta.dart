@@ -1,3 +1,4 @@
+import 'package:cint/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/routes.dart';
@@ -18,11 +19,62 @@ class NovaOferta extends StatefulWidget {
 class _NovaOfertaState extends State<NovaOferta> {
   late var selectedIconURL = null;
   late var selectedIcon = null;
+  var invalido = false;
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final user = supabase.auth.currentUser;
+    final profileImageUrl = user?.userMetadata?['avatar_url'];
+    final fullName = user?.userMetadata?['full_name'];
+    List<String> nomes = fullName.split(" ");
+    String primeiroNome = nomes.first;
+    String ultimoNome = nomes.length > 1 ? nomes.last : "";
+    final userName = '$primeiroNome $ultimoNome';
     return Scaffold(
         appBar: const Header(),
         bottomNavigationBar: const Footer(),
+        floatingActionButton: SizedBox(
+          width: 60,
+          height: 60,
+          child: FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                invalido = (_formKey.currentState!.validate());
+              });
+              (_formKey.currentState!.validate());
+              if (selectedIcon != null && _formKey.currentState!.validate()) {
+                Navigator.pushNamed(context, '/minhasofertas');
+              } else {
+                if (selectedIcon == null) {
+                  Future.delayed(const Duration(seconds: 1), () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
+                        content: Text(
+                          'Selecione um tipo de instituição!',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+                }
+              }
+            },
+            foregroundColor: Colors.white,
+            backgroundColor: const Color(0xFF6EB855),
+            child: Icon(Icons.send),
+            shape: CircleBorder(),
+          ),
+        ),
         body: Container(
             color: const Color(0xFFF6F4EB),
             child: FractionallySizedBox(
@@ -56,6 +108,22 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   children: [
                                     Row(
                                       children: [
+                                        if (profileImageUrl != null)
+                                          ClipOval(
+                                            child: Image.network(
+                                              profileImageUrl,
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          userName ?? '',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                         const Spacer(),
                                         Container(
                                           height: 50,
@@ -72,10 +140,13 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         ),
                                       ],
                                     ),
-                                    CampoTexto(
-                                      '',
-                                      false,
-                                      keyboard: TextInputType.multiline,
+                                    Form(
+                                      key: _formKey,
+                                      child: CampoTexto(
+                                        '',
+                                        true,
+                                        keyboard: TextInputType.multiline,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -109,6 +180,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/saude-icon/saude-green.png',
+                                  invalido: invalido,
                                 ),
                                 const Spacer(),
                                 SquareGesture(
@@ -127,6 +199,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/educacao-icon/educacao_green.png',
+                                  invalido: invalido,
                                 ),
                                 const Spacer(),
                                 SquareGesture(
@@ -145,6 +218,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/criancas-icon/criancas_green.png',
+                                  invalido: invalido,
                                 ),
                               ],
                             ),
@@ -169,6 +243,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/idosos-icon/idosos_green.png',
+                                  invalido: invalido,
                                 ),
                                 Spacer(),
                                 SquareGesture(
@@ -187,6 +262,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/sem-teto-icon/sem-teto_green.png',
+                                  invalido: invalido,
                                 ),
                                 Spacer(),
                                 SquareGesture(
@@ -205,6 +281,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/mulheres-icon/mulheres_green.png',
+                                  invalido: invalido,
                                 ),
                               ],
                             ),
@@ -229,6 +306,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/religiosas-icon/religiosas_green.png',
+                                  invalido: invalido,
                                 ),
                                 Spacer(),
                                 SquareGesture(
@@ -247,6 +325,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/minorias-icon/minorias_green.png',
+                                  invalido: invalido,
                                 ),
                                 Spacer(),
                                 SquareGesture(
@@ -265,6 +344,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/ambientais-icon/ambientais_green.png',
+                                  invalido: invalido,
                                 ),
                               ],
                             ),
@@ -289,6 +369,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/culturais-icon/culturais_green.png',
+                                  invalido: invalido,
                                 ),
                                 Spacer(),
                                 SquareGesture(
@@ -307,6 +388,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
+                                  invalido: invalido,
                                 ),
                                 Spacer(),
                                 SquareGesture(
@@ -325,6 +407,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/refugiados-icon/refugiados_green.png',
+                                  invalido: invalido,
                                 ),
                               ],
                             ),
@@ -348,14 +431,17 @@ class SquareGesture extends StatelessWidget {
   final String? iconSelected;
   final Function? onTap;
   final bool isSelected;
+  final bool invalido;
 
-  const SquareGesture(
-      {Key? key,
-      this.name,
-      this.icon,
-      this.onTap,
-      required this.isSelected,
-      this.iconSelected});
+  const SquareGesture({
+    Key? key,
+    this.name,
+    this.icon,
+    this.onTap,
+    required this.isSelected,
+    this.iconSelected,
+    required this.invalido,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +453,7 @@ class SquareGesture extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: const Color(0xFF28730E),
+            color: invalido ? Colors.red : const Color(0xFF28730E),
           ),
           color: isSelected ? const Color(0xFF28730E) : Colors.white,
         ),
