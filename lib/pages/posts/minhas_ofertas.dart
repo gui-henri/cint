@@ -2,11 +2,14 @@ import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:cint/routes.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/title_back.dart';
 import 'anuncio_form.dart';
+
+import '../../components/post_oferta.dart';
 
 class MinhasOfertas extends StatefulWidget {
   const MinhasOfertas({super.key});
@@ -18,7 +21,7 @@ class MinhasOfertas extends StatefulWidget {
 }
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
-  List posts = [];
+  List posts = [1];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +29,32 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
       bottomNavigationBar: const Footer(),
       body: Container(
           color: const Color(0xFFF6F4EB),
-          child: (posts.isEmpty)
-              ? Column(children: [
-                  titleBack(context, 'Minhas Ofertas', '/home'),
-                  semOfertas(),
-                ])
-              : Container()),
+          child: FractionallySizedBox(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: SingleChildScrollView(
+              child: Stack(children: [
+                (posts.isEmpty)
+                    ? Column(children: [
+                        titleBack(context, 'Minhas Ofertas', '/home'),
+                        semOfertas(),
+                      ])
+                    : FractionallySizedBox(
+                        widthFactor: 1,
+                        child: Column(
+                          children: [
+                            FractionallySizedBox(
+                              widthFactor: 0.9,
+                              child: Container(
+                                child: PostCard(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ]),
+            ),
+          )),
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,
