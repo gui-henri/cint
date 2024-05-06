@@ -26,7 +26,9 @@ class PostOferta {
 
 class PostCard extends StatefulWidget {
   final PostOferta oferta;
-  const PostCard({super.key, required this.oferta});
+  final VoidCallback onPressed;
+  const PostCard({super.key, required this.oferta, required this.onPressed});
+
   @override
   State<PostCard> createState() => _PostCardState();
 }
@@ -42,22 +44,21 @@ class _PostCardState extends State<PostCard> {
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
     return FractionallySizedBox(
-        widthFactor: 0.9,
-        child: Row(children: [
+      widthFactor: 0.9,
+      child: Row(
+        children: [
           Expanded(
-              child: Container(
-            padding:
-                const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: const Color(0xFF28730E),
+            child: Container(
+              padding: const EdgeInsets.only(
+                  top: 20, bottom: 20, left: 20, right: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: const Color(0xFF28730E),
+                ),
+                color: Colors.white,
               ),
-              color: Colors.white,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Row(
                   children: [
                     if (profileImageUrl != null)
@@ -92,14 +93,47 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.oferta.textoPrincipal),
+                    Text(
+                      widget.oferta.textoPrincipal,
+                      textAlign: TextAlign.start,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        PopupMenuButton<String>(
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<String>>[
+                                  PopupMenuItem<String>(
+                                    value: 'Deletar',
+                                    child: ListTile(
+                                      leading: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      title: const Text(
+                                        'Deletar',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                            onSelected: (String value) {
+                              if (value == 'Deletar') {
+                                setState(() {
+                                  widget.onPressed();
+                                });
+                              }
+                            }),
+                      ],
+                    ),
                   ],
                 ),
-              ],
+              ]),
             ),
-          ))
-        ]));
+          )
+        ],
+      ),
+    );
   }
 }

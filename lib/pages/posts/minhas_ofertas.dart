@@ -23,7 +23,6 @@ class MinhasOfertas extends StatefulWidget {
 }
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
-  //List posts = [1];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,30 +33,23 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           child: FractionallySizedBox(
             widthFactor: 1,
             heightFactor: 1,
-            child: SingleChildScrollView(
-              child: Stack(children: [
-                (meusPosts.isEmpty)
-                    ? Column(children: [
-                        titleBack(context, 'Minhas Ofertas', '/home'),
-                        semOfertas(),
-                      ])
-                    : FractionallySizedBox(
-                        widthFactor: 1,
-                        child: Column(
-                          children: [
-                            FractionallySizedBox(
-                              widthFactor: 0.9,
-                              child: Container(
-                                child: PostCard(
-                                  oferta: meusPosts[0],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+            child: Stack(children: [
+              titleBack(context, 'Minhas Ofertas', '/home'),
+              (meusPosts.isEmpty)
+                  ? Column(children: [
+                      Container(
+                        child: semOfertas(),
+                        padding: EdgeInsets.only(top: 70),
                       ),
-              ]),
-            ),
+                    ])
+                  : FractionallySizedBox(
+                      widthFactor: 1,
+                      child: Container(
+                        child: ListaMeusPosts(),
+                        padding: EdgeInsets.only(top: 70),
+                      ),
+                    ),
+            ]),
           )),
       floatingActionButton: SizedBox(
         width: 60,
