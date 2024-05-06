@@ -5,7 +5,9 @@ import 'package:cint/routes.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
 import '../../components/header.dart';
+import '../../components/post_oferta.dart';
 import '../../components/title_back.dart';
+import 'salvos/lista_meus_posts.dart';
 
 class NovaOferta extends StatefulWidget {
   const NovaOferta({super.key});
@@ -21,6 +23,7 @@ class _NovaOfertaState extends State<NovaOferta> {
   late var selectedIcon = null;
   var invalido = false;
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +47,7 @@ class _NovaOfertaState extends State<NovaOferta> {
               });
               (_formKey.currentState!.validate());
               if (selectedIcon != null && _formKey.currentState!.validate()) {
+                meusPosts.add(PostOferta(selectedIcon, _controller.text));
                 Navigator.pushNamed(context, '/minhasofertas');
               } else {
                 if (selectedIcon == null) {
@@ -142,11 +146,8 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     ),
                                     Form(
                                       key: _formKey,
-                                      child: CampoTexto(
-                                        '',
-                                        true,
-                                        keyboard: TextInputType.multiline,
-                                      ),
+                                      child: CampoTexto('', true, _controller,
+                                          keyboard: TextInputType.multiline),
                                     ),
                                   ],
                                 ),

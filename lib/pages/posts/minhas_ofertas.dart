@@ -11,6 +11,8 @@ import 'anuncio_form.dart';
 
 import '../../components/post_oferta.dart';
 
+import 'salvos/lista_meus_posts.dart';
+
 class MinhasOfertas extends StatefulWidget {
   const MinhasOfertas({super.key});
 
@@ -21,7 +23,7 @@ class MinhasOfertas extends StatefulWidget {
 }
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
-  List posts = [1];
+  //List posts = [1];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +36,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
             heightFactor: 1,
             child: SingleChildScrollView(
               child: Stack(children: [
-                (posts.isEmpty)
+                (meusPosts.isEmpty)
                     ? Column(children: [
                         titleBack(context, 'Minhas Ofertas', '/home'),
                         semOfertas(),
@@ -46,7 +48,9 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
                             FractionallySizedBox(
                               widthFactor: 0.9,
                               child: Container(
-                                child: PostCard(),
+                                child: PostCard(
+                                  oferta: meusPosts[0],
+                                ),
                               ),
                             ),
                           ],

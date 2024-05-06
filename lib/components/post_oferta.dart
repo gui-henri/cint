@@ -25,15 +25,13 @@ class PostOferta {
 }
 
 class PostCard extends StatefulWidget {
-  const PostCard({super.key});
-
+  final PostOferta oferta;
+  const PostCard({super.key, required this.oferta});
   @override
   State<PostCard> createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
-  PostOferta teste = PostOferta(
-      Image.asset('../../assets/icons/icon-megaphone-solid.png'), 'blabla');
   @override
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
@@ -89,13 +87,14 @@ class _PostCardState extends State<PostCard> {
                         ),
                         color: Colors.white,
                       ),
-                      child: teste.icon,
+                      child: widget.oferta.icon,
                     ),
                   ],
                 ),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(teste.textoPrincipal),
+                    Text(widget.oferta.textoPrincipal),
                   ],
                 ),
               ],

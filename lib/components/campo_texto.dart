@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-Widget CampoTexto(String label, bool obrigatorio,
+Widget CampoTexto(
+    String label, bool obrigatorio, TextEditingController controller,
     {int size = 200, var keyboard = TextInputType.text}) {
   return Column(children: [
     Row(
@@ -20,6 +21,7 @@ Widget CampoTexto(String label, bool obrigatorio,
       ],
     ),
     TextFormField(
+      controller: controller,
       textInputAction: TextInputAction.next,
       keyboardType: keyboard,
       maxLines: null,

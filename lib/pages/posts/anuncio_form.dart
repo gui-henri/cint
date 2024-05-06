@@ -15,7 +15,12 @@ class AnuncioForm extends StatefulWidget {
 
 class _AnuncioFormState extends State<AnuncioForm> {
   final _formKey = GlobalKey<FormState>();
-
+  final TextEditingController _controllerProduto = TextEditingController();
+  final TextEditingController _controllerQuantidade = TextEditingController();
+  final TextEditingController _controllerCondicoes = TextEditingController();
+  final TextEditingController _controllerCategoria = TextEditingController();
+  final TextEditingController _controllerTelefone = TextEditingController();
+  final TextEditingController _controllerInfo = TextEditingController();
   File? _image;
 
   Future<void> _pickImage() async {
@@ -69,15 +74,24 @@ class _AnuncioFormState extends State<AnuncioForm> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    CampoTexto('Informe o produto a ser doado', true),
-                    CampoTexto('Quantidade do produto', true),
-                    CampoTexto('Condições do produto', true),
-                    CampoTexto('Categoria do produto', true),
-                    CampoTexto('Telefone para contato', false,
-                        size: 11, keyboard: TextInputType.number),
+                    CampoTexto('Informe o produto a ser doado', true,
+                        _controllerProduto),
+                    CampoTexto(
+                        'Quantidade do produto', true, _controllerQuantidade),
+                    CampoTexto(
+                        'Condições do produto', true, _controllerCondicoes),
+                    CampoTexto(
+                        'Categoria do produto', true, _controllerCategoria),
+                    CampoTexto(
+                        'Telefone para contato',
+                        false,
+                        size: 11,
+                        keyboard: TextInputType.number,
+                        _controllerTelefone),
                     CampoTexto(
                         'Há mais alguma informação relevante sobre o\nproduto que gostaria de compartilhar?',
-                        false),
+                        false,
+                        _controllerInfo),
                   ],
                 ),
               ),
