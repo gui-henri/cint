@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../anuncio_form.dart';
 import '../../../components/post_oferta.dart';
+import '../nova_oferta.dart';
 
 List meusPosts = [];
+List tempForm = [];
 
 class ListaMeusPosts extends StatefulWidget {
   const ListaMeusPosts({Key? key}) : super(key: key);
@@ -26,10 +28,14 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
           children: [
             PostCard(
               oferta: meusPosts[index],
-              onPressed: () {
+              deletar: () {
                 setState(() {
                   meusPosts.removeAt(index);
                 });
+              },
+              editar: () {
+                Navigator.pushNamed(context, '/editar_form',
+                    arguments: meusPosts[index]);
               },
             ),
           ],

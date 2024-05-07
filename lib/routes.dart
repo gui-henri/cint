@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:cint/pages/login.page.dart';
 import 'package:cint/pages/posts/nova_oferta.dart';
 
+import 'pages/posts/editar_form.dart';
+
 Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       LoginPage.routeName: (context) => const LoginPage(),
       HomePage.routeName: (context) => const HomePage(),
@@ -21,4 +23,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       MinhasOfertas.routeName: (context) => const MinhasOfertas(),
       NovaOferta.routeName: (context) => const NovaOferta(),
       AnuncioForm.routeName: (context) => const AnuncioForm(),
+      EditarForm.routeName: (context) => const EditarForm(),
     };

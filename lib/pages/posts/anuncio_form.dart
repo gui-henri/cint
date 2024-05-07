@@ -4,6 +4,9 @@ import 'dart:io';
 
 import '../../components/campo_texto.dart';
 
+import '../../components/post_oferta.dart';
+import '../posts/salvos/lista_meus_posts.dart';
+
 class AnuncioForm extends StatefulWidget {
   const AnuncioForm({super.key});
 
@@ -15,7 +18,7 @@ class AnuncioForm extends StatefulWidget {
 
 class _AnuncioFormState extends State<AnuncioForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _controllerProduto = TextEditingController();
+  TextEditingController _controllerProduto = TextEditingController();
   final TextEditingController _controllerQuantidade = TextEditingController();
   final TextEditingController _controllerCondicoes = TextEditingController();
   final TextEditingController _controllerCategoria = TextEditingController();
@@ -35,12 +38,23 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (tempForm.isNotEmpty) {
+      setState(() {
+        _controllerProduto.text = tempForm[0];
+        _controllerQuantidade.text = tempForm[1];
+        _controllerCondicoes.text = tempForm[2];
+        _controllerCategoria.text = tempForm[3];
+        _controllerTelefone.text = tempForm[4];
+        _controllerInfo.text = tempForm[5];
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded),
+          icon: const Icon(Icons.arrow_back_ios_rounded),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(CircleBorder(
+              shape: MaterialStateProperty.all(const CircleBorder(
             side: BorderSide(
               width: 1,
               color: Colors.black,
@@ -57,7 +71,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Image.asset('assets/icons/icon-megaphone-solid.png'),
-              Text(
+              const Text(
                 'Anuncie',
                 style: TextStyle(fontSize: 25),
               ),
@@ -97,11 +111,11 @@ class _AnuncioFormState extends State<AnuncioForm> {
               ),
             ),
             BotaoFoto(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             BotaoEnviar(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
           ],
@@ -112,6 +126,14 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   void enviarForm() {
     if (_formKey.currentState!.validate()) {
+      tempForm = [
+        _controllerProduto.text,
+        _controllerQuantidade.text,
+        _controllerCondicoes.text,
+        _controllerCategoria.text,
+        _controllerTelefone.text,
+        _controllerInfo.text,
+      ];
       Navigator.pushNamed(context, '/nova_oferta');
     }
   }
@@ -126,9 +148,9 @@ class _AnuncioFormState extends State<AnuncioForm> {
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7.0),
-            side: BorderSide(
+            side: const BorderSide(
               width: 1,
-              color: const Color(0xFF28730E),
+              color: Color(0xFF28730E),
             ),
           ),
         ),
@@ -136,11 +158,11 @@ class _AnuncioFormState extends State<AnuncioForm> {
       child: Container(
         width: 130,
         height: 30,
-        child: Center(
+        child: const Center(
           child: Text(
             'Enviar',
             style: TextStyle(
-              color: const Color(0xFF28730E),
+              color: Color(0xFF28730E),
               fontSize: 16.0,
             ),
           ),
@@ -154,13 +176,13 @@ class _AnuncioFormState extends State<AnuncioForm> {
       child: Container(
         height: 37,
         width: 299,
-        child: Center(
+        child: const Center(
           child: Text('Anexar foto do produto'),
         ),
       ),
       style: ButtonStyle(
-        foregroundColor: MaterialStatePropertyAll(Colors.white),
-        backgroundColor: MaterialStatePropertyAll(const Color(0xFF28730E)),
+        foregroundColor: const MaterialStatePropertyAll(Colors.white),
+        backgroundColor: const MaterialStatePropertyAll(Color(0xFF28730E)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7.0),

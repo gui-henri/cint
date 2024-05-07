@@ -8,6 +8,7 @@ import '../../components/header.dart';
 import '../../components/post_oferta.dart';
 import '../../components/title_back.dart';
 import 'salvos/lista_meus_posts.dart';
+import 'anuncio_form.dart';
 
 class NovaOferta extends StatefulWidget {
   const NovaOferta({super.key});
@@ -47,7 +48,16 @@ class _NovaOfertaState extends State<NovaOferta> {
               });
               (_formKey.currentState!.validate());
               if (selectedIcon != null && _formKey.currentState!.validate()) {
-                meusPosts.add(PostOferta(selectedIcon, _controller.text));
+                meusPosts.add(PostOferta(
+                    tempForm[0],
+                    tempForm[1],
+                    tempForm[2],
+                    tempForm[3],
+                    tempForm[4],
+                    tempForm[5],
+                    selectedIcon,
+                    _controller.text));
+                tempForm.clear();
                 Navigator.pushNamed(context, '/minhasofertas');
               } else {
                 if (selectedIcon == null) {

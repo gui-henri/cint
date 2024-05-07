@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import '../pages/posts/anuncio_form.dart';
 
 class PostOferta {
-/*   String produto;
+  String produto;
   String quantidade;
   String condicoes;
   String categoria;
-  int telefone;
-  String info; */
+  String telefone;
+  String info;
   Image icon;
   String textoPrincipal;
 
   PostOferta(
-/*     this.produto,
+    this.produto,
     this.quantidade,
     this.condicoes,
     this.categoria,
     this.telefone,
-    this.info, */
+    this.info,
     this.icon,
     this.textoPrincipal,
   );
@@ -26,8 +26,13 @@ class PostOferta {
 
 class PostCard extends StatefulWidget {
   final PostOferta oferta;
-  final VoidCallback onPressed;
-  const PostCard({super.key, required this.oferta, required this.onPressed});
+  final VoidCallback deletar;
+  final VoidCallback editar;
+  const PostCard(
+      {super.key,
+      required this.oferta,
+      required this.deletar,
+      required this.editar});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -104,15 +109,28 @@ class _PostCardState extends State<PostCard> {
                         PopupMenuButton<String>(
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<String>>[
-                                  PopupMenuItem<String>(
+                                  const PopupMenuItem<String>(
                                     value: 'Deletar',
                                     child: ListTile(
-                                      leading: const Icon(
+                                      leading: Icon(
                                         Icons.delete,
                                         color: Colors.red,
                                       ),
-                                      title: const Text(
+                                      title: Text(
                                         'Deletar',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: 'Editar',
+                                    child: ListTile(
+                                      leading: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      title: Text(
+                                        'Editar',
                                         style: TextStyle(color: Colors.red),
                                       ),
                                     ),
@@ -121,7 +139,12 @@ class _PostCardState extends State<PostCard> {
                             onSelected: (String value) {
                               if (value == 'Deletar') {
                                 setState(() {
-                                  widget.onPressed();
+                                  widget.deletar();
+                                });
+                              }
+                              if (value == 'Editar') {
+                                setState(() {
+                                  widget.editar();
                                 });
                               }
                             }),
