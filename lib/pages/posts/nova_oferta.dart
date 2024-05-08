@@ -28,6 +28,12 @@ class _NovaOfertaState extends State<NovaOferta> {
 
   @override
   Widget build(BuildContext context) {
+    if (isEditing) {
+      setState(() {
+        selectedIcon = ofertaEditada!.icon;
+        _controller.text = ofertaEditada!.textoPrincipal;
+      });
+    }
     final user = supabase.auth.currentUser;
     final profileImageUrl = user?.userMetadata?['avatar_url'];
     final fullName = user?.userMetadata?['full_name'];
@@ -46,9 +52,11 @@ class _NovaOfertaState extends State<NovaOferta> {
               setState(() {
                 invalido = (_formKey.currentState!.validate());
               });
+              print(isEditing);
               (_formKey.currentState!.validate());
               if (selectedIcon != null && _formKey.currentState!.validate()) {
-                meusPosts.add(PostOferta(
+                if (isEditing == false) {
+                  meusPosts.add(PostOferta(
                     tempForm[0],
                     tempForm[1],
                     tempForm[2],
@@ -56,7 +64,16 @@ class _NovaOfertaState extends State<NovaOferta> {
                     tempForm[4],
                     tempForm[5],
                     selectedIcon,
-                    _controller.text));
+                    _controller.text,
+                  ));
+                }
+                if (isEditing) {
+                  setState(() {
+                    ofertaEditada!.icon = selectedIcon;
+                    ofertaEditada!.textoPrincipal = _controller.text;
+                    isEditing = false;
+                  });
+                }
                 tempForm.clear();
                 Navigator.pushNamed(context, '/minhasofertas');
               } else {
@@ -188,6 +205,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/saude-icon/saude-green.png',
@@ -207,6 +229,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/educacao-icon/educacao_green.png',
@@ -226,6 +253,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/criancas-icon/criancas_green.png',
@@ -251,6 +283,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/idosos-icon/idosos_green.png',
@@ -270,6 +307,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/sem-teto-icon/sem-teto_green.png',
@@ -289,6 +331,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/mulheres-icon/mulheres_green.png',
@@ -314,6 +361,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/religiosas-icon/religiosas_green.png',
@@ -333,6 +385,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/minorias-icon/minorias_green.png',
@@ -352,6 +409,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/ambientais-icon/ambientais_green.png',
@@ -377,6 +439,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/culturais-icon/culturais_green.png',
@@ -396,6 +463,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
@@ -415,6 +487,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
+                                    if (isEditing) {
+                                      setState(() {
+                                        ofertaEditada!.icon = selectedIcon;
+                                      });
+                                    }
                                   },
                                   isSelected: selectedIconURL ==
                                       '../../../assets/icons/refugiados-icon/refugiados_green.png',

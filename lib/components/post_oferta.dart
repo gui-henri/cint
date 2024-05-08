@@ -1,6 +1,11 @@
 import 'package:cint/main.dart';
+import 'package:cint/pages/posts/salvos/lista_meus_posts.dart';
 import 'package:flutter/material.dart';
+import '../pages/posts/salvos/lista_meus_posts.dart';
 import '../pages/posts/anuncio_form.dart';
+
+bool isEditing = false;
+PostOferta? ofertaEditada;
 
 class PostOferta {
   String produto;
@@ -28,11 +33,14 @@ class PostCard extends StatefulWidget {
   final PostOferta oferta;
   final VoidCallback deletar;
   final VoidCallback editar;
-  const PostCard(
-      {super.key,
-      required this.oferta,
-      required this.deletar,
-      required this.editar});
+  final VoidCallback detalhes;
+  const PostCard({
+    super.key,
+    required this.oferta,
+    required this.deletar,
+    required this.editar,
+    required this.detalhes,
+  });
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -135,6 +143,19 @@ class _PostCardState extends State<PostCard> {
                                       ),
                                     ),
                                   ),
+                                  const PopupMenuItem<String>(
+                                    value: 'Detalhes',
+                                    child: ListTile(
+                                      leading: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      title: Text(
+                                        'Detalhes',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                             onSelected: (String value) {
                               if (value == 'Deletar') {
@@ -144,7 +165,15 @@ class _PostCardState extends State<PostCard> {
                               }
                               if (value == 'Editar') {
                                 setState(() {
+                                  isEditing = true;
+                                  ofertaEditada = widget.oferta;
                                   widget.editar();
+                                });
+                              }
+                              if (value == 'Detalhes') {
+                                setState(() {
+                                  ofertaEditada = widget.oferta;
+                                  widget.detalhes();
                                 });
                               }
                             }),

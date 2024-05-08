@@ -34,6 +34,10 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                 });
               },
               editar: () {
+                Navigator.pushNamed(context, '/anuncio_form',
+                    arguments: meusPosts[index]);
+              },
+              detalhes: () {
                 Navigator.pushNamed(context, '/editar_form',
                     arguments: meusPosts[index]);
               },

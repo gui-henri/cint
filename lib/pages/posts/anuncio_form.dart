@@ -17,6 +17,7 @@ class AnuncioForm extends StatefulWidget {
 }
 
 class _AnuncioFormState extends State<AnuncioForm> {
+  late PostOferta dadosPostEditado;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _controllerProduto = TextEditingController();
   final TextEditingController _controllerQuantidade = TextEditingController();
@@ -38,6 +39,23 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (isEditing) {
+      setState(() {
+        dadosPostEditado =
+            ModalRoute.of(context)!.settings.arguments as PostOferta;
+        tempForm.clear();
+        tempForm = [
+          dadosPostEditado.produto,
+          dadosPostEditado.quantidade,
+          dadosPostEditado.condicoes,
+          dadosPostEditado.categoria,
+          dadosPostEditado.telefone,
+          dadosPostEditado.info,
+        ];
+        ofertaEditada = dadosPostEditado;
+      });
+    }
+
     if (tempForm.isNotEmpty) {
       setState(() {
         _controllerProduto.text = tempForm[0];
@@ -61,6 +79,10 @@ class _AnuncioFormState extends State<AnuncioForm> {
             ),
           ))),
           onPressed: () {
+            setState(() {
+              isEditing = false;
+              tempForm.clear();
+            });
             Navigator.pop(context);
           },
         ),
@@ -126,14 +148,28 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   void enviarForm() {
     if (_formKey.currentState!.validate()) {
-      tempForm = [
-        _controllerProduto.text,
-        _controllerQuantidade.text,
-        _controllerCondicoes.text,
-        _controllerCategoria.text,
-        _controllerTelefone.text,
-        _controllerInfo.text,
-      ];
+      if (isEditing == false) {
+        tempForm = [
+          _controllerProduto.text,
+          _controllerQuantidade.text,
+          _controllerCondicoes.text,
+          _controllerCategoria.text,
+          _controllerTelefone.text,
+          _controllerInfo.text,
+          null,
+          null,
+        ];
+      }
+      if (isEditing) {
+        setState(() {
+          dadosPostEditado.produto = _controllerProduto.text;
+          dadosPostEditado.quantidade = _controllerQuantidade.text;
+          dadosPostEditado.condicoes = _controllerCondicoes.text;
+          dadosPostEditado.categoria = _controllerCategoria.text;
+          dadosPostEditado.telefone = _controllerTelefone.text;
+          dadosPostEditado.info = _controllerInfo.text;
+        });
+      }
       Navigator.pushNamed(context, '/nova_oferta');
     }
   }
