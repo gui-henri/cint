@@ -26,6 +26,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
   File? _image;
+  List<File> fotos = [];
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -33,8 +34,25 @@ class _AnuncioFormState extends State<AnuncioForm> {
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
+        fotos.add(_image!);
       });
     }
+  }
+
+  void _showImageDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            child: Image.network(
+              fotos[index].path,
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -104,6 +122,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Placeholder for when no image
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Form(
@@ -132,6 +151,31 @@ class _AnuncioFormState extends State<AnuncioForm> {
                 ),
               ),
             ),
+            _image != null
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: fotos.map((photo) {
+                      int index = fotos.indexOf(photo);
+                      return GestureDetector(
+                        onTap: () => _showImageDialog(index),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                photo.path,
+                                height: 60.0,
+                                width: 60.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  )
+                : const SizedBox(),
             BotaoFoto(),
             const SizedBox(
               height: 20,
