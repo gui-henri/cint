@@ -35,6 +35,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
       setState(() {
         _image = File(pickedImage.path);
         fotos.add(_image!);
+        print(fotos);
       });
     }
   }
@@ -214,7 +215,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           dadosPostEditado.info = _controllerInfo.text;
         });
       }
-      Navigator.pushNamed(context, '/nova_oferta');
+      Navigator.pushNamed(context, '/nova_oferta', arguments: fotos);
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cint/main.dart';
 import 'package:cint/pages/posts/salvos/lista_meus_posts.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +18,9 @@ class PostOferta {
   String info;
   Image icon;
   String textoPrincipal;
-
-  PostOferta(
-    this.produto,
-    this.quantidade,
-    this.condicoes,
-    this.categoria,
-    this.telefone,
-    this.info,
-    this.icon,
-    this.textoPrincipal,
-  );
+  List<File> fotosPost;
+  PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
+      this.telefone, this.info, this.icon, this.textoPrincipal, this.fotosPost);
 }
 
 class PostCard extends StatefulWidget {
@@ -47,6 +41,22 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  void _showImageDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            child: Image.network(
+              widget.oferta.fotosPost[index].path,
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
@@ -110,6 +120,42 @@ class _PostCardState extends State<PostCard> {
                     Text(
                       widget.oferta.textoPrincipal,
                       textAlign: TextAlign.start,
+                    ),
+                    Row(
+                      children: [
+                        widget.oferta.fotosPost.isNotEmpty
+                            ? Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Wrap(
+                                    children:
+                                        widget.oferta.fotosPost.map((photo) {
+                                      int index = widget.oferta.fotosPost
+                                          .indexOf(photo);
+                                      return GestureDetector(
+                                        onTap: () => _showImageDialog(index),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(
+                                                photo.path,
+                                                height: 60.0,
+                                                width: 60.0,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

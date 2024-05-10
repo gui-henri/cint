@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cint/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class _NovaOfertaState extends State<NovaOferta> {
 
   @override
   Widget build(BuildContext context) {
+    final fotosPost = ModalRoute.of(context)!.settings.arguments as List<File>;
     if (isEditing) {
       setState(() {
         selectedIcon = ofertaEditada!.icon;
@@ -65,6 +68,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                     tempForm[5],
                     selectedIcon,
                     _controller.text,
+                    fotosPost,
                   ));
                 }
                 if (isEditing) {
