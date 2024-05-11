@@ -26,7 +26,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
   File? _image;
-  List<File> fotos = [];
+  List fotos = [];
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -45,12 +45,30 @@ class _AnuncioFormState extends State<AnuncioForm> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          child: Container(
-            child: Image.network(
-              fotos[index].path,
-              fit: BoxFit.contain,
+          child: Stack(children: [
+            Container(
+              child: Image.network(
+                fotos[index].path,
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  fotos.remove(fotos[index]);
+                  Navigator.pop(context);
+                });
+              },
+              icon: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+              ),
+            )
+          ]),
         );
       },
     );
@@ -71,6 +89,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           dadosPostEditado.telefone,
           dadosPostEditado.info,
         ];
+        fotos = dadosPostEditado.fotosPost;
         ofertaEditada = dadosPostEditado;
       });
     }
@@ -152,7 +171,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
                 ),
               ),
             ),
-            _image != null
+            fotos.isNotEmpty
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: fotos.map((photo) {

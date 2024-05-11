@@ -18,7 +18,7 @@ class PostOferta {
   String info;
   Image icon;
   String textoPrincipal;
-  List<File> fotosPost;
+  List fotosPost;
   PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
       this.telefone, this.info, this.icon, this.textoPrincipal, this.fotosPost);
 }
@@ -117,9 +117,16 @@ class _PostCardState extends State<PostCard> {
                 ),
                 Column(
                   children: [
-                    Text(
-                      widget.oferta.textoPrincipal,
-                      textAlign: TextAlign.start,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            widget.oferta.textoPrincipal,
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
                     ),
                     Row(
                       children: [
@@ -161,6 +168,7 @@ class _PostCardState extends State<PostCard> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         PopupMenuButton<String>(
+                            icon: const Icon(Icons.more_horiz),
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<String>>[
                                   const PopupMenuItem<String>(
@@ -180,8 +188,8 @@ class _PostCardState extends State<PostCard> {
                                     value: 'Editar',
                                     child: ListTile(
                                       leading: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
+                                        Icons.edit,
+                                        color: Colors.blue,
                                       ),
                                       title: Text(
                                         'Editar',

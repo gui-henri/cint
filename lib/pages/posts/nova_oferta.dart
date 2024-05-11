@@ -30,7 +30,7 @@ class _NovaOfertaState extends State<NovaOferta> {
 
   @override
   Widget build(BuildContext context) {
-    final fotosPost = ModalRoute.of(context)!.settings.arguments as List<File>;
+    final fotosPost = ModalRoute.of(context)!.settings.arguments as List;
     if (isEditing) {
       setState(() {
         selectedIcon = ofertaEditada!.icon;
