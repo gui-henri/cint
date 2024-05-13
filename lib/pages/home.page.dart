@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter/material.dart';
 import '../components/main_title.dart';
-import '../components/org_button.dart';
+import '../components/ong_button.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
 import 'posts/anuncio_form.dart';
