@@ -48,6 +48,8 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Saúde',
                 child: botaoTipoOng(
+                  iconOff: '../../assets/icons/saude-icon/saude-green.png',
+                  iconOn: '../../assets/icons/saude-icon/saude-white.png',
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Saúde',
                   onTap: (tipo) {
@@ -63,22 +65,239 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   },
                 ),
               ),
-              const PopupMenuItem<String>(
-                value: 'Editar',
-                child: ListTile(
-                  leading: Icon(
-                    Icons.edit,
-                    color: Colors.blue,
-                  ),
+              PopupMenuItem<String>(
+                value: 'Educação',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/educacao-icon/educacao_green.png',
+                  iconOn: '../../assets/icons/educacao-icon/educacao_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Educação',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
                 ),
               ),
-              const PopupMenuItem<String>(
-                value: 'Detalhes',
-                child: ListTile(
-                  leading: Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ),
+              PopupMenuItem<String>(
+                value: 'Crianças',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/criancas-icon/criancas_green.png',
+                  iconOn: '../../assets/icons/criancas-icon/criancas_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Crianças',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Idosos',
+                child: botaoTipoOng(
+                  iconOff: '../../assets/icons/idosos-icon/idosos_green.png',
+                  iconOn: '../../assets/icons/idosos-icon/idosos_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Idosos',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Sem-teto',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/sem-teto-icon/sem-teto_green.png',
+                  iconOn: '../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Sem-teto',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Mulheres',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/mulheres-icon/mulheres_green.png',
+                  iconOn: '../../assets/icons/mulheres-icon/mulheres_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Mulheres',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Religiosas',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/religiosas-icon/religiosas_green.png',
+                  iconOn:
+                      '../../assets/icons/religiosas-icon/religiosas_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Religiosas',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Minorias',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/minorias-icon/minorias_green.png',
+                  iconOn: '../../assets/icons/minorias-icon/minorias_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Minorias',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Ambientais',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/ambientais-icon/ambientais_green.png',
+                  iconOn:
+                      '../../assets/icons/ambientais-icon/ambientais_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Ambientais',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Culturais',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/culturais-icon/culturais_green.png',
+                  iconOn:
+                      '../../assets/icons/culturais-icon/culturais_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Culturais',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Reabilitação',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
+                  iconOn:
+                      '../../assets/icons/reabilitacao-icon/reabilitacao_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Reabilitação',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Refugiados',
+                child: botaoTipoOng(
+                  iconOff:
+                      '../../assets/icons/refugiados-icon/refugiados_green.png',
+                  iconOn:
+                      '../../assets/icons/refugiados-icon/refugiados_white.png',
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Refugiados',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
                 ),
               ),
             ],
@@ -97,11 +316,18 @@ class _ExplorarPageState extends State<ExplorarPage> {
 }
 
 class botaoTipoOng extends StatefulWidget {
+  final String iconOn;
+  final String iconOff;
   final Function? onTap;
   final String tipo;
   final List<String> ongsFiltradas;
   const botaoTipoOng(
-      {super.key, this.onTap, required this.tipo, required this.ongsFiltradas});
+      {super.key,
+      this.onTap,
+      required this.tipo,
+      required this.ongsFiltradas,
+      required this.iconOn,
+      required this.iconOff});
 
   @override
   State<botaoTipoOng> createState() => _botaoTipoOngState();
@@ -141,11 +367,11 @@ class _botaoTipoOngState extends State<botaoTipoOng> {
             ),
             child: isSelected
                 ? Image.asset(
-                    '../../assets/icons/saude-icon/saude-white.png',
+                    widget.iconOn,
                     fit: BoxFit.contain,
                   )
                 : Image.asset(
-                    '../../assets/icons/saude-icon/saude-green.png',
+                    widget.iconOff,
                     fit: BoxFit.contain,
                   ),
           ),
