@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
 
+List<DadosOng> listaOngs = [
+  DadosOng(
+      'Mãos Solidárias',
+      'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
+      'bla')
+];
+
 class ExplorarPage extends StatefulWidget {
   const ExplorarPage({super.key});
 
@@ -30,11 +37,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               child: ListView.builder(
                 itemBuilder: (context, index) {
                   return Container(
-                    color: Colors.green,
-                    child: Text(ongsFiltradas[index]),
+                    child: OngCard(nome: listaOngs[index].nome),
                   );
                 },
-                itemCount: ongsFiltradas.length,
+                itemCount: listaOngs.length,
               ),
             ),
           ],
@@ -376,6 +382,33 @@ class _botaoTipoOngState extends State<botaoTipoOng> {
                   ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class DadosOng {
+  String nome;
+  String descricao;
+  String imagem;
+
+  DadosOng(this.nome, this.descricao, this.imagem);
+}
+
+class OngCard extends StatefulWidget {
+  final String nome;
+  const OngCard({super.key, required this.nome});
+
+  @override
+  State<OngCard> createState() => _OngCardState();
+}
+
+class _OngCardState extends State<OngCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Row(
+        children: [Text(widget.nome)],
       ),
     );
   }
