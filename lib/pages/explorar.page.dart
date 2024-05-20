@@ -4,9 +4,11 @@ import '../components/footer.dart';
 
 List<DadosOng> listaOngs = [
   DadosOng(
-      'Mãos Solidárias',
-      'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
-      'bla')
+    'Mãos Solidárias',
+    'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
+    'bla',
+    'Sem-teto',
+  )
 ];
 
 class ExplorarPage extends StatefulWidget {
@@ -29,16 +31,33 @@ class _ExplorarPageState extends State<ExplorarPage> {
           children: [
             Row(
               children: [
-                Spacer(),
+                const Spacer(),
                 botaoFiltrar(),
               ],
             ),
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  return Container(
-                    child: OngCard(nome: listaOngs[index].nome),
-                  );
+                  if (ongsFiltradas.isEmpty) {
+                    return OngCard(
+                      nome: listaOngs[index].nome,
+                      descricao: listaOngs[index].descricao,
+                      imagem: '../../assets/images/ongImg-1.png',
+                      iconTipo:
+                          '../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                    );
+                  } else {
+                    if (ongsFiltradas.contains(listaOngs[index].tipo)) {
+                      return OngCard(
+                        nome: listaOngs[index].nome,
+                        descricao: listaOngs[index].descricao,
+                        imagem: '../../assets/images/ongImg-1.png',
+                        iconTipo:
+                            '../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                      );
+                    }
+                  }
+                  return null;
                 },
                 itemCount: listaOngs.length,
               ),
@@ -53,7 +72,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
                 value: 'Saúde',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff: '../../assets/icons/saude-icon/saude-green.png',
                   iconOn: '../../assets/icons/saude-icon/saude-white.png',
                   ongsFiltradas: ongsFiltradas,
@@ -73,7 +92,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Educação',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/educacao-icon/educacao_green.png',
                   iconOn: '../../assets/icons/educacao-icon/educacao_white.png',
@@ -94,7 +113,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Crianças',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/criancas-icon/criancas_green.png',
                   iconOn: '../../assets/icons/criancas-icon/criancas_white.png',
@@ -115,7 +134,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Idosos',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff: '../../assets/icons/idosos-icon/idosos_green.png',
                   iconOn: '../../assets/icons/idosos-icon/idosos_white.png',
                   ongsFiltradas: ongsFiltradas,
@@ -135,7 +154,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Sem-teto',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/sem-teto-icon/sem-teto_green.png',
                   iconOn: '../../assets/icons/sem-teto-icon/sem-teto_white.png',
@@ -156,7 +175,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Mulheres',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/mulheres-icon/mulheres_green.png',
                   iconOn: '../../assets/icons/mulheres-icon/mulheres_white.png',
@@ -177,7 +196,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Religiosas',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/religiosas-icon/religiosas_green.png',
                   iconOn:
@@ -199,7 +218,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Minorias',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/minorias-icon/minorias_green.png',
                   iconOn: '../../assets/icons/minorias-icon/minorias_white.png',
@@ -220,7 +239,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Ambientais',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/ambientais-icon/ambientais_green.png',
                   iconOn:
@@ -242,7 +261,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Culturais',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/culturais-icon/culturais_green.png',
                   iconOn:
@@ -264,7 +283,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Reabilitação',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
                   iconOn:
@@ -286,7 +305,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               ),
               PopupMenuItem<String>(
                 value: 'Refugiados',
-                child: botaoTipoOng(
+                child: BotaoTipoOng(
                   iconOff:
                       '../../assets/icons/refugiados-icon/refugiados_green.png',
                   iconOn:
@@ -321,13 +340,13 @@ class _ExplorarPageState extends State<ExplorarPage> {
   }
 }
 
-class botaoTipoOng extends StatefulWidget {
+class BotaoTipoOng extends StatefulWidget {
   final String iconOn;
   final String iconOff;
   final Function? onTap;
   final String tipo;
   final List<String> ongsFiltradas;
-  const botaoTipoOng(
+  const BotaoTipoOng(
       {super.key,
       this.onTap,
       required this.tipo,
@@ -336,10 +355,10 @@ class botaoTipoOng extends StatefulWidget {
       required this.iconOff});
 
   @override
-  State<botaoTipoOng> createState() => _botaoTipoOngState();
+  State<BotaoTipoOng> createState() => _BotaoTipoOngState();
 }
 
-class _botaoTipoOngState extends State<botaoTipoOng> {
+class _BotaoTipoOngState extends State<BotaoTipoOng> {
   bool isSelected = false;
   @override
   void initState() {
@@ -348,6 +367,7 @@ class _botaoTipoOngState extends State<botaoTipoOng> {
         widget.tipo); // Verifica se o tipo está na lista ongsFiltradas
   }
 
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -364,7 +384,7 @@ class _botaoTipoOngState extends State<botaoTipoOng> {
           tileColor: isSelected ? const Color(0xFF28730E) : Colors.white,
           title: Text(widget.tipo),
           leading: Container(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             width: 50,
             height: 50,
             decoration: BoxDecoration(
@@ -391,13 +411,23 @@ class DadosOng {
   String nome;
   String descricao;
   String imagem;
+  String tipo;
 
-  DadosOng(this.nome, this.descricao, this.imagem);
+  DadosOng(this.nome, this.descricao, this.imagem, this.tipo);
 }
 
 class OngCard extends StatefulWidget {
   final String nome;
-  const OngCard({super.key, required this.nome});
+  final String descricao;
+  final String imagem;
+  final String iconTipo;
+  const OngCard({
+    super.key,
+    required this.nome,
+    required this.imagem,
+    required this.descricao,
+    required this.iconTipo,
+  });
 
   @override
   State<OngCard> createState() => _OngCardState();
@@ -407,8 +437,73 @@ class _OngCardState extends State<OngCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: const Color(0xFF6EB855),
       child: Row(
-        children: [Text(widget.nome)],
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                widget.imagem,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 5,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5, top: 5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      widget.nome,
+                      style: const TextStyle(
+                        color: Color(0xFF28730E),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Text(
+                    widget.descricao,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: Image.asset(
+                    widget.iconTipo,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

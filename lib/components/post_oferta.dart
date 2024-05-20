@@ -1,10 +1,5 @@
-import 'dart:io';
-
 import 'package:cint/main.dart';
-import 'package:cint/pages/posts/salvos/lista_meus_posts.dart';
 import 'package:flutter/material.dart';
-import '../pages/posts/salvos/lista_meus_posts.dart';
-import '../pages/posts/anuncio_form.dart';
 
 bool isEditing = false;
 PostOferta? ofertaEditada;
