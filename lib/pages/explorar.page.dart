@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
+import '../components/icones_ong.dart';
 
 List<DadosOng> listaOngs = [
   DadosOng(
-    'Mãos Solidárias',
-    'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
-    'bla',
-    'Sem-teto',
-  )
+      'Mãos Solidárias',
+      'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
+      '../../assets/images/ongImg-1.png',
+      'Sem-teto'),
+  DadosOng(
+    'Esperança Renovada',
+    'Nossa ONG está comprometida em defender os direitos das crianças em todas as esferas da vida, seja em questões de saúde, educação, justiça ou igualdade de oportunidades. Trabalhamos em parceria com outras organizações, governos e comunidades para criar um ambiente onde os direitos das crianças sejam respeitados e protegidos.',
+    '../../assets/images/ong_generica-2.jpg',
+    'Crianças',
+  ),
 ];
 
 class ExplorarPage extends StatefulWidget {
@@ -42,22 +48,23 @@ class _ExplorarPageState extends State<ExplorarPage> {
                     return OngCard(
                       nome: listaOngs[index].nome,
                       descricao: listaOngs[index].descricao,
-                      imagem: '../../assets/images/ongImg-1.png',
-                      iconTipo:
-                          '../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                      imagem: listaOngs[index].imagem,
+                      iconTipo: iconesOng.firstWhere((item) =>
+                          item["tipo"] == listaOngs[index].tipo)["icon-white"],
                     );
                   } else {
                     if (ongsFiltradas.contains(listaOngs[index].tipo)) {
                       return OngCard(
                         nome: listaOngs[index].nome,
                         descricao: listaOngs[index].descricao,
-                        imagem: '../../assets/images/ongImg-1.png',
-                        iconTipo:
-                            '../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                        imagem: listaOngs[index].imagem,
+                        iconTipo: iconesOng.firstWhere((item) =>
+                            item["tipo"] ==
+                            listaOngs[index].tipo)["icon-white"],
                       );
                     }
                   }
-                  return null;
+                  return const SizedBox();
                 },
                 itemCount: listaOngs.length,
               ),
@@ -73,8 +80,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Saúde',
                 child: BotaoTipoOng(
-                  iconOff: '../../assets/icons/saude-icon/saude-green.png',
-                  iconOn: '../../assets/icons/saude-icon/saude-white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Saúde')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Saúde')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Saúde',
                   onTap: (tipo) {
