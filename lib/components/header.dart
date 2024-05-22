@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
+import '../pages/explorar.page.dart';
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
-  const Header({super.key});
+  final TextEditingController _searchController = TextEditingController();
+  Header({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(65.0);
 
-  @override
   Widget build(BuildContext context) {
-    TextEditingController _searchController = TextEditingController();
+    void pesquisarOng(String input) {
+      List<DadosOng> resultados = [];
+      if (input.isEmpty) {
+        resultados = listaOngs;
+      } else {
+        resultados = listaOngs
+            .where(
+                (ong) => ong.nome.toLowerCase().contains(input.toLowerCase()))
+            .toList();
+      }
+      Navigator.pushNamed(context, '/explorar', arguments: resultados);
+    }
 
     return AppBar(
       elevation: 1,
       backgroundColor: const Color(0xFF28730E),
       title: TextField(
         controller: _searchController,
+        onSubmitted: (value) {
+          pesquisarOng(_searchController.text);
+        },
         style: const TextStyle(color: Colors.black, fontSize: 12),
         decoration: const InputDecoration(
           filled: true,

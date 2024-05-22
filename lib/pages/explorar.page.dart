@@ -28,10 +28,23 @@ class ExplorarPage extends StatefulWidget {
 
 class _ExplorarPageState extends State<ExplorarPage> {
   List<String> ongsFiltradas = [];
+  List<DadosOng> ongsPesquisadas = [];
+  @override
+  initState() {
+    ongsPesquisadas = listaOngs;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      setState(() {
+        ongsPesquisadas =
+            ModalRoute.of(context)!.settings.arguments as List<DadosOng>;
+      });
+    }
     return Scaffold(
-        appBar: const Header(),
+        appBar: Header(),
         bottomNavigationBar: const Footer(),
         body: Column(
           children: [
@@ -46,11 +59,12 @@ class _ExplorarPageState extends State<ExplorarPage> {
                 itemBuilder: (context, index) {
                   if (ongsFiltradas.isEmpty) {
                     return OngCard(
-                      nome: listaOngs[index].nome,
-                      descricao: listaOngs[index].descricao,
-                      imagem: listaOngs[index].imagem,
+                      nome: ongsPesquisadas[index].nome,
+                      descricao: ongsPesquisadas[index].descricao,
+                      imagem: ongsPesquisadas[index].imagem,
                       iconTipo: iconesOng.firstWhere((item) =>
-                          item["tipo"] == listaOngs[index].tipo)["icon-white"],
+                          item["tipo"] ==
+                          ongsPesquisadas[index].tipo)["icon-white"],
                     );
                   } else {
                     if (ongsFiltradas.contains(listaOngs[index].tipo)) {
@@ -66,7 +80,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   }
                   return const SizedBox();
                 },
-                itemCount: listaOngs.length,
+                itemCount: ongsPesquisadas.length,
               ),
             ),
           ],
