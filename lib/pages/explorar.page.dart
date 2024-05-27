@@ -48,12 +48,12 @@ class _ExplorarPageState extends State<ExplorarPage> {
         bottomNavigationBar: const Footer(),
         body: Column(
           children: [
-            Row(
-              children: [
-                const Spacer(),
-                botaoFiltrar(),
-              ],
-            ),
+            Row(children: [
+              titleExplorar(),
+              Image.asset('assets/icons/icon_explore_.png'),
+              const Spacer(),
+              botaoFiltrar(),
+            ]),
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
@@ -530,4 +530,19 @@ class _OngCardState extends State<OngCard> {
       ),
     );
   }
+}
+
+Widget titleExplorar() {
+  return const Padding(
+    padding: EdgeInsets.all(15.0),
+    child: Row(
+      children: [
+        Text(
+          'Instituições',
+          style: TextStyle(
+              fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
 }

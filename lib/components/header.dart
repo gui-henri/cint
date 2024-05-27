@@ -9,6 +9,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(65.0);
 
   Widget build(BuildContext context) {
+    String currentRoute = ModalRoute.of(context)!.settings.name!;
     void pesquisarOng(String input) {
       List<DadosOng> resultados = [];
       if (input.isEmpty) {
@@ -27,7 +28,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: const Color(0xFF28730E),
       title: TextField(
         controller: _searchController,
-        onSubmitted: (value) {
+        onChanged: (value) {
           pesquisarOng(_searchController.text);
         },
         style: const TextStyle(color: Colors.black, fontSize: 12),
