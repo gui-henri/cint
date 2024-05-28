@@ -50,7 +50,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
           children: [
             Row(children: [
               titleExplorar(),
-              Image.asset('assets/icons/icon_explore_.png'),
+              Image.asset('assets/icons/icon-explore.png'),
               const Spacer(),
               botaoFiltrar(),
             ]),
