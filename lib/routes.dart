@@ -25,5 +25,7 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       NovaOferta.routeName: (context) => const NovaOferta(),
       AnuncioForm.routeName: (context) => const AnuncioForm(),
       EditarForm.routeName: (context) => const EditarForm(),
-      ExplorarPage.routeName: (context) => const ExplorarPage(),
+      ExplorarPage.routeName: (context) => ExplorarPage(
+            ongsPesquisadas: const [],
+          ),
     };

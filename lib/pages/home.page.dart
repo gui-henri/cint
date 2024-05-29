@@ -20,7 +20,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(),
+      appBar: Header(
+        atualizarBusca: (value) {},
+      ),
       bottomNavigationBar: const Footer(),
 
       body: Container(

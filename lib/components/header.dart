@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import '../pages/explorar.page.dart';
 
-class Header extends StatelessWidget implements PreferredSizeWidget {
-  final TextEditingController _searchController = TextEditingController();
-  Header({super.key});
+class Header extends StatefulWidget implements PreferredSizeWidget {
+  final ValueChanged<String> atualizarBusca;
+  late final String textoSalvo;
+  Header({Key? key, required this.atualizarBusca, this.textoSalvo = ''})
+      : super(key: key);
+
+  @override
+  _HeaderState createState() => _HeaderState();
 
   @override
   Size get preferredSize => const Size.fromHeight(65.0);
+}
 
+class _HeaderState extends State<Header> {
+  final TextEditingController _searchController = TextEditingController();
+  List<DadosOng> resultados = [];
+
+  @override
   Widget build(BuildContext context) {
-    String currentRoute = ModalRoute.of(context)!.settings.name!;
-    void pesquisarOng(String input) {
-      List<DadosOng> resultados = [];
-      if (input.isEmpty) {
-        resultados = listaOngs;
-      } else {
-        resultados = listaOngs
-            .where(
-                (ong) => ong.nome.toLowerCase().contains(input.toLowerCase()))
-            .toList();
-      }
-      Navigator.pushNamed(context, '/explorar', arguments: resultados);
-    }
-
     return AppBar(
       elevation: 1,
       backgroundColor: const Color(0xFF28730E),
       title: TextField(
         controller: _searchController,
-        onChanged: (value) {
-          pesquisarOng(_searchController.text);
+        onChanged: (input) {
+          widget.atualizarBusca(input);
+          pesquisarOng(input);
+        },
+        onSubmitted: (value) {
+          Navigator.of(context).pushNamed('/explorar');
+          widget.atualizarBusca(value);
         },
         style: const TextStyle(color: Colors.black, fontSize: 12),
         decoration: const InputDecoration(
@@ -57,5 +59,20 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+  }
+
+  void pesquisarOng(String input) {
+    if (input.isEmpty) {
+      setState(() {
+        resultados = listaOngs;
+      });
+    } else {
+      setState(() {
+        resultados = listaOngs
+            .where(
+                (ong) => ong.nome.toLowerCase().contains(input.toLowerCase()))
+            .toList();
+      });
+    }
   }
 }

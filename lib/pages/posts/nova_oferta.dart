@@ -45,7 +45,9 @@ class _NovaOfertaState extends State<NovaOferta> {
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
     return Scaffold(
-        appBar: Header(),
+        appBar: Header(
+          atualizarBusca: (value) {},
+        ),
         bottomNavigationBar: const Footer(),
         floatingActionButton: SizedBox(
           width: 60,

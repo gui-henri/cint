@@ -18,7 +18,9 @@ List<DadosOng> listaOngs = [
 ];
 
 class ExplorarPage extends StatefulWidget {
-  const ExplorarPage({super.key});
+  final List<DadosOng> ongsPesquisadas = [];
+
+  ExplorarPage({super.key, required List<DadosOng> ongsPesquisadas});
 
   static const routeName = '/explorar';
 
@@ -28,26 +30,35 @@ class ExplorarPage extends StatefulWidget {
 
 class _ExplorarPageState extends State<ExplorarPage> {
   List<String> ongsFiltradas = [];
-  List<DadosOng> ongsPesquisadas = [];
+  late List<DadosOng> ongsEncontradas;
+  late String textoPesquisado = '';
+
   @override
   initState() {
-    ongsPesquisadas = listaOngs;
+    ongsEncontradas = listaOngs;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)!.settings.arguments != null) {
-      setState(() {
-        ongsPesquisadas =
-            ModalRoute.of(context)!.settings.arguments as List<DadosOng>;
-      });
-    }
     return Scaffold(
-        appBar: Header(),
+        appBar: Header(
+          textoSalvo: textoPesquisado,
+          atualizarBusca: (value) {
+            textoPesquisado = value;
+            setState(() {
+              ongsEncontradas = listaOngs
+                  .where((ong) => ong.nome
+                      .toLowerCase()
+                      .contains(textoPesquisado.toLowerCase()))
+                  .toList();
+            });
+          },
+        ),
         bottomNavigationBar: const Footer(),
         body: Column(
           children: [
+            Text(textoPesquisado),
             Row(children: [
               titleExplorar(),
               Image.asset('assets/icons/icon-explore.png'),
@@ -59,12 +70,12 @@ class _ExplorarPageState extends State<ExplorarPage> {
                 itemBuilder: (context, index) {
                   if (ongsFiltradas.isEmpty) {
                     return OngCard(
-                      nome: ongsPesquisadas[index].nome,
-                      descricao: ongsPesquisadas[index].descricao,
-                      imagem: ongsPesquisadas[index].imagem,
+                      nome: ongsEncontradas[index].nome,
+                      descricao: ongsEncontradas[index].descricao,
+                      imagem: ongsEncontradas[index].imagem,
                       iconTipo: iconesOng.firstWhere((item) =>
                           item["tipo"] ==
-                          ongsPesquisadas[index].tipo)["icon-white"],
+                          ongsEncontradas[index].tipo)["icon-white"],
                     );
                   } else {
                     if (ongsFiltradas.contains(listaOngs[index].tipo)) {
@@ -80,7 +91,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   }
                   return const SizedBox();
                 },
-                itemCount: ongsPesquisadas.length,
+                itemCount: ongsEncontradas.length,
               ),
             ),
           ],

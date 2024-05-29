@@ -27,7 +27,9 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(),
+      appBar: Header(
+        atualizarBusca: (value) {},
+      ),
       bottomNavigationBar: const Footer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

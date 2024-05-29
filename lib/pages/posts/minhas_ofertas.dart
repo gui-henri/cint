@@ -26,7 +26,9 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(),
+      appBar: Header(
+        atualizarBusca: (value) {},
+      ),
       bottomNavigationBar: const Footer(),
       body: Container(
           color: const Color(0xFFF6F4EB),
