@@ -32,6 +32,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
   List<String> ongsFiltradas = [];
   late List<DadosOng> ongsEncontradas;
   late String textoPesquisado = '';
+  late String digitando = '';
 
   @override
   initState() {
@@ -41,24 +42,55 @@ class _ExplorarPageState extends State<ExplorarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // problema: o args fica reconstruindo a lista a partir do texto dele,
+    // então a mudança na barra de pequisa não consegue alterar a lista
+    // porque o args sempre fica salvo
+    var args = ModalRoute.of(context)?.settings.arguments;
+    String argsText = args != null ? args.toString() : '';
+    if (digitando != '') {
+      argsText = '';
+    }
+    setState(() {
+      if (argsText != '') {
+        print('args: $argsText');
+        ongsEncontradas = listaOngs
+            .where((ong) =>
+                ong.nome.toLowerCase().contains(argsText.toLowerCase()))
+            .toList();
+        argsText = '';
+      }
+    });
     return Scaffold(
         appBar: Header(
-          textoSalvo: textoPesquisado,
+          textoSalvo: digitando,
           atualizarBusca: (value) {
+            //print('argsText: $argsText');
+            print('att');
+
             textoPesquisado = value;
             setState(() {
-              ongsEncontradas = listaOngs
-                  .where((ong) => ong.nome
-                      .toLowerCase()
-                      .contains(textoPesquisado.toLowerCase()))
-                  .toList();
+              digitando = value;
+              //argsText = '';
+              if (value.isNotEmpty) {
+                print('value: $value');
+                ongsEncontradas = listaOngs
+                    .where((ong) =>
+                        ong.nome.toLowerCase().contains(value.toLowerCase()))
+                    .toList();
+              } else {
+                ongsEncontradas = listaOngs
+                    .where((ong) => ong.nome
+                        .toLowerCase()
+                        .contains(digitando.toLowerCase()))
+                    .toList();
+              }
             });
           },
         ),
         bottomNavigationBar: const Footer(),
         body: Column(
           children: [
-            Text(textoPesquisado),
+            //Text(textoPesquisado),
             Row(children: [
               titleExplorar(),
               Image.asset('assets/icons/icon-explore.png'),
