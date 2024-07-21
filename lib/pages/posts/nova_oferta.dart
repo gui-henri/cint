@@ -201,13 +201,13 @@ class _NovaOfertaState extends State<NovaOferta> {
                                 SquareGesture(
                                   name: 'Saúde',
                                   icon:
-                                      '../../../assets/icons/saude-icon/saude-green.png',
+                                      '../../../assets/icons/saude-icon/saude_green.png',
                                   iconSelected:
-                                      '../../../assets/icons/saude-icon/saude-white.png',
+                                      '../../../assets/icons/saude-icon/saude_white.png',
                                   onTap: () {
                                     setState(() {
                                       selectedIconURL =
-                                          '../../../assets/icons/saude-icon/saude-green.png';
+                                          '../../../assets/icons/saude-icon/saude_green.png';
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
@@ -218,7 +218,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     }
                                   },
                                   isSelected: selectedIconURL ==
-                                      '../../../assets/icons/saude-icon/saude-green.png',
+                                      '../../../assets/icons/saude-icon/saude_green.png',
                                   invalido: invalido,
                                 ),
                                 const Spacer(),

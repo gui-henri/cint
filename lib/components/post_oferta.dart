@@ -116,9 +116,11 @@ class _PostCardState extends State<PostCard> {
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
                         children: [
-                          Text(
-                            widget.oferta.textoPrincipal,
-                            textAlign: TextAlign.left,
+                          Flexible(
+                            child: Text(
+                              widget.oferta.textoPrincipal,
+                              textAlign: TextAlign.left,
+                            ),
                           ),
                         ],
                       ),
