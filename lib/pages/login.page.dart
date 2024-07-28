@@ -8,10 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cint/main.dart';
 import 'package:cint/pages/perfil.page.dart';
-import 'package:google_sign_in_web/web_only.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -37,19 +34,19 @@ class _LoginPageState extends State<LoginPage> {
       });
       if (_userId != null) {
         Navigator.pushNamed(context, '/ApresentacaoPage');
-      } else {
-        print('null!!!!');
       }
     });
   }
 
   Future<AuthResponse> _googleSignIn() async {
-    var webClientId = dotenv.env['WEB_CLIENT'];
+    const webClientId =
+        '880819740648-1fehn5cf9adsditbu33oanfnsfkqu3fh.apps.googleusercontent.com';
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: webClientId,
+      serverClientId: webClientId,
     );
-    final googleUser = await googleSignIn.signInSilently();
+    var googleUser = await googleSignIn.signInSilently();
+    googleUser ??= await googleSignIn.signIn();
     final googleAuth = await googleUser!.authentication;
     final accessToken = googleAuth.accessToken;
     final idToken = googleAuth.idToken;
@@ -89,7 +86,6 @@ class _LoginPageState extends State<LoginPage> {
                     if (!kIsWeb && (Platform.isAndroid)) {
                       await _googleSignIn();
                     }
-                    await supabase.auth.signInWithOAuth(OAuthProvider.google);
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
