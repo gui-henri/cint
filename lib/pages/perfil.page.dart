@@ -2,9 +2,7 @@ import 'package:cint/components/footer.dart';
 import 'package:cint/components/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cint/main.dart';
-import 'package:cint/pages/login.page.dart';
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
