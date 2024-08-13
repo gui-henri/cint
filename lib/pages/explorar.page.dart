@@ -7,12 +7,12 @@ List<DadosOng> listaOngs = [
   DadosOng(
       'Mãos Solidárias',
       'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
-      '../../assets/images/ongImg-1.png',
+      'assets/images/ongImg-1.png',
       'Sem-teto'),
   DadosOng(
     'Esperança Renovada',
     'Nossa ONG está comprometida em defender os direitos das crianças em todas as esferas da vida, seja em questões de saúde, educação, justiça ou igualdade de oportunidades. Trabalhamos em parceria com outras organizações, governos e comunidades para criar um ambiente onde os direitos das crianças sejam respeitados e protegidos.',
-    '../../assets/images/ong_generica-2.jpg',
+    'assets/images/ong_generica-2.jpg',
     'Crianças',
   ),
 ];
@@ -159,9 +159,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Educação',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/educacao-icon/educacao_green.png',
-                  iconOn: '../../assets/icons/educacao-icon/educacao_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Educação')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Educação')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Educação',
                   onTap: (tipo) {
@@ -180,9 +181,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Crianças',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/criancas-icon/criancas_green.png',
-                  iconOn: '../../assets/icons/criancas-icon/criancas_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Crianças')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Crianças')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Crianças',
                   onTap: (tipo) {
@@ -201,8 +203,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Idosos',
                 child: BotaoTipoOng(
-                  iconOff: '../../assets/icons/idosos-icon/idosos_green.png',
-                  iconOn: '../../assets/icons/idosos-icon/idosos_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Idosos')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Idosos')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Idosos',
                   onTap: (tipo) {
@@ -221,9 +225,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Sem-teto',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/sem-teto-icon/sem-teto_green.png',
-                  iconOn: '../../assets/icons/sem-teto-icon/sem-teto_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Sem-teto')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Sem-teto')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Sem-teto',
                   onTap: (tipo) {
@@ -242,9 +247,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Mulheres',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/mulheres-icon/mulheres_green.png',
-                  iconOn: '../../assets/icons/mulheres-icon/mulheres_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Mulheres')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Mulheres')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Mulheres',
                   onTap: (tipo) {
@@ -263,10 +269,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Religiosas',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/religiosas-icon/religiosas_green.png',
-                  iconOn:
-                      '../../assets/icons/religiosas-icon/religiosas_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Religiosas')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Religiosas')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Religiosas',
                   onTap: (tipo) {
@@ -285,9 +291,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Minorias',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/minorias-icon/minorias_green.png',
-                  iconOn: '../../assets/icons/minorias-icon/minorias_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Minorias')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Minorias')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Minorias',
                   onTap: (tipo) {
@@ -306,10 +313,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Ambientais',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/ambientais-icon/ambientais_green.png',
-                  iconOn:
-                      '../../assets/icons/ambientais-icon/ambientais_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Ambientais')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Ambientais')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Ambientais',
                   onTap: (tipo) {
@@ -328,10 +335,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Culturais',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/culturais-icon/culturais_green.png',
-                  iconOn:
-                      '../../assets/icons/culturais-icon/culturais_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Culturais')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Culturais')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Culturais',
                   onTap: (tipo) {
@@ -350,10 +357,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Reabilitação',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/reabilitacao-icon/reabilitacao_green.png',
-                  iconOn:
-                      '../../assets/icons/reabilitacao-icon/reabilitacao_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Reabilitação')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Reabilitação')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Reabilitação',
                   onTap: (tipo) {
@@ -372,10 +379,10 @@ class _ExplorarPageState extends State<ExplorarPage> {
               PopupMenuItem<String>(
                 value: 'Refugiados',
                 child: BotaoTipoOng(
-                  iconOff:
-                      '../../assets/icons/refugiados-icon/refugiados_green.png',
-                  iconOn:
-                      '../../assets/icons/refugiados-icon/refugiados_white.png',
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Refugiados')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Refugiados')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
                   tipo: 'Refugiados',
                   onTap: (tipo) {
