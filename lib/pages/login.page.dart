@@ -4,7 +4,6 @@ import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacaopage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cint/main.dart';
 import 'package:cint/pages/perfil.page.dart';
