@@ -61,11 +61,17 @@ class _PostCardState extends State<PostCard> {
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
-    return FractionallySizedBox(
-      widthFactor: 0.9,
-      child: Row(
-        children: [
-          Expanded(
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isEditing = true;
+                      ofertaEditada = widget.oferta;
+                      widget.editar();
+                    });
+                  },
             child: Container(
               padding: const EdgeInsets.only(
                   top: 20, bottom: 20, left: 20, right: 20),
@@ -161,82 +167,13 @@ class _PostCardState extends State<PostCard> {
                             : const SizedBox(),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        PopupMenuButton<String>(
-                            icon: const Icon(Icons.more_horiz),
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                                  const PopupMenuItem<String>(
-                                    value: 'Deletar',
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      title: Text(
-                                        'Deletar',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ),
-                                  const PopupMenuItem<String>(
-                                    value: 'Editar',
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Icons.edit,
-                                        color: Colors.blue,
-                                      ),
-                                      title: Text(
-                                        'Editar',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ),
-                                  const PopupMenuItem<String>(
-                                    value: 'Detalhes',
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      title: Text(
-                                        'Detalhes',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                            onSelected: (String value) {
-                              if (value == 'Deletar') {
-                                setState(() {
-                                  widget.deletar();
-                                });
-                              }
-                              if (value == 'Editar') {
-                                setState(() {
-                                  isEditing = true;
-                                  ofertaEditada = widget.oferta;
-                                  widget.editar();
-                                });
-                              }
-                              if (value == 'Detalhes') {
-                                setState(() {
-                                  ofertaEditada = widget.oferta;
-                                  widget.detalhes();
-                                });
-                              }
-                            }),
-                      ],
-                    ),
                   ],
                 ),
               ]),
             ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }

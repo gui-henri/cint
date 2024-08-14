@@ -16,35 +16,75 @@ class ListaMeusPosts extends StatefulWidget {
 class _ListaMeusPostsState extends State<ListaMeusPosts> {
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      physics: BouncingScrollPhysics(),
-      padding: EdgeInsets.only(bottom: 30),
-      separatorBuilder: (context, index) => SizedBox(
-        height: 20,
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20),
+      child: ListView.separated(
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: 30),
+        separatorBuilder: (context, index) => SizedBox(
+          height: 20,
+        ),
+        itemCount: meusPosts.length,
+        itemBuilder: (context, index) {
+          
+          return Column(
+            children: [
+              Dismissible(
+                
+                key: UniqueKey(),
+                onDismissed: (direction) {
+                  setState(() {
+                    meusPosts.removeAt(index);
+                  });
+                },
+                background: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.redAccent,
+                    ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                  ),
+                ),
+                secondaryBackground: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.redAccent,
+                    ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                  ),
+                ),
+                
+                child: PostCard(
+                  oferta: meusPosts[index],
+                  deletar: () {
+                    setState(() {
+                      meusPosts.removeAt(index);
+                    });
+                  },
+                  editar: () {
+                    Navigator.pushNamed(context, '/anuncio_form',
+                        arguments: meusPosts[index]);
+                  },
+                  detalhes: () {
+                    Navigator.pushNamed(context, '/editar_form',
+                        arguments: meusPosts[index]);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
-      itemCount: meusPosts.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            PostCard(
-              oferta: meusPosts[index],
-              deletar: () {
-                setState(() {
-                  meusPosts.removeAt(index);
-                });
-              },
-              editar: () {
-                Navigator.pushNamed(context, '/anuncio_form',
-                    arguments: meusPosts[index]);
-              },
-              detalhes: () {
-                Navigator.pushNamed(context, '/editar_form',
-                    arguments: meusPosts[index]);
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
