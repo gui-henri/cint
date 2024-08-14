@@ -16,6 +16,7 @@ dependencies:
   google_sign_in: ^6.2.1
   flutter_dotenv: 
   google_sign_in_web: ^0.12.4
+  image_picker: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -27,4 +28,3 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - .env
