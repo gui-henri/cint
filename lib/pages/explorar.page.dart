@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
 import '../components/icones_ong.dart';
+import 'package:cint/repositorys/ong.repository.dart';
 
 List<DadosOng> listaOngs = [
   DadosOng(
@@ -34,17 +35,17 @@ class _ExplorarPageState extends State<ExplorarPage> {
   late String textoPesquisado = '';
   late String digitando = '';
 
+    final rep = OngRepository(); 
+    late Future<List<Map<String, dynamic>>> futureOngs;
+
   @override
-  initState() {
-    ongsEncontradas = listaOngs;
+  void initState() {
     super.initState();
+    futureOngs = rep.getAllWithPhotos();
   }
 
   @override
   Widget build(BuildContext context) {
-    // problema: o args fica reconstruindo a lista a partir do texto dele,
-    // então a mudança na barra de pequisa não consegue alterar a lista
-    // porque o args sempre fica salvo
     var args = ModalRoute.of(context)?.settings.arguments;
     String argsText = args != null ? args.toString() : '';
     if (digitando != '') {
@@ -68,7 +69,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
             print('att');
 
             textoPesquisado = value;
-            setState(() {
+/*             setState(() {
               digitando = value;
               //argsText = '';
               if (value.isNotEmpty) {
@@ -84,7 +85,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         .contains(digitando.toLowerCase()))
                     .toList();
               }
-            });
+            }); */
           },
         ),
         bottomNavigationBar: const Footer(),
@@ -98,33 +99,37 @@ class _ExplorarPageState extends State<ExplorarPage> {
               botaoFiltrar(),
             ]),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: futureOngs,
+                builder: (context, snapshot) {
+                  final ongs = snapshot.data!;
                   if (ongsFiltradas.isEmpty) {
-                    return OngCard(
-                      nome: ongsEncontradas[index].nome,
-                      descricao: ongsEncontradas[index].descricao,
-                      imagem: ongsEncontradas[index].imagem,
-                      iconTipo: iconesOng.firstWhere((item) =>
-                          item["tipo"] ==
-                          ongsEncontradas[index].tipo)["icon-white"],
-                    );
-                  } else {
-                    if (ongsFiltradas.contains(listaOngs[index].tipo)) {
-                      return OngCard(
-                        nome: listaOngs[index].nome,
-                        descricao: listaOngs[index].descricao,
-                        imagem: listaOngs[index].imagem,
+                    return ListView(
+                      children: ongs.map((ong) {
+                        return OngCard(
+                        nome: ong['nome'],
+                        descricao: 'blablabla',
+                        imagem: ong['foto_instituicao'][0]['url'],
                         iconTipo: iconesOng.firstWhere((item) =>
-                            item["tipo"] ==
-                            listaOngs[index].tipo)["icon-white"],
+                        item["tipo"] == 'Saúde')['icon-white'],
+                        )
+                      ;}).toList()
+                    );
+                  } /* else {
+                    if (ongsFiltradas.contains(listaOngs[index].tipo)) {
+                      return ListView(
+                        children: ongs.map((ong) {
+                          return OngCard(
+                          nome: ong['nome'],
+                          descricao: 'blablabla',
+                          imagem: ong['foto_instituicao'][0]['url'],
+                          iconTipo: 'Saúde',
+                        );})
                       );
                     }
-                  }
+                  } */
                   return const SizedBox();
-                },
-                itemCount: ongsEncontradas.length,
-              ),
+  }),
             ),
           ],
         ));
@@ -522,10 +527,17 @@ class _OngCardState extends State<OngCard> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                widget.imagem,
-                fit: BoxFit.cover,
-              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(widget.imagem),
+                    fit: BoxFit.cover,
+                    )
+                ),
+              )
+                
+                //fit: BoxFit.cover,
+              
             ),
           ),
           Expanded(
