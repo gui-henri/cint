@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cint/components/ong_carrossel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter/material.dart';
 import '../components/main_title.dart';
@@ -39,43 +40,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 15,
             ),
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 215, // Altura do carrossel
-                viewportFraction:
-                    0.9, // Fração da largura do viewport ocupada por cada item do carrossel
-                initialPage: 0, // Página inicial
-                enableInfiniteScroll: false, // Ativa/desativa rolagem infinita
-                onPageChanged: (index, reason) {
-                  // Função chamada quando a página do carrossel é alterada
-                },
-                scrollDirection:
-                    Axis.horizontal, // Direção da rolagem do carrossel
-              ),
-              items: const [
-                // Lista de itens do carrossel
-                OngButton(
-                  nomeOng: 'Mãos Solidárias',
-                  imgOng: 'assets/images/ongImg-1.png',
-                  navegar: '/home',
-                ),
-                OngButton(
-                  nomeOng: 'Esperança Renovada',
-                  imgOng: 'assets/images/ongImg-1.png',
-                  navegar: '/home',
-                ),
-                OngButton(
-                  nomeOng: 'Mãos Solidárias',
-                  imgOng: 'assets/images/ongImg-1.png',
-                  navegar: '/home',
-                ),
-                OngButton(
-                  nomeOng: 'Esperança Renovada',
-                  imgOng: 'assets/images/ongImg-1.png',
-                  navegar: '/home',
-                ),
-              ],
-            ),
+            const OngsCarousel(),
             const SizedBox(
               height: 60,
             ),
@@ -98,20 +63,15 @@ class _HomePageState extends State<HomePage> {
             ),
             CarouselSlider(
               options: CarouselOptions(
-                height: 215, // Altura do carrossel
-                aspectRatio: 16 / 9, // Proporção do carrossel (opcional)
-                viewportFraction:
-                    0.9, // Fração da largura do viewport ocupada por cada item do carrossel
-                initialPage: 0, // Página inicial
-                enableInfiniteScroll: false, // Ativa/desativa rolagem infinita
-                onPageChanged: (index, reason) {
-                  // Função chamada quando a página do carrossel é alterada
-                },
-                scrollDirection:
-                    Axis.horizontal, // Direção da rolagem do carrossel
+                height: 215,
+                aspectRatio: 16 / 9,
+                viewportFraction: 0.9,
+                initialPage: 0,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {},
+                scrollDirection: Axis.horizontal,
               ),
               items: const [
-                // Lista de itens do carrossel
                 OngButton(
                   nomeOng: 'Esperança Renovada',
                   imgOng: 'assets/images/ongImg-1.png',
