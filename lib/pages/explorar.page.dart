@@ -4,24 +4,9 @@ import '../components/footer.dart';
 import '../components/icones_ong.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 
-List<DadosOng> listaOngs = [
-  DadosOng(
-      'Mãos Solidárias',
-      'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
-      'assets/images/ongImg-1.png',
-      'Sem-teto'),
-  DadosOng(
-    'Esperança Renovada',
-    'Nossa ONG está comprometida em defender os direitos das crianças em todas as esferas da vida, seja em questões de saúde, educação, justiça ou igualdade de oportunidades. Trabalhamos em parceria com outras organizações, governos e comunidades para criar um ambiente onde os direitos das crianças sejam respeitados e protegidos.',
-    'assets/images/ong_generica-2.jpg',
-    'Crianças',
-  ),
-];
-
 class ExplorarPage extends StatefulWidget {
-  final List<DadosOng> ongsPesquisadas = [];
 
-  ExplorarPage({super.key, required List<DadosOng> ongsPesquisadas});
+  const ExplorarPage({super.key});
 
   static const routeName = '/explorar';
 
@@ -31,7 +16,6 @@ class ExplorarPage extends StatefulWidget {
 
 class _ExplorarPageState extends State<ExplorarPage> {
   List<String> ongsFiltradas = [];
-  late List<DadosOng> ongsEncontradas;
   late String textoPesquisado = '';
   late String digitando = '';
 
@@ -54,44 +38,22 @@ class _ExplorarPageState extends State<ExplorarPage> {
     setState(() {
       if (argsText != '') {
         print('args: $argsText');
-        ongsEncontradas = listaOngs
-            .where((ong) =>
-                ong.nome.toLowerCase().contains(argsText.toLowerCase()))
-            .toList();
-        argsText = '';
+        digitando = argsText;
       }
     });
     return Scaffold(
         appBar: Header(
           textoSalvo: digitando,
           atualizarBusca: (value) {
-            //print('argsText: $argsText');
-            print('att');
-
             textoPesquisado = value;
-/*             setState(() {
+            setState(() {
               digitando = value;
-              //argsText = '';
-              if (value.isNotEmpty) {
-                print('value: $value');
-                ongsEncontradas = listaOngs
-                    .where((ong) =>
-                        ong.nome.toLowerCase().contains(value.toLowerCase()))
-                    .toList();
-              } else {
-                ongsEncontradas = listaOngs
-                    .where((ong) => ong.nome
-                        .toLowerCase()
-                        .contains(digitando.toLowerCase()))
-                    .toList();
-              }
-            }); */
+            }); 
           },
         ),
         bottomNavigationBar: const Footer(),
         body: Column(
           children: [
-            //Text(textoPesquisado),
             Row(children: [
               titleExplorar(),
               Image.asset('assets/icons/icon-explore.png'),
@@ -102,8 +64,15 @@ class _ExplorarPageState extends State<ExplorarPage> {
               child: FutureBuilder<List<Map<String, dynamic>>>(
                 future: futureOngs,
                 builder: (context, snapshot) {
-                  final ongs = snapshot.data!;
-                  if (ongsFiltradas.isEmpty) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text('Erro ao carregar ONGs'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('Nenhuma ONG encontrada'));
+                  }
+                  Iterable<Map<String, dynamic>> ongs = snapshot.data!;
+                  if (ongsFiltradas.isEmpty && digitando.isEmpty) {
                     return ListView(
                       children: ongs.map((ong) {
                         return OngCard(
@@ -128,13 +97,39 @@ class _ExplorarPageState extends State<ExplorarPage> {
                       );
                     }
                   } */
-                  return const SizedBox();
+                 if (digitando.isNotEmpty) {
+                    print(digitando);
+                    ongs = ongs.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
+                    return (ongs.length > 0) ?
+                    ListView(
+                      children: ongs
+                      .map((ong) {
+                        return OngCard(
+                        nome: ong['nome'],
+                        descricao: 'blablabla',
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere((item) =>
+                        item["tipo"] == 'Saúde')['icon-white'],
+                        )
+                      ;}).toList()
+                    ) :
+                    const Center(
+                      child: Text(
+                        'Nenhuma ONG correspondente à pesquisa',
+                        style: TextStyle(color: Color(0xFF28730E)),
+                        textAlign: TextAlign.center,                        
+                        ),
+                    );
+                 } 
+                 return const SizedBox();
+                  
   }),
             ),
           ],
         ));
   }
 
+  // Dropdown de tipos de ONG do botão de filtro
   Widget botaoFiltrar() {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.filter_list_outlined),
@@ -404,20 +399,11 @@ class _ExplorarPageState extends State<ExplorarPage> {
                 ),
               ),
             ],
-        onSelected: (String value) {
-          if (value == 'Deletar') {
-            setState(() {});
-          }
-          if (value == 'Editar') {
-            setState(() {});
-          }
-          if (value == 'Detalhes') {
-            setState(() {});
-          }
-        });
+          );
   }
 }
 
+// Classe Stateful que define o funcionamento dos botões do Dropdown do filtro
 class BotaoTipoOng extends StatefulWidget {
   final String iconOn;
   final String iconOff;
@@ -485,15 +471,6 @@ class _BotaoTipoOngState extends State<BotaoTipoOng> {
   }
 }
 
-class DadosOng {
-  String nome;
-  String descricao;
-  String imagem;
-  String tipo;
-
-  DadosOng(this.nome, this.descricao, this.imagem, this.tipo);
-}
-
 class OngCard extends StatefulWidget {
   final String nome;
   final String descricao;
@@ -535,9 +512,6 @@ class _OngCardState extends State<OngCard> {
                     )
                 ),
               )
-                
-                //fit: BoxFit.cover,
-              
             ),
           ),
           Expanded(
