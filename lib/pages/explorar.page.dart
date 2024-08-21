@@ -154,6 +154,28 @@ class _ExplorarPageState extends State<ExplorarPage> {
         icon: const Icon(Icons.filter_list_outlined),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
+                value: 'Animais',
+                child: BotaoTipoOng(
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Animais')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Animais')["icon-white"],
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Animais',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
+              PopupMenuItem<String>(
                 value: 'Saúde',
                 child: BotaoTipoOng(
                   iconOff: iconesOng.firstWhere(
