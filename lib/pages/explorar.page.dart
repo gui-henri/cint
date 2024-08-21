@@ -92,6 +92,11 @@ class _ExplorarPageState extends State<ExplorarPage> {
                     for (var categoria in categoriasSnapshot)
                       categoria['id']: categoria['nome']
                   };
+                  // Cria um mapa para acesso rápido aos nomes das ONGs
+                  final ongNomeMap = {
+                    for (var ong in ongsSnapshot)
+                      ong['id']: ong['nome']
+                  };
 
                   // Filtra as ONGs com base nas categorias
                   final filteredSnapshot = ongsSnapshot.where((ong) {
@@ -99,7 +104,24 @@ class _ExplorarPageState extends State<ExplorarPage> {
                     return ongsFiltradas.isEmpty || ongsFiltradas.contains(categoriaNome);
                   }).toList();
 
-                  return ListView.builder(
+                  // Pesquisa por texto
+                  final searchSnapshot = ongsSnapshot.where((ong) {
+                    final ongNome = ongNomeMap[ong['id']];
+                    return digitando.isNotEmpty && ongNome.toLowerCase().contains(digitando.toLowerCase());
+                  }).toList();
+
+                  // Pesquisa por texto e filtro
+                  final searchandfilterSnapshot = ongsSnapshot.where((ong) {
+                    final categoriaNome = categoriaMap[ong['id_categoria']];
+                    final ongNome = ongNomeMap[ong['id']];
+                    return digitando.isNotEmpty && ongNome.toLowerCase().contains(digitando.toLowerCase()) && ongsFiltradas.contains(categoriaNome);
+                  }).toList();
+
+                  // se apenas estiver filtrando, retorna uma listview com
+                  // as ongs filtradas
+                  if (ongsFiltradas.isNotEmpty && digitando.isEmpty)
+                  {
+                    return ListView.builder(
                     itemCount: filteredSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = filteredSnapshot[index];
@@ -113,10 +135,70 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         )['icon-white'],
                       );
                     },
+                  );} else {
+                  // se apenas estiver pesquisando por texto, retorna uma listview com
+                  // as ongs as quais o nome contem o que foi digitado/pesquisado
+                    if (digitando.isNotEmpty && ongsFiltradas.isEmpty) {
+                      print(digitando);
+                    return ListView.builder(
+                    itemCount: searchSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = searchSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final ongNome = ongNomeMap[ong['id']];
+                      return OngCard(
+                        nome: ongNome,
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
+                  ); } else
+                  // se estiver filtrando e pesquisando por texto ao mesmo tempo,
+                  // retorna uma listview com as ongs que estao no filtro por tipo
+                  // e que o nome contem o que foi digitado/pesquisado
+                  {if (digitando.isNotEmpty && ongsFiltradas.isNotEmpty) {
+              return ListView.builder(
+                    itemCount: searchandfilterSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = searchandfilterSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final ongNome = ongNomeMap[ong['id']];
+                      return OngCard(
+                        nome: ongNome,
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
                   );
-/*                     if (ongsFiltradas.contains(listaOngs[index].tipo)) {
-                    } */
-                  } 
+                  }
+                  else {
+                    return ListView.builder(
+                    itemCount: ongsSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = ongsSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final ongNome = ongNomeMap[ong['id']];
+                      return OngCard(
+                        nome: ongNome,
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
+                  );
+                  }
+                      
+                  }
+                  return SizedBox();
+                  } }
                  /**//*if (digitando.isNotEmpty) {
                     print(digitando);
                     var ongs = ongsSnapshot.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
