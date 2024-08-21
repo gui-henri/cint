@@ -21,15 +21,27 @@ class _ExplorarPageState extends State<ExplorarPage> {
 
     final rep = OngRepository(); 
     late Future<List<Map<String, dynamic>>> futureOngs;
+    late Future<List<Map<String, dynamic>>> futureCategorias;
+
 
   @override
   void initState() {
     super.initState();
     futureOngs = rep.getAllWithPhotos();
+    futureCategorias = rep.getCategoria();
+
   }
 
   @override
   Widget build(BuildContext context) {
+    Future<List<Map<String, dynamic>>> fetchBothData() async {
+      final data1 = await futureOngs;
+      final data2 = await futureCategorias;
+      return [{
+        'futureOngs': data1,
+        'futureCategorias': data2,
+      }];
+    }
     var args = ModalRoute.of(context)?.settings.arguments;
     String argsText = args != null ? args.toString() : '';
     if (digitando != '') {
@@ -62,7 +74,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
             ]),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: futureOngs,
+                future: fetchBothData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -71,18 +83,29 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(child: Text('Nenhuma ONG encontrada'));
                   }
-                  Iterable<Map<String, dynamic>> ongs = snapshot.data!;
+                  final data = snapshot.data!.first;
+                  final ongsSnapshot = data['futureOngs'] as List<Map<String, dynamic>>;
+                  final categoriasSnapshot = data['futureCategorias'] as List<Map<String, dynamic>>;
                   if (ongsFiltradas.isEmpty && digitando.isEmpty) {
-                    return ListView(
-                      children: ongs.map((ong) {
+
+      
+                    return ListView.builder(
+                      itemCount: ongsSnapshot.length,
+                      itemBuilder: (context, index) {
+                        final ong = ongsSnapshot[index];
+                        final categoria = categoriasSnapshot[index];
+                        
                         return OngCard(
-                        nome: ong['nome'],
-                        descricao: 'blablabla',
-                        imagem: ong['foto_instituicao'][0]['url'],
-                        iconTipo: iconesOng.firstWhere((item) =>
-                        item["tipo"] == 'Saúde')['icon-white'],
-                        )
-                      ;}).toList()
+                          nome: ong['nome'],
+                          descricao: ong['descricao'],
+                          imagem: ong['foto_instituicao'][0]['url'],
+                          iconTipo: iconesOng.firstWhere(
+                            (item) => item["tipo"] == categoria['nome']
+                          )['icon-white'],
+                        );
+                      },
+      
+
                     );
                   } /* else {
                     if (ongsFiltradas.contains(listaOngs[index].tipo)) {
@@ -97,9 +120,9 @@ class _ExplorarPageState extends State<ExplorarPage> {
                       );
                     }
                   } */
-                 if (digitando.isNotEmpty) {
+                 /*if (digitando.isNotEmpty) {
                     print(digitando);
-                    ongs = ongs.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
+                    var ongs = ongsSnapshot.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
                     return (ongs.length > 0) ?
                     ListView(
                       children: ongs
@@ -120,7 +143,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         textAlign: TextAlign.center,                        
                         ),
                     );
-                 } 
+                 }  */
                  return const SizedBox();
                   
   }),
