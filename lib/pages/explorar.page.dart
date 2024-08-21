@@ -34,14 +34,14 @@ class _ExplorarPageState extends State<ExplorarPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<List<Map<String, dynamic>>> fetchBothData() async {
-      final data1 = await futureOngs;
-      final data2 = await futureCategorias;
-      return [{
-        'futureOngs': data1,
-        'futureCategorias': data2,
-      }];
-    }
+  Future<Map<String, List<Map<String, dynamic>>>> fetchBothData() async {
+    final data1 = await futureOngs;
+    final data2 = await futureCategorias;
+    return {
+      'futureOngs': data1,
+      'futureCategorias': data2,
+    };
+  }
     var args = ModalRoute.of(context)?.settings.arguments;
     String argsText = args != null ? args.toString() : '';
     if (digitando != '') {
@@ -73,7 +73,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
               botaoFiltrar(),
             ]),
             Expanded(
-              child: FutureBuilder<List<Map<String, dynamic>>>(
+              child: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
                 future: fetchBothData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -83,44 +83,41 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(child: Text('Nenhuma ONG encontrada'));
                   }
-                  final data = snapshot.data!.first;
-                  final ongsSnapshot = data['futureOngs'] as List<Map<String, dynamic>>;
-                  final categoriasSnapshot = data['futureCategorias'] as List<Map<String, dynamic>>;
-                  if (ongsFiltradas.isEmpty && digitando.isEmpty) {
+                  final data = snapshot.data!;
+                  final ongsSnapshot = data['futureOngs']!;
+                  final categoriasSnapshot = data['futureCategorias']!;
 
-      
-                    return ListView.builder(
-                      itemCount: ongsSnapshot.length,
-                      itemBuilder: (context, index) {
-                        final ong = ongsSnapshot[index];
-                        final categoria = categoriasSnapshot[index];
-                        
-                        return OngCard(
-                          nome: ong['nome'],
-                          descricao: ong['descricao'],
-                          imagem: ong['foto_instituicao'][0]['url'],
-                          iconTipo: iconesOng.firstWhere(
-                            (item) => item["tipo"] == categoria['nome']
-                          )['icon-white'],
-                        );
-                      },
-      
+                  // Cria um mapa para acesso rápido às categorias das ONGs
+                  final categoriaMap = {
+                    for (var categoria in categoriasSnapshot)
+                      categoria['id']: categoria['nome']
+                  };
 
-                    );
-                  } /* else {
-                    if (ongsFiltradas.contains(listaOngs[index].tipo)) {
-                      return ListView(
-                        children: ongs.map((ong) {
-                          return OngCard(
-                          nome: ong['nome'],
-                          descricao: 'blablabla',
-                          imagem: ong['foto_instituicao'][0]['url'],
-                          iconTipo: 'Saúde',
-                        );})
+                  // Filtra as ONGs com base nas categorias
+                  final filteredSnapshot = ongsSnapshot.where((ong) {
+                    final categoriaNome = categoriaMap[ong['id_categoria']];
+                    return ongsFiltradas.isEmpty || ongsFiltradas.contains(categoriaNome);
+                  }).toList();
+
+                  return ListView.builder(
+                    itemCount: filteredSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = filteredSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      return OngCard(
+                        nome: ong['nome'],
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
                       );
-                    }
-                  } */
-                 /*if (digitando.isNotEmpty) {
+                    },
+                  );
+/*                     if (ongsFiltradas.contains(listaOngs[index].tipo)) {
+                    } */
+                  } 
+                 /**//*if (digitando.isNotEmpty) {
                     print(digitando);
                     var ongs = ongsSnapshot.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
                     return (ongs.length > 0) ?
@@ -144,9 +141,8 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         ),
                     );
                  }  */
-                 return const SizedBox();
                   
-  }),
+  ),
             ),
           ],
         ));
@@ -334,14 +330,14 @@ class _ExplorarPageState extends State<ExplorarPage> {
                 ),
               ),
               PopupMenuItem<String>(
-                value: 'Ambientais',
+                value: 'Reciclagem',
                 child: BotaoTipoOng(
                   iconOff: iconesOng.firstWhere(
-                      (item) => item["tipo"] == 'Ambientais')["icon-green"],
+                      (item) => item["tipo"] == 'Reciclagem')["icon-green"],
                   iconOn: iconesOng.firstWhere(
-                      (item) => item["tipo"] == 'Ambientais')["icon-white"],
+                      (item) => item["tipo"] == 'Reciclagem')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
-                  tipo: 'Ambientais',
+                  tipo: 'Reciclagem',
                   onTap: (tipo) {
                     if (!ongsFiltradas.contains(tipo)) {
                       setState(() {
