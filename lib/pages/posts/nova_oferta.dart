@@ -57,19 +57,22 @@ class _NovaOfertaState extends State<NovaOferta> {
           height: 60,
           child: FloatingActionButton(
             onPressed: () {
+              final rep = AnunciosRepository();
               setState(() {
                 invalido = (_formKey.currentState!.validate());
               });
-              final rep = AnunciosRepository();
-              rep.addTextoAndTipo(arguments[1], _controller.text);
+              
+              
               print('arguments: $arguments');
               print('texto: ${_controller.text}');
               
-              print(isEditing);
+              print('está editando: $isEditing');
               (_formKey.currentState!.validate());
               if (selectedIcon != null && _formKey.currentState!.validate()) {
                 if (isEditing == false) {
-                 
+                setState(() {
+                  rep.addTextoAndTipo(arguments[1], _controller.text);
+              });
                 }
                 if (isEditing) {
                   setState(() {

@@ -72,7 +72,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AnuncioForm()),
+              MaterialPageRoute(builder: (context) => const AnuncioForm()),
             );
           },
           foregroundColor: Colors.white,

@@ -76,7 +76,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   @override
   Widget build(BuildContext context) {
-    if (isEditing) {
+/*     if (isEditing) {
       setState(() {
         dadosPostEditado =
             ModalRoute.of(context)!.settings.arguments as PostOferta;
@@ -92,7 +92,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         //fotos = dadosPostEditado.fotosPost;
         ofertaEditada = dadosPostEditado;
       });
-    }
+    } */
 
     if (tempForm.isNotEmpty) {
       setState(() {
@@ -104,7 +104,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         _controllerInfo.text = tempForm[5];
       });
     }
-
+    print('está editandoForm: $isEditing');
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -217,7 +217,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         final userEmail = rep.getUserEmail();
         print('id do user é...: $userEmail');
 
-      if (isEditing == false) {
+      //if (isEditing == false) {
         tempForm = [
           _controllerProduto.text,
           _controllerQuantidade.text,
@@ -229,16 +229,16 @@ class _AnuncioFormState extends State<AnuncioForm> {
           null,
         ];
 
-      final idPost = await rep.createPost(
-        _controllerProduto.text,
-        int.parse(_controllerQuantidade.text),
-        int.parse(_controllerCondicoes.text),
-        int.parse(_controllerCategoria.text)
-      );
-      print('Id da linha nova: $idPost');
-      Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost]);
-      }
-      if (isEditing) {
+        final idPost = await rep.createPost(
+          _controllerProduto.text,
+          int.parse(_controllerQuantidade.text),
+          int.parse(_controllerCondicoes.text),
+          int.parse(_controllerCategoria.text)
+        );
+        print('Id da linha nova: $idPost');
+        Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost]);
+      //}
+/*       if (isEditing) {
         setState(() {
           dadosPostEditado.produto = _controllerProduto.text;
           dadosPostEditado.quantidade = int.parse(_controllerQuantidade.text);
@@ -248,7 +248,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           dadosPostEditado.info = _controllerInfo.text;
         });
         Navigator.pushNamed(context, '/nova_oferta', arguments: fotos);
-      }
+      } */
       
     }
   }
