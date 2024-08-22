@@ -9,6 +9,7 @@ import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/post_oferta.dart';
 import '../../components/title_back.dart';
+import '../../repositorys/anuncios.repository.dart';
 import 'salvos/lista_meus_posts.dart';
 import 'anuncio_form.dart';
 import '../../components/icones_ong.dart';
@@ -31,10 +32,11 @@ class _NovaOfertaState extends State<NovaOferta> {
 
   @override
   Widget build(BuildContext context) {
-    final fotosPost = ModalRoute.of(context)!.settings.arguments as List;
+    final arguments = ModalRoute.of(context)!.settings.arguments as List;
+    final fotosPost = arguments[0];
     if (isEditing) {
       setState(() {
-        selectedIcon = ofertaEditada!.icon;
+        //selectedIcon = ofertaEditada!.icon;
         _controller.text = ofertaEditada!.textoPrincipal;
       });
     }
@@ -58,25 +60,20 @@ class _NovaOfertaState extends State<NovaOferta> {
               setState(() {
                 invalido = (_formKey.currentState!.validate());
               });
+              final rep = AnunciosRepository();
+              rep.addTextoAndTipo(arguments[1], _controller.text);
+              print('arguments: $arguments');
+              print('texto: ${_controller.text}');
+              
               print(isEditing);
               (_formKey.currentState!.validate());
               if (selectedIcon != null && _formKey.currentState!.validate()) {
                 if (isEditing == false) {
-                  meusPosts.add(PostOferta(
-                    tempForm[0],
-                    tempForm[1],
-                    tempForm[2],
-                    tempForm[3],
-                    tempForm[4],
-                    tempForm[5],
-                    selectedIcon,
-                    _controller.text,
-                    fotosPost,
-                  ));
+                 
                 }
                 if (isEditing) {
                   setState(() {
-                    ofertaEditada!.icon = selectedIcon;
+                    //ofertaEditada!.icon = selectedIcon;
                     ofertaEditada!.textoPrincipal = _controller.text;
                     isEditing = false;
                   });
@@ -217,7 +214,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -245,7 +242,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -273,7 +270,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -307,7 +304,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -335,7 +332,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -363,7 +360,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -397,7 +394,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -425,7 +422,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -436,30 +433,30 @@ class _NovaOfertaState extends State<NovaOferta> {
                                 ),
                                 Spacer(),
                                 SquareGesture(
-                                  name: 'Ambientais',
+                                  name: 'Reciclagem',
                                   icon:
                                       iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Ambientais')["icon-green"],
+                                        (item) => item["tipo"] == 'Reciclagem')["icon-green"],
                                   iconSelected:
                                       iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Ambientais')["icon-white"],
+                                        (item) => item["tipo"] == 'Reciclagem')["icon-white"],
                                   onTap: () {
                                     setState(() {
                                       selectedIconURL =
                                         iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Ambientais')["icon-green"];
+                                          (item) => item["tipo"] == 'Reciclagem')["icon-green"];
                                       selectedIcon =
                                           Image.asset(selectedIconURL);
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
                                   isSelected: selectedIconURL ==
                                       iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Ambientais')["icon-green"],
+                                        (item) => item["tipo"] == 'Reciclagem')["icon-green"],
                                   invalido: invalido,
                                 ),
                               ],
@@ -487,7 +484,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -515,7 +512,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },
@@ -543,7 +540,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                     });
                                     if (isEditing) {
                                       setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
+                                        //ofertaEditada!.icon = selectedIcon;
                                       });
                                     }
                                   },

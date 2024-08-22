@@ -6,16 +6,16 @@ PostOferta? ofertaEditada;
 
 class PostOferta {
   String produto;
-  String quantidade;
-  String condicoes;
-  String categoria;
+  int quantidade;
+  int condicoes;
+  int categoria;
   String telefone;
   String info;
-  Image icon;
+  //Image icon;
   String textoPrincipal;
-  List fotosPost;
+  //List fotosPost;
   PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
-      this.telefone, this.info, this.icon, this.textoPrincipal, this.fotosPost);
+      this.telefone, this.info, this.textoPrincipal);
 }
 
 class PostCard extends StatefulWidget {
@@ -36,21 +36,21 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  void _showImageDialog(int index) {
+/*   void _showImageDialog(int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
-            child: Image.network(
-              widget.oferta.fotosPost[index].path,
+            child: Image.file(
+              widget.oferta.fotosPost[index],
               fit: BoxFit.contain,
             ),
           ),
         );
       },
     );
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ),
                     const Spacer(),
-                    Container(
+                    /* Container(
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
@@ -113,7 +113,7 @@ class _PostCardState extends State<PostCard> {
                         color: Colors.white,
                       ),
                       child: widget.oferta.icon,
-                    ),
+                    ), */
                   ],
                 ),
                 Column(
@@ -131,13 +131,13 @@ class _PostCardState extends State<PostCard> {
                         ],
                       ),
                     ),
-                    Row(
+                    /* Row(
                       children: [
                         widget.oferta.fotosPost.isNotEmpty
                             ? Expanded(
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
-                                  child: Wrap(
+                                  child: Row(
                                     children:
                                         widget.oferta.fotosPost.map((photo) {
                                       int index = widget.oferta.fotosPost
@@ -150,10 +150,10 @@ class _PostCardState extends State<PostCard> {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
-                                              child: Image.network(
-                                                photo.path,
-                                                height: 60.0,
-                                                width: 60.0,
+                                              child: Image.file(
+                                                photo,
+                                                height: 200.0,
+                                                width: 200.0,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -166,7 +166,7 @@ class _PostCardState extends State<PostCard> {
                               )
                             : const SizedBox(),
                       ],
-                    ),
+                    ), */
                   ],
                 ),
               ]),

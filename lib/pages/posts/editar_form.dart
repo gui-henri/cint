@@ -21,13 +21,13 @@ class _EditarFormState extends State<EditarForm> {
             title: Text(postAtual.produto),
           ),
           ListTile(
-            title: Text(postAtual.quantidade),
+            title: Text(postAtual.quantidade.toString()),
           ),
           ListTile(
-            title: Text(postAtual.condicoes),
+            title: Text(postAtual.condicoes.toString()),
           ),
           ListTile(
-            title: Text(postAtual.categoria),
+            title: Text(postAtual.categoria.toString()),
           ),
           ListTile(
             title: Text(postAtual.telefone),

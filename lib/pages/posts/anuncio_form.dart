@@ -6,6 +6,7 @@ import '../../components/campo_texto.dart';
 
 import '../../components/post_oferta.dart';
 import '../posts/salvos/lista_meus_posts.dart';
+import 'package:cint/repositorys/anuncios.repository.dart';
 
 class AnuncioForm extends StatefulWidget {
   const AnuncioForm({super.key});
@@ -25,16 +26,15 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerCategoria = TextEditingController();
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
-  File? _image;
   List fotos = [];
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
+      final arquivo = File(pickedImage.path); // Converte XFile para File
       setState(() {
-        _image = File(pickedImage.path);
-        fotos.add(_image!);
+        fotos.add(arquivo);
         print(fotos);
       });
     }
@@ -47,8 +47,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
         return Dialog(
           child: Stack(children: [
             Container(
-              child: Image.network(
-                fotos[index].path,
+              child: Image.file(
+                fotos[index],
                 fit: BoxFit.contain,
               ),
             ),
@@ -89,7 +89,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           dadosPostEditado.telefone,
           dadosPostEditado.info,
         ];
-        fotos = dadosPostEditado.fotosPost;
+        //fotos = dadosPostEditado.fotosPost;
         ofertaEditada = dadosPostEditado;
       });
     }
@@ -183,8 +183,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
                           child: Container(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                photo.path,
+                              child: Image.file(
+                                photo,
                                 height: 60.0,
                                 width: 60.0,
                                 fit: BoxFit.cover,
@@ -210,8 +210,13 @@ class _AnuncioFormState extends State<AnuncioForm> {
     );
   }
 
-  void enviarForm() {
-    if (_formKey.currentState!.validate()) {
+  Future<void> enviarForm() async {
+    if (_formKey.currentState!.validate()) {  
+             
+        final rep = AnunciosRepository();
+        final userEmail = rep.getUserEmail();
+        print('id do user é...: $userEmail');
+
       if (isEditing == false) {
         tempForm = [
           _controllerProduto.text,
@@ -223,18 +228,28 @@ class _AnuncioFormState extends State<AnuncioForm> {
           null,
           null,
         ];
+
+      final idPost = await rep.createPost(
+        _controllerProduto.text,
+        int.parse(_controllerQuantidade.text),
+        int.parse(_controllerCondicoes.text),
+        int.parse(_controllerCategoria.text)
+      );
+      print('Id da linha nova: $idPost');
+      Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost]);
       }
       if (isEditing) {
         setState(() {
           dadosPostEditado.produto = _controllerProduto.text;
-          dadosPostEditado.quantidade = _controllerQuantidade.text;
-          dadosPostEditado.condicoes = _controllerCondicoes.text;
-          dadosPostEditado.categoria = _controllerCategoria.text;
+          dadosPostEditado.quantidade = int.parse(_controllerQuantidade.text);
+          dadosPostEditado.condicoes = int.parse(_controllerCondicoes.text);
+          dadosPostEditado.categoria = int.parse(_controllerCategoria.text);
           dadosPostEditado.telefone = _controllerTelefone.text;
           dadosPostEditado.info = _controllerInfo.text;
         });
+        Navigator.pushNamed(context, '/nova_oferta', arguments: fotos);
       }
-      Navigator.pushNamed(context, '/nova_oferta', arguments: fotos);
+      
     }
   }
 

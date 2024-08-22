@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/title_back.dart';
+import '../../repositorys/anuncios.repository.dart';
 import 'anuncio_form.dart';
 
 import '../../components/post_oferta.dart';
@@ -21,6 +22,13 @@ class MinhasOfertas extends StatefulWidget {
 }
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
+  final rep = AnunciosRepository();
+  late Future<List<Map<String, dynamic>>> futurePosts;
+  @override
+  void initState() {
+    super.initState();
+    futurePosts = rep.getPostInfo();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,27 +38,33 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
       bottomNavigationBar: const Footer(),
       body: Container(
           color: const Color(0xFFF6F4EB),
-          child: FractionallySizedBox(
-            widthFactor: 1,
-            heightFactor: 1,
-            child: Stack(children: [
-              titleBack(context, 'Minhas Ofertas', '/home'),
-              (meusPosts.isEmpty)
-                  ? Column(children: [
-                      Container(
-                        child: semOfertas(),
+          child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: futurePosts,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: Text('Erro ao carregar ONGs'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('Nenhuma ONG encontrada'));
+                }
+                final data = snapshot.data!;
+
+                /* print('snapshot dos posts: $data'); */
+                return Stack(children: [
+                  titleBack(context, 'Minhas Ofertas', '/home'),
+                  (data.isEmpty)
+                      ? Column(children: [
+                          Container(
+                            child: semOfertas(),
+                            padding: EdgeInsets.only(top: 70),
+                          ),
+                        ])
+                      : Container(
+                        child: ListaMeusPosts(dadosMeusPosts: data,),
                         padding: EdgeInsets.only(top: 70),
                       ),
-                    ])
-                  : FractionallySizedBox(
-                      widthFactor: 1,
-                      child: Container(
-                        child: ListaMeusPosts(),
-                        padding: EdgeInsets.only(top: 70),
-                      ),
-                    ),
-            ]),
-          )),
+                ]);}),),
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,

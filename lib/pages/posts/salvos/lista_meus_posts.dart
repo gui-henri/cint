@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../repositorys/anuncios.repository.dart';
 import '../anuncio_form.dart';
 import '../../../components/post_oferta.dart';
 import '../nova_oferta.dart';
@@ -7,15 +8,30 @@ List meusPosts = [];
 List tempForm = [];
 
 class ListaMeusPosts extends StatefulWidget {
-  const ListaMeusPosts({Key? key}) : super(key: key);
+  final dadosMeusPosts;
+  const ListaMeusPosts({Key? key, required this.dadosMeusPosts}) : super(key: key);
 
   @override
   State<ListaMeusPosts> createState() => _ListaMeusPostsState();
 }
 
 class _ListaMeusPostsState extends State<ListaMeusPosts> {
+  final rep = AnunciosRepository();
+  /* final <List<Map<String, dynamic>> futurePosts; */
+    @override
+  void initState() {
+    super.initState();
+    print('snapshot dos post!!s: ${widget.dadosMeusPosts}');
+    /* futurePosts = widget.dadosMeusPosts; */
+  }
   @override
   Widget build(BuildContext context) {
+/*   Future<Map<String, List<Map<String, dynamic>>>> fetchPostsInfo() async {
+    final data = await futurePosts;
+    return {
+      'futurePosts': data,
+    };
+  } */
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: ListView.separated(
@@ -24,7 +40,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
         separatorBuilder: (context, index) => SizedBox(
           height: 20,
         ),
-        itemCount: meusPosts.length,
+        itemCount: widget.dadosMeusPosts.length,
         itemBuilder: (context, index) {
           
           return Column(
@@ -34,7 +50,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                 key: UniqueKey(),
                 onDismissed: (direction) {
                   setState(() {
-                    meusPosts.removeAt(index);
+                    widget.dadosMeusPosts.removeAt(index);
                   });
                 },
                 background: Container(
@@ -65,26 +81,33 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                 ),
                 
                 child: PostCard(
-                  oferta: meusPosts[index],
+                  oferta: PostOferta(
+                    widget.dadosMeusPosts[index]['nome_produto'], 
+                    widget.dadosMeusPosts[index]['quantidade'], 
+                    widget.dadosMeusPosts[index]['condicao'], 
+                    widget.dadosMeusPosts[index]['categoria'], 
+                    widget.dadosMeusPosts[index]['telefone'], 
+                    widget.dadosMeusPosts[index]['informacao_relevante'], 
+                    widget.dadosMeusPosts[index]['texto_anuncio'], ),
                   deletar: () {
                     setState(() {
-                      meusPosts.removeAt(index);
+                      widget.dadosMeusPosts.removeAt(index);
                     });
                   },
                   editar: () {
                     Navigator.pushNamed(context, '/anuncio_form',
-                        arguments: meusPosts[index]);
+                        arguments: widget.dadosMeusPosts[index]);
                   },
                   detalhes: () {
                     Navigator.pushNamed(context, '/editar_form',
-                        arguments: meusPosts[index]);
+                        arguments: widget.dadosMeusPosts[index]);
                   },
                 ),
               ),
             ],
           );
         },
-      ),
-    );
+      )
+  );
   }
 }
