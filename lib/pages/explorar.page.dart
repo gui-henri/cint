@@ -2,25 +2,11 @@ import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
 import '../components/icones_ong.dart';
-
-List<DadosOng> listaOngs = [
-  DadosOng(
-      'Mãos Solidárias',
-      'A missão da Mãos Solidárias é criar oportunidades e promover o desenvolvimento em comunidades carentes, visando erradicar a pobreza.',
-      'assets/images/ongImg-1.png',
-      'Sem-teto'),
-  DadosOng(
-    'Esperança Renovada',
-    'Nossa ONG está comprometida em defender os direitos das crianças em todas as esferas da vida, seja em questões de saúde, educação, justiça ou igualdade de oportunidades. Trabalhamos em parceria com outras organizações, governos e comunidades para criar um ambiente onde os direitos das crianças sejam respeitados e protegidos.',
-    'assets/images/ong_generica-2.jpg',
-    'Crianças',
-  ),
-];
+import 'package:cint/repositorys/ong.repository.dart';
 
 class ExplorarPage extends StatefulWidget {
-  final List<DadosOng> ongsPesquisadas = [];
 
-  ExplorarPage({super.key, required List<DadosOng> ongsPesquisadas});
+  const ExplorarPage({super.key});
 
   static const routeName = '/explorar';
 
@@ -30,21 +16,32 @@ class ExplorarPage extends StatefulWidget {
 
 class _ExplorarPageState extends State<ExplorarPage> {
   List<String> ongsFiltradas = [];
-  late List<DadosOng> ongsEncontradas;
   late String textoPesquisado = '';
   late String digitando = '';
 
+    final rep = OngRepository(); 
+    late Future<List<Map<String, dynamic>>> futureOngs;
+    late Future<List<Map<String, dynamic>>> futureCategorias;
+
+
   @override
-  initState() {
-    ongsEncontradas = listaOngs;
+  void initState() {
     super.initState();
+    futureOngs = rep.getAllWithPhotos();
+    futureCategorias = rep.getCategoria();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    // problema: o args fica reconstruindo a lista a partir do texto dele,
-    // então a mudança na barra de pequisa não consegue alterar a lista
-    // porque o args sempre fica salvo
+  Future<Map<String, List<Map<String, dynamic>>>> fetchBothData() async {
+    final data1 = await futureOngs;
+    final data2 = await futureCategorias;
+    return {
+      'futureOngs': data1,
+      'futureCategorias': data2,
+    };
+  }
     var args = ModalRoute.of(context)?.settings.arguments;
     String argsText = args != null ? args.toString() : '';
     if (digitando != '') {
@@ -53,44 +50,22 @@ class _ExplorarPageState extends State<ExplorarPage> {
     setState(() {
       if (argsText != '') {
         print('args: $argsText');
-        ongsEncontradas = listaOngs
-            .where((ong) =>
-                ong.nome.toLowerCase().contains(argsText.toLowerCase()))
-            .toList();
-        argsText = '';
+        digitando = argsText;
       }
     });
     return Scaffold(
         appBar: Header(
           textoSalvo: digitando,
           atualizarBusca: (value) {
-            //print('argsText: $argsText');
-            print('att');
-
             textoPesquisado = value;
             setState(() {
               digitando = value;
-              //argsText = '';
-              if (value.isNotEmpty) {
-                print('value: $value');
-                ongsEncontradas = listaOngs
-                    .where((ong) =>
-                        ong.nome.toLowerCase().contains(value.toLowerCase()))
-                    .toList();
-              } else {
-                ongsEncontradas = listaOngs
-                    .where((ong) => ong.nome
-                        .toLowerCase()
-                        .contains(digitando.toLowerCase()))
-                    .toList();
-              }
-            });
+            }); 
           },
         ),
         bottomNavigationBar: const Footer(),
         body: Column(
           children: [
-            //Text(textoPesquisado),
             Row(children: [
               titleExplorar(),
               Image.asset('assets/icons/icon-explore.png'),
@@ -98,42 +73,190 @@ class _ExplorarPageState extends State<ExplorarPage> {
               botaoFiltrar(),
             ]),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  if (ongsFiltradas.isEmpty) {
-                    return OngCard(
-                      nome: ongsEncontradas[index].nome,
-                      descricao: ongsEncontradas[index].descricao,
-                      imagem: ongsEncontradas[index].imagem,
-                      iconTipo: iconesOng.firstWhere((item) =>
-                          item["tipo"] ==
-                          ongsEncontradas[index].tipo)["icon-white"],
-                    );
-                  } else {
-                    if (ongsFiltradas.contains(listaOngs[index].tipo)) {
-                      return OngCard(
-                        nome: listaOngs[index].nome,
-                        descricao: listaOngs[index].descricao,
-                        imagem: listaOngs[index].imagem,
-                        iconTipo: iconesOng.firstWhere((item) =>
-                            item["tipo"] ==
-                            listaOngs[index].tipo)["icon-white"],
-                      );
-                    }
+              child: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
+                future: fetchBothData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return const Center(child: Text('Erro ao carregar ONGs'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('Nenhuma ONG encontrada'));
                   }
-                  return const SizedBox();
-                },
-                itemCount: ongsEncontradas.length,
-              ),
+                  final data = snapshot.data!;
+                  final ongsSnapshot = data['futureOngs']!;
+                  final categoriasSnapshot = data['futureCategorias']!;
+
+                  // Cria um mapa para acesso rápido às categorias das ONGs
+                  final categoriaMap = {
+                    for (var categoria in categoriasSnapshot)
+                      categoria['id']: categoria['nome']
+                  };
+                  // Cria um mapa para acesso rápido aos nomes das ONGs
+                  final ongNomeMap = {
+                    for (var ong in ongsSnapshot)
+                      ong['id']: ong['nome']
+                  };
+
+                  // Filtra as ONGs com base nas categorias
+                  final filteredSnapshot = ongsSnapshot.where((ong) {
+                    final categoriaNome = categoriaMap[ong['id_categoria']];
+                    return ongsFiltradas.isEmpty || ongsFiltradas.contains(categoriaNome);
+                  }).toList();
+
+                  // Pesquisa por texto
+                  final searchSnapshot = ongsSnapshot.where((ong) {
+                    final ongNome = ongNomeMap[ong['id']];
+                    return digitando.isNotEmpty && ongNome.toLowerCase().contains(digitando.toLowerCase());
+                  }).toList();
+
+                  // Pesquisa por texto e filtro
+                  final searchandfilterSnapshot = ongsSnapshot.where((ong) {
+                    final categoriaNome = categoriaMap[ong['id_categoria']];
+                    final ongNome = ongNomeMap[ong['id']];
+                    return digitando.isNotEmpty && ongNome.toLowerCase().contains(digitando.toLowerCase()) && ongsFiltradas.contains(categoriaNome);
+                  }).toList();
+
+                  // se apenas estiver filtrando, retorna uma listview com
+                  // as ongs filtradas
+                  if (ongsFiltradas.isNotEmpty && digitando.isEmpty)
+                  {
+                    return ListView.builder(
+                    itemCount: filteredSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = filteredSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      return OngCard(
+                        nome: ong['nome'],
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
+                  );} else {
+                  // se apenas estiver pesquisando por texto, retorna uma listview com
+                  // as ongs as quais o nome contem o que foi digitado/pesquisado
+                    if (digitando.isNotEmpty && ongsFiltradas.isEmpty) {
+                      print(digitando);
+                    return ListView.builder(
+                    itemCount: searchSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = searchSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final ongNome = ongNomeMap[ong['id']];
+                      return OngCard(
+                        nome: ongNome,
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
+                  ); } else
+                  // se estiver filtrando e pesquisando por texto ao mesmo tempo,
+                  // retorna uma listview com as ongs que estao no filtro por tipo
+                  // e que o nome contem o que foi digitado/pesquisado
+                  {if (digitando.isNotEmpty && ongsFiltradas.isNotEmpty) {
+              return ListView.builder(
+                    itemCount: searchandfilterSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = searchandfilterSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final ongNome = ongNomeMap[ong['id']];
+                      return OngCard(
+                        nome: ongNome,
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
+                  );
+                  }
+                  else {
+                    return ListView.builder(
+                    itemCount: ongsSnapshot.length,
+                    itemBuilder: (context, index) {
+                      final ong = ongsSnapshot[index];
+                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final ongNome = ongNomeMap[ong['id']];
+                      return OngCard(
+                        nome: ongNome,
+                        descricao: ong['descricao'],
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere(
+                          (item) => item["tipo"] == categoriaNome
+                        )['icon-white'],
+                      );
+                    },
+                  );
+                  }
+                      
+                  }
+                  return SizedBox();
+                  } }
+                 /**//*if (digitando.isNotEmpty) {
+                    print(digitando);
+                    var ongs = ongsSnapshot.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
+                    return (ongs.length > 0) ?
+                    ListView(
+                      children: ongs
+                      .map((ong) {
+                        return OngCard(
+                        nome: ong['nome'],
+                        descricao: 'blablabla',
+                        imagem: ong['foto_instituicao'][0]['url'],
+                        iconTipo: iconesOng.firstWhere((item) =>
+                        item["tipo"] == 'Saúde')['icon-white'],
+                        )
+                      ;}).toList()
+                    ) :
+                    const Center(
+                      child: Text(
+                        'Nenhuma ONG correspondente à pesquisa',
+                        style: TextStyle(color: Color(0xFF28730E)),
+                        textAlign: TextAlign.center,                        
+                        ),
+                    );
+                 }  */
+                  
+  ),
             ),
           ],
         ));
   }
 
+  // Dropdown de tipos de ONG do botão de filtro
   Widget botaoFiltrar() {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.filter_list_outlined),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'Animais',
+                child: BotaoTipoOng(
+                  iconOff: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Animais')["icon-green"],
+                  iconOn: iconesOng.firstWhere(
+                      (item) => item["tipo"] == 'Animais')["icon-white"],
+                  ongsFiltradas: ongsFiltradas,
+                  tipo: 'Animais',
+                  onTap: (tipo) {
+                    if (!ongsFiltradas.contains(tipo)) {
+                      setState(() {
+                        ongsFiltradas.add(tipo);
+                      });
+                    } else {
+                      setState(() {
+                        ongsFiltradas.remove(tipo);
+                      });
+                    }
+                  },
+                ),
+              ),
               PopupMenuItem<String>(
                 value: 'Saúde',
                 child: BotaoTipoOng(
@@ -311,14 +434,14 @@ class _ExplorarPageState extends State<ExplorarPage> {
                 ),
               ),
               PopupMenuItem<String>(
-                value: 'Ambientais',
+                value: 'Reciclagem',
                 child: BotaoTipoOng(
                   iconOff: iconesOng.firstWhere(
-                      (item) => item["tipo"] == 'Ambientais')["icon-green"],
+                      (item) => item["tipo"] == 'Reciclagem')["icon-green"],
                   iconOn: iconesOng.firstWhere(
-                      (item) => item["tipo"] == 'Ambientais')["icon-white"],
+                      (item) => item["tipo"] == 'Reciclagem')["icon-white"],
                   ongsFiltradas: ongsFiltradas,
-                  tipo: 'Ambientais',
+                  tipo: 'Reciclagem',
                   onTap: (tipo) {
                     if (!ongsFiltradas.contains(tipo)) {
                       setState(() {
@@ -399,20 +522,11 @@ class _ExplorarPageState extends State<ExplorarPage> {
                 ),
               ),
             ],
-        onSelected: (String value) {
-          if (value == 'Deletar') {
-            setState(() {});
-          }
-          if (value == 'Editar') {
-            setState(() {});
-          }
-          if (value == 'Detalhes') {
-            setState(() {});
-          }
-        });
+          );
   }
 }
 
+// Classe Stateful que define o funcionamento dos botões do Dropdown do filtro
 class BotaoTipoOng extends StatefulWidget {
   final String iconOn;
   final String iconOff;
@@ -480,15 +594,6 @@ class _BotaoTipoOngState extends State<BotaoTipoOng> {
   }
 }
 
-class DadosOng {
-  String nome;
-  String descricao;
-  String imagem;
-  String tipo;
-
-  DadosOng(this.nome, this.descricao, this.imagem, this.tipo);
-}
-
 class OngCard extends StatefulWidget {
   final String nome;
   final String descricao;
@@ -522,10 +627,14 @@ class _OngCardState extends State<OngCard> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                widget.imagem,
-                fit: BoxFit.cover,
-              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(widget.imagem),
+                    fit: BoxFit.cover,
+                    )
+                ),
+              )
             ),
           ),
           Expanded(

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../pages/explorar.page.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
   final ValueChanged<String> atualizarBusca;
-  late final String textoSalvo;
-  Header({Key? key, required this.atualizarBusca, this.textoSalvo = ''})
-      : super(key: key);
+  final String textoSalvo;
+  const Header({super.key, required this.atualizarBusca, this.textoSalvo = ''});
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -16,7 +14,6 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
 
 class _HeaderState extends State<Header> {
   final TextEditingController _searchController = TextEditingController();
-  List<DadosOng> resultados = [];
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,6 @@ class _HeaderState extends State<Header> {
         controller: _searchController,
         onChanged: (input) {
           widget.atualizarBusca(input);
-          pesquisarOng(input);
         },
         onSubmitted: (value) {
           //widget.atualizarBusca(value);
@@ -59,20 +55,5 @@ class _HeaderState extends State<Header> {
         ),
       ),
     );
-  }
-
-  void pesquisarOng(String input) {
-    if (input.isEmpty) {
-      setState(() {
-        resultados = listaOngs;
-      });
-    } else {
-      setState(() {
-        resultados = listaOngs
-            .where(
-                (ong) => ong.nome.toLowerCase().contains(input.toLowerCase()))
-            .toList();
-      });
-    }
   }
 }

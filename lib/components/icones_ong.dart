@@ -1,6 +1,6 @@
 List<Map<String, dynamic>> iconesOng = [
   {
-    "tipo": 'Ambientais',
+    "tipo": 'Reciclagem',
     "icon-white": 'assets/icons/ambientais_white.png',
     "icon-green": 'assets/icons/ambientais_green.png'
   },
@@ -58,5 +58,10 @@ List<Map<String, dynamic>> iconesOng = [
     "tipo": 'Sem-teto',
     "icon-white": 'assets/icons/sem-teto_white.png',
     "icon-green": 'assets/icons/sem-teto_green.png'
+  },
+  {
+    "tipo": 'Animais',
+    "icon-white": 'assets/icons/pets_white.png',
+    "icon-green": 'assets/icons/pets_green.png'
   },
 ];
