@@ -233,6 +233,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
   // Dropdown de tipos de ONG do botão de filtro
   Widget botaoFiltrar() {
     return PopupMenuButton<String>(
+        surfaceTintColor: Colors.white,
         icon: const Icon(Icons.filter_list_outlined),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
