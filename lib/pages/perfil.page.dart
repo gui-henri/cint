@@ -24,6 +24,13 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = supabase.auth.currentUser;
+    final profileImageUrl = user?.userMetadata?['avatar_url'];
+    final fullName = user?.userMetadata?['full_name'];
+    List<String> nomes = fullName.split(" ");
+    String primeiroNome = nomes.first;
+    String ultimoNome = nomes.length > 1 ? nomes.last : "";
+    final userName = '$primeiroNome $ultimoNome';
     return Scaffold(
       appBar: Header(
         atualizarBusca: (value) {},
@@ -111,12 +118,15 @@ class _PerfilPageState extends State<PerfilPage> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                    width: 10), // Espaçamento entre o nome e a foto de perfil
-                CircleAvatar(
-                  radius: 44,
-                  backgroundImage: AssetImage(userProfileImage),
-                ),
+                    if (profileImageUrl != null)
+                      ClipOval(
+                        child: Image.network(
+                          profileImageUrl,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
               ],
             ),
           ),
@@ -127,17 +137,19 @@ class _PerfilPageState extends State<PerfilPage> {
                 Navigator.pushNamed(context, '/');
               }
             },
-            child: Container(
-              padding: const EdgeInsets.only(
-                  right: 20, left: 20, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0), color: Colors.red),
-              child: const Text(
-                'Desconectar',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.only(
+                    right: 20, left: 20, top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0), color: Colors.red),
+                child: const Text(
+                  'Desconectar',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
