@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/title_back.dart';
+import '../../main.dart';
 import '../../repositorys/anuncios.repository.dart';
 import 'anuncio_form.dart';
 
@@ -24,13 +25,16 @@ class MinhasOfertas extends StatefulWidget {
 class _MinhasOfertasState extends State<MinhasOfertas> {
   final rep = AnunciosRepository();
   late Future<List<Map<String, dynamic>>> futurePosts;
+  final ListaMinhasOfertas listaMinhasOfertas = ListaMinhasOfertas([]);
   @override
   void initState() {
     super.initState();
-    futurePosts = rep.getPostInfo();
+    futurePosts = rep.getPostInfo('user_email', supabase.auth.currentSession?.user.email);
   }
   @override
   Widget build(BuildContext context) {
+/*     var args = ModalRoute.of(context)!.settings.arguments as PostOferta;
+    print('os argyumentos: ${args.id}'); */
     return Scaffold(
       appBar: Header(
         atualizarBusca: (value) {},
@@ -41,30 +45,44 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           child: FutureBuilder<List<Map<String, dynamic>>>(
               future: futurePosts,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Center(child: Text('Erro ao carregar ONGs'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('Nenhuma ONG encontrada'));
+                final data = snapshot.data;
+                print('snapshot dos posts mO: ${data}');
+                if (data!=null) {
+/*                   if (args!=null) {
+                    listaMinhasOfertas.addPost(args);
+                  } */
+                  listaMinhasOfertas.fillList(data);
+                  print('a lista vaziaaa ${listaMinhasOfertas.getList()}');
                 }
-                final data = snapshot.data!;
-
-                /* print('snapshot dos posts: $data'); */
+                
+                if (snapshot.connectionState == ConnectionState.waiting) {
                 return Stack(children: [
                   titleBack(context, 'Minhas Ofertas', '/home'),
-                  (data.isEmpty)
-                      ? Column(children: [
+                  const Center(child: CircularProgressIndicator(color: Color(0xFF28730E),))]);
+                } else if (snapshot.hasError) {
+                  return Stack(children: [
+                    titleBack(context, 'Minhas Ofertas', '/home'),
+                    const Center(child: Text('Erro ao carregar ofertas'))]);
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty || listaMinhasOfertas.listaPosts.isEmpty || data!.isEmpty) {
+                  return Stack(children: [
+                    titleBack(context, 'Minhas Ofertas', '/home'),
+                    Column(children: [
                           Container(
                             child: semOfertas(),
                             padding: EdgeInsets.only(top: 70),
                           ),
-                        ])
-                      : Container(
-                        child: ListaMeusPosts(dadosMeusPosts: data,),
-                        padding: EdgeInsets.only(top: 70),
-                      ),
-                ]);}),),
+                        ])]);
+                }
+                          return Stack(children: [
+                            titleBack(context, 'Minhas Ofertas', '/home'),
+                            Container(
+                              padding: const EdgeInsets.only(top: 70),
+                              child: ListaMeusPosts(
+                                dadosMeusPosts: listaMinhasOfertas.listaPosts
+                                ),
+                            )
+                          ]);
+}),),
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,

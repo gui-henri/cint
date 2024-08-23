@@ -1,3 +1,4 @@
+import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
 import '../../../repositorys/anuncios.repository.dart';
 import '../anuncio_form.dart';
@@ -9,7 +10,7 @@ List tempForm = [];
 
 class ListaMeusPosts extends StatefulWidget {
   final dadosMeusPosts;
-  const ListaMeusPosts({Key? key, required this.dadosMeusPosts}) : super(key: key);
+  const ListaMeusPosts({super.key, required this.dadosMeusPosts});
 
   @override
   State<ListaMeusPosts> createState() => _ListaMeusPostsState();
@@ -17,27 +18,22 @@ class ListaMeusPosts extends StatefulWidget {
 
 class _ListaMeusPostsState extends State<ListaMeusPosts> {
   final rep = AnunciosRepository();
-  /* final <List<Map<String, dynamic>> futurePosts; */
+  late Future<List<Map<String, dynamic>>> futurePosts;
+  final ListaMinhasOfertas listaMinhasOfertas = ListaMinhasOfertas([]);
     @override
   void initState() {
     super.initState();
-    print('snapshot dos post!!s: ${widget.dadosMeusPosts}');
-    /* futurePosts = widget.dadosMeusPosts; */
+    futurePosts = rep.getPostInfo('user_email', supabase.auth.currentSession?.user.email);
   }
   @override
   Widget build(BuildContext context) {
-/*   Future<Map<String, List<Map<String, dynamic>>>> fetchPostsInfo() async {
-    final data = await futurePosts;
-    return {
-      'futurePosts': data,
-    };
-  } */
+
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: ListView.separated(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 30),
-        separatorBuilder: (context, index) => SizedBox(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(bottom: 30),
+        separatorBuilder: (context, index) => const SizedBox(
           height: 20,
         ),
         itemCount: widget.dadosMeusPosts.length,
@@ -50,6 +46,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                 key: UniqueKey(),
                 onDismissed: (direction) {
                   setState(() {
+                    rep.deletePost(widget.dadosMeusPosts[index].id);
                     widget.dadosMeusPosts.removeAt(index);
                   });
                 },
@@ -58,10 +55,10 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.redAccent,
                     ),
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.0),
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
                   ),
@@ -71,27 +68,21 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.redAccent,
                     ),
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.0),
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
                   ),
                 ),
                 
                 child: PostCard(
-                  oferta: PostOferta(
-                    widget.dadosMeusPosts[index]['nome_produto'], 
-                    widget.dadosMeusPosts[index]['quantidade'], 
-                    widget.dadosMeusPosts[index]['condicao'], 
-                    widget.dadosMeusPosts[index]['categoria'], 
-                    widget.dadosMeusPosts[index]['telefone'], 
-                    widget.dadosMeusPosts[index]['informacao_relevante'], 
-                    widget.dadosMeusPosts[index]['texto_anuncio'], ),
+                  oferta: widget.dadosMeusPosts[index],
                   deletar: () {
                     setState(() {
                       widget.dadosMeusPosts.removeAt(index);
+                      
                     });
                   },
                   editar: () {

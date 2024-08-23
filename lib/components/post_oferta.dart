@@ -13,9 +13,10 @@ class PostOferta {
   String info;
   //Image icon;
   String textoPrincipal;
+  String id;
   //List fotosPost;
   PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
-      this.telefone, this.info, this.textoPrincipal);
+      this.telefone, this.info, this.textoPrincipal, this.id);
 }
 
 class PostCard extends StatefulWidget {
@@ -175,5 +176,38 @@ class _PostCardState extends State<PostCard> {
         )
       ],
     );
+  }
+}
+
+
+class ListaMinhasOfertas {
+  List<PostOferta> listaPosts;
+  ListaMinhasOfertas(this.listaPosts);
+
+  List<PostOferta> getList() {
+    return listaPosts;
+  }
+
+  addPost(value) {
+    listaPosts.add(value);
+  }
+
+  fillList(value) {
+    for (var post in value) {
+      if (!(listaPosts.contains(post))) {
+        listaPosts.add(
+          PostOferta(
+          post['nome_produto'], 
+          post['quantidade'], 
+          post['condicao'], 
+          post['categoria'], 
+          post['telefone'], 
+          post['informacao_relevante'], 
+          post['texto_anuncio'], 
+          post['id']
+          )
+        );
+      }
+    }
   }
 }

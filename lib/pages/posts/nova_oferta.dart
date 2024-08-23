@@ -56,7 +56,7 @@ class _NovaOfertaState extends State<NovaOferta> {
           width: 60,
           height: 60,
           child: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               final rep = AnunciosRepository();
               setState(() {
                 invalido = (_formKey.currentState!.validate());
@@ -82,7 +82,19 @@ class _NovaOfertaState extends State<NovaOferta> {
                   });
                 }
                 tempForm.clear();
-                Navigator.pushNamed(context, '/minhasofertas');
+                var novoPostData = await rep.getPostInfo('id', arguments[1]);
+                var novoPost = PostOferta(
+                  novoPostData[0]['nome_produto'], 
+                  novoPostData[0]['quantidade'], 
+                  novoPostData[0]['condicao'], 
+                  novoPostData[0]['categoria'], 
+                  novoPostData[0]['telefone'], 
+                  novoPostData[0]['informacao_relevante'], 
+                  novoPostData[0]['texto_anuncio'], 
+                  novoPostData[0]['id'], 
+                  );
+                print('novopost: ${novoPost.id}');
+                Navigator.pushNamed(context, '/minhasofertas', arguments: novoPost);
               } else {
                 if (selectedIcon == null) {
                   Future.delayed(const Duration(seconds: 1), () {
