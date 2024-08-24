@@ -24,12 +24,12 @@ class MinhasOfertas extends StatefulWidget {
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
   final rep = AnunciosRepository();
-  late Future<List<Map<String, dynamic>>> futurePosts;
+  final Stream<List<Map<String, dynamic>>> futurePosts = supabase.from('anuncio').stream(primaryKey: ['id']).eq('user_email', supabase.auth.currentSession?.user.email as Object);
   final ListaMinhasOfertas listaMinhasOfertas = ListaMinhasOfertas([]);
   @override
   void initState() {
     super.initState();
-    futurePosts = rep.getPostInfo('user_email', supabase.auth.currentSession?.user.email);
+    /* futurePosts = rep.getPostInfo('user_email', supabase.auth.currentSession?.user.email); */
   }
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
       bottomNavigationBar: const Footer(),
       body: Container(
           color: const Color(0xFFF6F4EB),
-          child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: futurePosts,
+          child: StreamBuilder<List<Map<String, dynamic>>>(
+              stream: futurePosts,
               builder: (context, snapshot) {
                 final data = snapshot.data;
                 print('snapshot dos posts mO: ${data}');
