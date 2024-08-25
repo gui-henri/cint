@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:cint/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cint/routes.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
 import '../../components/header.dart';
@@ -11,7 +8,6 @@ import '../../components/post_oferta.dart';
 import '../../components/title_back.dart';
 import '../../repositorys/anuncios.repository.dart';
 import 'salvos/lista_meus_posts.dart';
-import 'anuncio_form.dart';
 import '../../components/icones_ong.dart';
 
 class NovaOferta extends StatefulWidget {
@@ -28,12 +24,32 @@ class _NovaOfertaState extends State<NovaOferta> {
   late var selectedIcon = null;
   var invalido = false;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _controller = TextEditingController();
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as List;
+    
     final fotosPost = arguments[0];
+    
+    if (isEditing) {
+      if (arguments[2]!=null) {
+        final postEditado = arguments[2] as PostOferta;
+        _controller.text = postEditado.textoPrincipal;
+      }
+    }
 /*     if (isEditing) {
       setState(() {
         //selectedIcon = ofertaEditada!.icon;
@@ -78,6 +94,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                   setState(() {
                     //ofertaEditada!.icon = selectedIcon;
                     //ofertaEditada!.textoPrincipal = _controller.text;
+
                     rep.addTextoAndTipo(arguments[1], _controller.text);
                     isEditing = false;
                   });

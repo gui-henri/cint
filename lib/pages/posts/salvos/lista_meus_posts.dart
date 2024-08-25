@@ -1,9 +1,8 @@
 import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
 import '../../../repositorys/anuncios.repository.dart';
-import '../anuncio_form.dart';
 import '../../../components/post_oferta.dart';
-import '../nova_oferta.dart';
+
 
 List meusPosts = [];
 List tempForm = [];
@@ -88,7 +87,11 @@ Dismissible(
     },
     editar: () {
       Navigator.pushNamed(context, '/anuncio_form',
-          arguments: widget.dadosMeusPosts[index]);
+          arguments: [
+            true, 
+            widget.dadosMeusPosts[index].id,
+            widget.dadosMeusPosts[index],
+            ]);
     },
     detalhes: () {
       Navigator.pushNamed(context, '/editar_form',

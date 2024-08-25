@@ -50,10 +50,8 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
                 final data = snapshot.data;
                 print('snapshot dos posts mO: ${data}');
                 listaMinhasOfertas.fillList(data!);
-                if (data!=null) {
-                  /* listaMinhasOfertas.fillList(data); */
-                  print('a lista de ofertas ${listaMinhasOfertas.listaPosts}');
-                }
+                
+                print('a lista de ofertas ${listaMinhasOfertas.listaPosts}');
                 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                 return Stack(children: [
@@ -63,7 +61,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
                   return Stack(children: [
                     titleBack(context, 'Minhas Ofertas', '/home', null),
                     const Center(child: Text('Erro ao carregar ofertas'))]);
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty || listaMinhasOfertas.listaPosts.isEmpty || data!.isEmpty) {
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty || listaMinhasOfertas.listaPosts.isEmpty || data.isEmpty) {
                   return Stack(children: [
                     titleBack(context, 'Minhas Ofertas', '/home', null),
                     Column(children: [

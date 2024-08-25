@@ -1,3 +1,4 @@
+import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -107,14 +108,17 @@ class _AnuncioFormState extends State<AnuncioForm> {
       });
     } */
 
-    if (tempForm.isNotEmpty) {
+    if (args[2]!=null) {
+      print('aaaaaaaaaaaaa');
+      //final linha = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', args[1]);
+      final dadosPost = args[2] as PostOferta;
       setState(() {
-        _controllerProduto.text = tempForm[0];
-        _controllerQuantidade.text = tempForm[1];
-        _controllerCondicoes.text = tempForm[2];
-        _controllerCategoria.text = tempForm[3];
-        _controllerTelefone.text = tempForm[4];
-        _controllerInfo.text = tempForm[5];
+        _controllerProduto.text = dadosPost.produto;
+        _controllerQuantidade.text = dadosPost.quantidade.toString();
+        _controllerCondicoes.text = dadosPost.condicoes.toString();
+        _controllerCategoria.text = dadosPost.categoria.toString();
+        _controllerTelefone.text = dadosPost.telefone;
+        _controllerInfo.text = dadosPost.info;
       });
     }
     print('está editandoForm: $isEditing');
@@ -252,6 +256,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         );
         print('Id da linha nova: $idPost');
         } else {
+          print('oioioioi');
           var idArgument = args[1];
           idPost = await rep.updateForm(
             idArgument,
@@ -264,7 +269,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         }
         
         if (mounted) {
-          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost]);
+          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, args[2]]);
         }
 
       //}
