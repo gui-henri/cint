@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cint/routes.dart';
 import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -8,7 +7,6 @@ import '../../components/header.dart';
 import '../../components/title_back.dart';
 import '../../main.dart';
 import '../../repositorys/anuncios.repository.dart';
-import 'anuncio_form.dart';
 
 import '../../components/post_oferta.dart';
 

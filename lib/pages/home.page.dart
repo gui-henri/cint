@@ -6,7 +6,6 @@ import '../components/main_title.dart';
 import '../components/ong_button.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
-import 'posts/anuncio_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -113,10 +112,7 @@ class _HomePageState extends State<HomePage> {
             child: const Icon(Icons.post_add_outlined),
             label: 'Criar oferta',
             onTap: () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AnuncioForm()),
-              ),
+              Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null])
             },
             shape: const CircleBorder(),
             labelStyle: const TextStyle(
