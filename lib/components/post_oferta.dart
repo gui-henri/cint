@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
 
@@ -181,6 +183,67 @@ class _PostCardState extends State<PostCard> {
 
 
 class ListaMinhasOfertas {
+  List<PostOferta> _listaPosts = [];
+  final _controller = StreamController<List<PostOferta>>.broadcast();
+
+  ListaMinhasOfertas();
+
+  // Getter para o stream
+  Stream<List<PostOferta>> get stream => _controller.stream;
+
+  // Getter para a lista de posts
+  List<PostOferta> get listaPosts => _listaPosts;
+
+  // Atualiza a lista de posts e notifica os ouvintes
+  void fillList(List<Map<String, dynamic>> newPosts) {
+    final newPostObjects = newPosts.map((post) => PostOferta(
+      post['nome_produto'],
+      post['quantidade'],
+      post['condicao'],
+      post['categoria'],
+      post['telefone'],
+      post['informacao_relevante'],
+      post['texto_anuncio'],
+      post['id'],
+    )).toList();
+
+    // Atualiza a lista interna, adiciona novos posts e remove os deletados
+    _listaPosts = _updatePosts(_listaPosts, newPostObjects);
+
+    // Notifica os ouvintes sobre as mudanças
+    _controller.sink.add(_listaPosts);
+  }
+
+  // Adiciona um post individual e atualiza o stream
+  void addPost(PostOferta post) {
+    _listaPosts.add(post);
+    _controller.sink.add(_listaPosts);
+  }
+
+  // Atualiza a lista de posts, removendo posts antigos e adicionando novos
+  List<PostOferta> _updatePosts(List<PostOferta> currentPosts, List<PostOferta> newPosts) {
+    final existingIds = currentPosts.map((post) => post.id).toSet();
+    final updatedPosts = List<PostOferta>.from(currentPosts);
+
+    for (var post in newPosts) {
+      if (!existingIds.contains(post.id)) {
+        updatedPosts.add(post);
+      }
+    }
+
+    // Remove posts que não estão mais na lista de novos posts
+    updatedPosts.removeWhere((post) => !newPosts.any((newPost) => newPost.id == post.id));
+    return updatedPosts;
+  }
+
+  // Feche o controller quando não for mais necessário
+  void dispose() {
+    _controller.close();
+  }
+}
+
+
+/* class ListaMinhasOfertas {
   List<PostOferta> listaPosts;
   ListaMinhasOfertas(this.listaPosts);
 
@@ -210,4 +273,4 @@ class ListaMinhasOfertas {
       }
     }
   }
-}
+} */

@@ -19,7 +19,7 @@ class ListaMeusPosts extends StatefulWidget {
 class _ListaMeusPostsState extends State<ListaMeusPosts> {
   final rep = AnunciosRepository();
   late Future<List<Map<String, dynamic>>> futurePosts;
-  final ListaMinhasOfertas listaMinhasOfertas = ListaMinhasOfertas([]);
+  final ListaMinhasOfertas listaMinhasOfertas = ListaMinhasOfertas();
     @override
   void initState() {
     super.initState();
@@ -41,60 +41,63 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
           
           return Column(
             children: [
-              Dismissible(
-                
-                key: UniqueKey(),
-                onDismissed: (direction) {
-                  setState(() {
-                    rep.deletePost(widget.dadosMeusPosts[index].id);
-                    widget.dadosMeusPosts.removeAt(index);
-                  });
-                },
-                background: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.redAccent,
-                    ),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
-                  ),
-                ),
-                secondaryBackground: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.redAccent,
-                    ),
-                  child: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
-                  ),
-                ),
-                
-                child: PostCard(
-                  oferta: widget.dadosMeusPosts[index],
-                  deletar: () {
-                    setState(() {
-                      widget.dadosMeusPosts.removeAt(index);
-                      
-                    });
-                  },
-                  editar: () {
-                    Navigator.pushNamed(context, '/anuncio_form',
-                        arguments: widget.dadosMeusPosts[index]);
-                  },
-                  detalhes: () {
-                    Navigator.pushNamed(context, '/editar_form',
-                        arguments: widget.dadosMeusPosts[index]);
-                  },
-                ),
-              ),
+Dismissible(
+  key: UniqueKey(),
+  onDismissed: (direction) async {
+    // Deleta o post do banco de dados
+    await rep.deletePost(widget.dadosMeusPosts[index].id);
+
+    // Atualiza o estado da lista
+    setState(() {
+      widget.dadosMeusPosts.removeAt(index);
+    });
+  },
+  background: Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    child: const Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Icon(Icons.delete, color: Colors.white),
+      ),
+    ),
+  ),
+  secondaryBackground: Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.redAccent,
+    ),
+    child: const Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Icon(Icons.delete, color: Colors.white),
+      ),
+    ),
+  ),
+  child: PostCard(
+    oferta: widget.dadosMeusPosts[index],
+    deletar: () {
+      // Remover do estado local
+      setState(() {
+        widget.dadosMeusPosts.removeAt(index);
+      });
+    },
+    editar: () {
+      Navigator.pushNamed(context, '/anuncio_form',
+          arguments: widget.dadosMeusPosts[index]);
+    },
+    detalhes: () {
+      Navigator.pushNamed(context, '/editar_form',
+          arguments: widget.dadosMeusPosts[index]);
+    },
+  ),
+)
+
+
             ],
           );
         },
