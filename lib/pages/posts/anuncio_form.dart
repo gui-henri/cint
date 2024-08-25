@@ -9,7 +9,9 @@ import '../posts/salvos/lista_meus_posts.dart';
 import 'package:cint/repositorys/anuncios.repository.dart';
 
 class AnuncioForm extends StatefulWidget {
-  const AnuncioForm({super.key});
+  final dynamic isEditing;
+
+  AnuncioForm({Key? key, this.isEditing}) : super(key: key);
 
   static const routeName = '/anuncio_form';
 
@@ -27,6 +29,15 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
   List fotos = [];
+
+  late List<dynamic> args;
+
+    @override
+    void didChangeDependencies() {
+      super.didChangeDependencies();
+      args = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+      isEditing = args[0] as bool;
+    }
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -76,6 +87,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   @override
   Widget build(BuildContext context) {
+    //final args = ModalRoute.of(context)!.settings.arguments as List;
+    //isEditing = args[0] as bool;
 /*     if (isEditing) {
       setState(() {
         dadosPostEditado =
@@ -229,14 +242,31 @@ class _AnuncioFormState extends State<AnuncioForm> {
           null,
         ];
 
-        final idPost = await rep.createPost(
+        late dynamic idPost;
+        if (!isEditing) {
+          idPost = await rep.createPost(
           _controllerProduto.text,
           int.parse(_controllerQuantidade.text),
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text)
         );
         print('Id da linha nova: $idPost');
-        Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost]);
+        } else {
+          var idArgument = args[1];
+          idPost = await rep.updateForm(
+            idArgument,
+          _controllerProduto.text,
+          int.parse(_controllerQuantidade.text),
+          int.parse(_controllerCondicoes.text),
+          int.parse(_controllerCategoria.text)
+        );
+        print('Id da linha editada: $idPost');
+        }
+        
+        if (mounted) {
+          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost]);
+        }
+
       //}
 /*       if (isEditing) {
         setState(() {

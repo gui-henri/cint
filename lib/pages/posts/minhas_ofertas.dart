@@ -59,15 +59,15 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
                 
                 if (snapshot.connectionState == ConnectionState.waiting) {
                 return Stack(children: [
-                  titleBack(context, 'Minhas Ofertas', '/home'),
+                  titleBack(context, 'Minhas Ofertas', '/home', null),
                   const Center(child: CircularProgressIndicator(color: Color(0xFF28730E),))]);
                 } else if (snapshot.hasError) {
                   return Stack(children: [
-                    titleBack(context, 'Minhas Ofertas', '/home'),
+                    titleBack(context, 'Minhas Ofertas', '/home', null),
                     const Center(child: Text('Erro ao carregar ofertas'))]);
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty || listaMinhasOfertas.listaPosts.isEmpty || data!.isEmpty) {
                   return Stack(children: [
-                    titleBack(context, 'Minhas Ofertas', '/home'),
+                    titleBack(context, 'Minhas Ofertas', '/home', null),
                     Column(children: [
                           Container(
                             child: semOfertas(),
@@ -76,7 +76,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
                         ])]);
                 }
                           return Stack(children: [
-                            titleBack(context, 'Minhas Ofertas', '/home'),
+                            titleBack(context, 'Minhas Ofertas', '/home', null),
                             Container(
                               padding: const EdgeInsets.only(top: 70),
                               child: ListaMeusPosts(
@@ -90,10 +90,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
         height: 60,
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AnuncioForm()),
-            );
+            Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null]);
           },
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6EB855),

@@ -11,6 +11,16 @@ class AnunciosRepository {
     return response['id'].toString();
   }
 
+  Future<String> updateForm(id, nome, quantidade, condicao, categoria) async {
+    final response = await Supabase.instance.client
+                            .from('anuncio')
+                            .update({'nome_produto' : '$nome', 'quantidade' : '$quantidade', 'condicao' : '$condicao', 'categoria' : '$categoria', 'user_email': '${supabase.auth.currentSession?.user.email}'})
+                            .eq('id', id)
+                            .select('id')
+                            .single();
+    return response['id'].toString();
+  }
+
   Future<List<Map<String, dynamic>>> getPostInfo(String coluna, obj) async {
     final response = await Supabase.instance.client
                             .from('anuncio')

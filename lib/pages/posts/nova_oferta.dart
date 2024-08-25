@@ -34,12 +34,12 @@ class _NovaOfertaState extends State<NovaOferta> {
   Widget build(BuildContext context) {
     final arguments = ModalRoute.of(context)!.settings.arguments as List;
     final fotosPost = arguments[0];
-    if (isEditing) {
+/*     if (isEditing) {
       setState(() {
         //selectedIcon = ofertaEditada!.icon;
         _controller.text = ofertaEditada!.textoPrincipal;
       });
-    }
+    } */
     final user = supabase.auth.currentUser;
     final profileImageUrl = user?.userMetadata?['avatar_url'];
     final fullName = user?.userMetadata?['full_name'];
@@ -77,7 +77,8 @@ class _NovaOfertaState extends State<NovaOferta> {
                 if (isEditing) {
                   setState(() {
                     //ofertaEditada!.icon = selectedIcon;
-                    ofertaEditada!.textoPrincipal = _controller.text;
+                    //ofertaEditada!.textoPrincipal = _controller.text;
+                    rep.addTextoAndTipo(arguments[1], _controller.text);
                     isEditing = false;
                   });
                 }
@@ -134,7 +135,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                 child: Stack(
                   children: [
                     Column(children: [
-                      titleBack(context, 'Nova oferta', '/anuncio_form'),
+                      titleBack(context, 'Nova oferta', '/anuncio_form', [true, arguments[1]]),
                       const SizedBox(
                         height: 30,
                       ),
