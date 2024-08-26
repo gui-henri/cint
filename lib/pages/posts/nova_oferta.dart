@@ -48,6 +48,7 @@ class _NovaOfertaState extends State<NovaOferta> {
     if (isEditing) {
       if (arguments[2]!=null) {
         final postEditado = arguments[2] as PostOferta;
+        print(postEditado);
         _controller.text = postEditado.textoPrincipal;
       }
     }
@@ -161,7 +162,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                 child: Stack(
                   children: [
                     Column(children: [
-                      titleBack(context, 'Nova oferta', '/anuncio_form', [true, arguments[1]]),
+                      titleBack(context, 'Nova oferta', '/anuncio_form', [true, arguments[1], (arguments[2] !=null) ? arguments[2] as PostOferta : null]),
                       const SizedBox(
                         height: 30,
                       ),

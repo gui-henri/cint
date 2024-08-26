@@ -120,7 +120,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         _controllerTelefone.text = dadosPost.telefone;
         _controllerInfo.text = dadosPost.info;
       });
-    }
+    } else {print('args 2 null');}
     print('está editandoForm: $isEditing');
     return Scaffold(
       appBar: AppBar(
@@ -138,7 +138,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
               isEditing = false;
               tempForm.clear();
             });
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/minhasofertas');
           },
         ),
         title: FractionallySizedBox(
@@ -254,6 +254,10 @@ class _AnuncioFormState extends State<AnuncioForm> {
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text)
         );
+        final postof = PostOferta(_controllerProduto.text, int.parse(_controllerQuantidade.text), int.parse(_controllerCondicoes.text), int.parse(_controllerCategoria.text), '', '', '', idPost);
+        if (mounted) {
+          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, postof]);
+        }
         print('Id da linha nova: $idPost');
         } else {
           print('oioioioi');
@@ -265,12 +269,13 @@ class _AnuncioFormState extends State<AnuncioForm> {
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text)
         );
-        print('Id da linha editada: $idPost');
+          if (mounted) {
+            Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, args[2]]);
+          }
+          print('Id da linha editada: $idPost');
         }
         
-        if (mounted) {
-          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, args[2]]);
-        }
+
 
       //}
 /*       if (isEditing) {

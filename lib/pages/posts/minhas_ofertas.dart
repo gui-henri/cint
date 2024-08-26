@@ -46,6 +46,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           color: const Color(0xFFF6F4EB),
           child: StreamBuilder<List<Map<String, dynamic>>>(
               stream: futurePosts,
+              initialData: [],
               builder: (context, snapshot) {
                 final data = snapshot.data;
                 print('snapshot dos posts mO: ${data}');
@@ -53,7 +54,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
                 
                 print('a lista de ofertas ${listaMinhasOfertas.listaPosts}');
                 
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
                 return Stack(children: [
                   titleBack(context, 'Minhas Ofertas', '/home', null),
                   const Center(child: CircularProgressIndicator(color: Color(0xFF28730E),))]);
@@ -86,7 +87,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
         height: 60,
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null]);
+            Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null, null]);
           },
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6EB855),

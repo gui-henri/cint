@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
             child: const Icon(Icons.post_add_outlined),
             label: 'Criar oferta',
             onTap: () => {
-              Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null])
+              Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null, null])
             },
             shape: const CircleBorder(),
             labelStyle: const TextStyle(
