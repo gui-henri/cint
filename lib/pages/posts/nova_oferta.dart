@@ -122,7 +122,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                 child: Stack(
                   children: [
                     Column(children: [
-                      titleBack(context, 'Nova oferta', '/anuncio_form'),
+                      titleBack(context, 'Nova oferta'),
                       const SizedBox(
                         height: 30,
                       ),

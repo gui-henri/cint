@@ -34,7 +34,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
             widthFactor: 1,
             heightFactor: 1,
             child: Stack(children: [
-              titleBack(context, 'Minhas Ofertas', '/home'),
+              titleBack(context, 'Minhas Ofertas'),
               (meusPosts.isEmpty)
                   ? Column(children: [
                       Container(
