@@ -22,7 +22,8 @@ class NovaOferta extends StatefulWidget {
 
 class _NovaOfertaState extends State<NovaOferta> {
   late var selectedIconURL = null;
-  late var selectedIcon = null;
+  late var selectedIconImage = null;
+  late var selectedIconCategory = null;
   var invalido = false;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _controller;
@@ -96,20 +97,21 @@ class _NovaOfertaState extends State<NovaOferta> {
               print('texto: ${_controller.text}');
               print('está editando: $isEditing');
               (_formKey.currentState!.validate());
-              if (selectedIcon != null && _formKey.currentState!.validate()) {
+              if (selectedIconCategory != null && _formKey.currentState!.validate()) {
                 if (isEditing == false) {
                   setState(() {
-                    rep.addTextoAndTipo(arguments[1], _controller.text);
+                    rep.addTextoAndTipo(arguments[1], _controller.text, selectedIconCategory);
                   });
                 }
                 if (isEditing) {
                   setState(() {
-                    rep.addTextoAndTipo(arguments[1], _controller.text);
+                    rep.addTextoAndTipo(arguments[1], _controller.text, selectedIconCategory);
                     isEditing = false;
                   });
                 }
                 tempForm.clear();
                 var novoPostData = await rep.getPostInfo('id', arguments[1]);
+                print('id!!!: ${novoPostData[0]['tipo_id']}');
                 var novoPost = PostOferta(
                   novoPostData[0]['nome_produto'], 
                   novoPostData[0]['quantidade'], 
@@ -119,11 +121,12 @@ class _NovaOfertaState extends State<NovaOferta> {
                   novoPostData[0]['informacao_relevante'], 
                   novoPostData[0]['texto_anuncio'], 
                   novoPostData[0]['id'], 
+                  novoPostData[0]['tipo_id'], 
                 );
                 print('novopost: ${novoPost.id}');
-                Navigator.pushNamed(context, '/minhasofertas', arguments: novoPost);
+                Navigator.pushNamed(context, '/minhasofertas', arguments: [novoPost, selectedIconCategory]);
               } else {
-                if (selectedIcon == null) {
+                if (selectedIconImage == null) {
                   Future.delayed(const Duration(seconds: 1), () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -214,7 +217,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                             ),
                                             color: Colors.white,
                                           ),
-                                          child: selectedIcon,
+                                          child: selectedIconImage
                                         ),
                                       ],
                                     ),
@@ -256,7 +259,8 @@ class _NovaOfertaState extends State<NovaOferta> {
                                 setState(() {
                                   selectedIconURL = iconesOng.firstWhere(
                                       (item) => item["tipo"] == category)["icon-green"];
-                                  selectedIcon = Image.asset(selectedIconURL);
+                                  selectedIconCategory = category;
+                                  selectedIconImage = Image.asset(selectedIconURL);
                                 });
                                 if (isEditing) {
                                   setState(() {

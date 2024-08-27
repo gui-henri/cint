@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:cint/components/icones_ong.dart';
 import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
+import '../../components/icones_ong.dart';
 
 bool isEditing = false;
 PostOferta? ofertaEditada;
@@ -13,12 +15,12 @@ class PostOferta {
   int categoria;
   String telefone;
   String info;
-  //Image icon;
+  int icon;
   String textoPrincipal;
   String id;
   //List fotosPost;
   PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
-      this.telefone, this.info, this.textoPrincipal, this.id);
+      this.telefone, this.info, this.textoPrincipal, this.id, this.icon);
 }
 
 class PostCard extends StatefulWidget {
@@ -64,6 +66,7 @@ class _PostCardState extends State<PostCard> {
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
+    final preferencia = supabase.from('preferencia').stream(primaryKey: ['id']).eq('id', widget.oferta.icon);
     return Row(
       children: [
         Expanded(
@@ -105,7 +108,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ),
                     const Spacer(),
-                    /* Container(
+                    Container(
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
@@ -115,8 +118,18 @@ class _PostCardState extends State<PostCard> {
                         ),
                         color: Colors.white,
                       ),
-                      child: widget.oferta.icon,
-                    ), */
+                      child: StreamBuilder(
+                        stream: preferencia, 
+                        builder: (context, snapshot) {
+                          final data = snapshot.data;
+                          if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
+                          return const Center(child: CircularProgressIndicator(color: Color(0xFF28730E),));
+                          }
+                          return Image.asset(iconesOng.firstWhere(
+                                      (item) => item["tipo"] == data![0]['nome'])["icon-green"]);
+                      },
+                      )
+                    ),
                   ],
                 ),
                 Column(
@@ -205,6 +218,7 @@ class ListaMinhasOfertas {
       post['informacao_relevante'],
       post['texto_anuncio'],
       post['id'],
+      post['tipo_id']
     )).toList();
 
     // Atualiza a lista interna, adiciona novos posts e remove os deletados

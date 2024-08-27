@@ -24,7 +24,7 @@ class AnunciosRepository {
   Future<List<Map<String, dynamic>>> getPostInfo(String coluna, obj) async {
     final response = await Supabase.instance.client
                             .from('anuncio')
-                            .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, texto_anuncio')
+                            .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, texto_anuncio, tipo_id')
                             .eq(coluna, obj as Object);
     return response;
   }
@@ -34,10 +34,14 @@ class AnunciosRepository {
     return response;
   }
 
-  Future<List<Map<String, dynamic>>> addTextoAndTipo(id, texto) async {
+  Future<List<Map<String, dynamic>>> addTextoAndTipo(id, texto, tipo) async {
+    final tipoId = await Supabase.instance.client
+                            .from('preferencia')
+                            .select('id')
+                            .eq('nome', tipo);
     final response = await Supabase.instance.client
                             .from('anuncio')
-                            .update({'texto_anuncio' : '$texto'})
+                            .update({'texto_anuncio' : '$texto', 'tipo_id' : tipoId[0]['id']})
                             .eq('id', id);
     return response;
   }

@@ -254,7 +254,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text)
         );
-        final postof = PostOferta(_controllerProduto.text, int.parse(_controllerQuantidade.text), int.parse(_controllerCondicoes.text), int.parse(_controllerCategoria.text), '', '', '', idPost);
+        final postof = PostOferta(_controllerProduto.text, int.parse(_controllerQuantidade.text), int.parse(_controllerCondicoes.text), int.parse(_controllerCategoria.text), '', '', '', idPost, 0);
         if (mounted) {
           Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, postof]);
         }
