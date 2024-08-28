@@ -46,11 +46,9 @@ class _AnuncioFormState extends State<AnuncioForm> {
       builder: (BuildContext context) {
         return Dialog(
           child: Stack(children: [
-            Container(
-              child: Image.network(
-                fotos[index].path,
-                fit: BoxFit.contain,
-              ),
+            Image.network(
+              fotos[index].path,
+              fit: BoxFit.contain,
             ),
             IconButton(
               onPressed: () {
@@ -61,7 +59,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
               },
               icon: Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: const Icon(
                   Icons.delete,
                   color: Colors.red,
@@ -180,15 +178,13 @@ class _AnuncioFormState extends State<AnuncioForm> {
                         onTap: () => _showImageDialog(index),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.network(
-                                photo.path,
-                                height: 60.0,
-                                width: 60.0,
-                                fit: BoxFit.cover,
-                              ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              photo.path,
+                              height: 60.0,
+                              width: 60.0,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -255,10 +251,10 @@ class _AnuncioFormState extends State<AnuncioForm> {
           ),
         ),
       ),
-      child: Container(
+      child: const SizedBox(
         width: 130,
         height: 30,
-        child: const Center(
+        child: Center(
           child: Text(
             'Enviar',
             style: TextStyle(
@@ -273,13 +269,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   Widget BotaoFoto() {
     return TextButton(
-      child: Container(
-        height: 37,
-        width: 299,
-        child: const Center(
-          child: Text('Anexar foto do produto'),
-        ),
-      ),
       style: ButtonStyle(
         foregroundColor: const MaterialStatePropertyAll(Colors.white),
         backgroundColor: const MaterialStatePropertyAll(Color(0xFF28730E)),
@@ -292,6 +281,13 @@ class _AnuncioFormState extends State<AnuncioForm> {
       onPressed: () {
         _pickImage();
       },
+      child: const SizedBox(
+        height: 37,
+        width: 299,
+        child: Center(
+          child: Text('Anexar foto do produto'),
+        ),
+      ),
     );
   }
 }

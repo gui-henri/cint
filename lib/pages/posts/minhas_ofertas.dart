@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cint/routes.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/title_back.dart';
 import 'anuncio_form.dart';
 
-import '../../components/post_oferta.dart';
 
 import 'salvos/lista_meus_posts.dart';
 
@@ -34,19 +31,19 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
             widthFactor: 1,
             heightFactor: 1,
             child: Stack(children: [
-              titleBack(context, 'Minhas Ofertas', '/home'),
+              titleBack(context, 'Minhas Ofertas'),
               (meusPosts.isEmpty)
                   ? Column(children: [
                       Container(
+                        padding: const EdgeInsets.only(top: 70),
                         child: semOfertas(),
-                        padding: EdgeInsets.only(top: 70),
                       ),
                     ])
                   : FractionallySizedBox(
                       widthFactor: 1,
                       child: Container(
-                        child: ListaMeusPosts(),
-                        padding: EdgeInsets.only(top: 70),
+                        padding: const EdgeInsets.only(top: 70),
+                        child: const ListaMeusPosts(),
                       ),
                     ),
             ]),
@@ -58,13 +55,13 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AnuncioForm()),
+              MaterialPageRoute(builder: (context) => const AnuncioForm()),
             );
           },
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6EB855),
-          child: Icon(Icons.add),
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );

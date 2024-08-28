@@ -8,16 +8,16 @@ Widget CampoTexto(
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: const Color(0xFF28730E),
+          style: const TextStyle(
+            color: Color(0xFF28730E),
           ),
         ),
         (obrigatorio)
-            ? Text(
+            ? const Text(
                 '*',
                 style: TextStyle(color: Colors.red),
               )
-            : Text(''),
+            : const Text(''),
       ],
     ),
     TextFormField(
@@ -31,11 +31,11 @@ Widget CampoTexto(
           borderRadius: BorderRadius.circular(20.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: const BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(20.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: const BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(20.0),
         ),
       ),
