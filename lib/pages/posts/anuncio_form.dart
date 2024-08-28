@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:io';
 
 import '../../components/campo_texto.dart';
@@ -30,6 +34,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
   List fotos = [];
+  List fotosKeys = [];
+  Map<String, dynamic> fotosMap = {};
 
   late List<dynamic> args;
 
@@ -43,12 +49,36 @@ class _AnuncioFormState extends State<AnuncioForm> {
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) {return;}
+    //envio remoto
+    var uuid = const Uuid();
+    String uniqueKey = uuid.v4();  // Gera um UUID v4
+    print('Unique Key: $uniqueKey');
+    final imageExtension = pickedImage.path.split('.').last.toLowerCase();
+    final imageBytes = await pickedImage.readAsBytes();
+    final userId = supabase.auth.currentUser!.id;
+    final imagePath = '/$userId/$uniqueKey';
+    await supabase.storage
+      .from('anuncio')
+      .uploadBinary(imagePath, 
+      imageBytes, 
+      fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'));
+      final imageUrl = supabase.storage.from('anuncio').getPublicUrl(imagePath);
+      print('url: $imageUrl');
+    //lista local
     if (pickedImage != null) {
       final arquivo = File(pickedImage.path); // Converte XFile para File
       setState(() {
         fotos.add(arquivo);
         print(fotos);
+        fotosKeys.add(imageUrl);
+
+        // preparando map
+        fotosMap['$uniqueKey'] = imageUrl;
+        print('fotosMap: $fotosMap');
       });
+
+      
     }
   }
 
@@ -252,9 +282,21 @@ class _AnuncioFormState extends State<AnuncioForm> {
           _controllerProduto.text,
           int.parse(_controllerQuantidade.text),
           int.parse(_controllerCondicoes.text),
-          int.parse(_controllerCategoria.text)
+          int.parse(_controllerCategoria.text),
+          jsonEncode(fotosMap)
         );
-        final postof = PostOferta(_controllerProduto.text, int.parse(_controllerQuantidade.text), int.parse(_controllerCondicoes.text), int.parse(_controllerCategoria.text), '', '', '', idPost, 0);
+        final postof = PostOferta(
+          _controllerProduto.text, 
+          int.parse(_controllerQuantidade.text), 
+          int.parse(_controllerCondicoes.text), 
+          int.parse(_controllerCategoria.text), 
+          '', 
+          '', 
+          '', 
+          idPost, 
+          0,
+
+          );
         if (mounted) {
           Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, postof]);
         }

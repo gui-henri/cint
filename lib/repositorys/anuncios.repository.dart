@@ -2,10 +2,10 @@ import 'package:cint/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AnunciosRepository {
-  Future<String> createPost(nome, quantidade, condicao, categoria) async {
+  Future<String> createPost(nome, quantidade, condicao, categoria, fotos) async {
     final response = await Supabase.instance.client
                             .from('anuncio')
-                            .insert([{'nome_produto' : '$nome', 'quantidade' : '$quantidade', 'condicao' : '$condicao', 'categoria' : '$categoria', 'user_email': '${supabase.auth.currentSession?.user.email}'}])
+                            .insert([{'nome_produto' : '$nome', 'quantidade' : '$quantidade', 'condicao' : '$condicao', 'categoria' : '$categoria', 'fotos' : '$fotos','user_email': '${supabase.auth.currentSession?.user.email}'}])
                             .select('id')
                             .single();
     return response['id'].toString();
