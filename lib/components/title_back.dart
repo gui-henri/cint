@@ -5,7 +5,7 @@ Widget titleBack(BuildContext context, String text) {
     padding: const EdgeInsets.all(15.0),
     child: Row(children: [
       Padding(
-        padding: EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.only(right: 10),
         child: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -15,7 +15,7 @@ Widget titleBack(BuildContext context, String text) {
             color: Colors.black,
           ),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(CircleBorder(
+              shape: MaterialStateProperty.all(const CircleBorder(
             side: BorderSide(
               width: 1,
               color: Colors.black,
@@ -25,7 +25,7 @@ Widget titleBack(BuildContext context, String text) {
       ),
       Text(
         text,
-        style: TextStyle(fontSize: 26, color: Colors.black),
+        style: const TextStyle(fontSize: 26, color: Colors.black),
       ),
     ]),
   );

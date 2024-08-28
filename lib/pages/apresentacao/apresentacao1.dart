@@ -31,7 +31,7 @@ class _Apresentacao1State extends State<Apresentacao1> {
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.width * 0.09,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF28730E),
+                color: const Color(0xFF28730E),
               ),
             ),
           ),

@@ -41,11 +41,9 @@ class _PostCardState extends State<PostCard> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          child: Container(
-            child: Image.network(
-              widget.oferta.fotosPost[index].path,
-              fit: BoxFit.contain,
-            ),
+          child: Image.network(
+            widget.oferta.fotosPost[index].path,
+            fit: BoxFit.contain,
           ),
         );
       },
@@ -146,16 +144,14 @@ class _PostCardState extends State<PostCard> {
                                         onTap: () => _showImageDialog(index),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              child: Image.network(
-                                                photo.path,
-                                                height: 60.0,
-                                                width: 60.0,
-                                                fit: BoxFit.cover,
-                                              ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            child: Image.network(
+                                              photo.path,
+                                              height: 60.0,
+                                              width: 60.0,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),

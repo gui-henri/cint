@@ -1,16 +1,12 @@
-import 'dart:io';
 
 import 'package:cint/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cint/routes.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/post_oferta.dart';
 import '../../components/title_back.dart';
 import 'salvos/lista_meus_posts.dart';
-import 'anuncio_form.dart';
 import '../../components/icones_ong.dart';
 
 class NovaOferta extends StatefulWidget {
@@ -109,8 +105,8 @@ class _NovaOfertaState extends State<NovaOferta> {
             },
             foregroundColor: Colors.white,
             backgroundColor: const Color(0xFF6EB855),
-            child: Icon(Icons.send),
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
+            child: const Icon(Icons.send),
           ),
         ),
         body: Container(
@@ -316,7 +312,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         (item) => item["tipo"] == 'Idosos')["icon-green"],
                                   invalido: invalido,
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 SquareGesture(
                                   name: 'Sem-teto',
                                   icon:
@@ -344,7 +340,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         (item) => item["tipo"] == 'Sem-teto')["icon-green"],
                                   invalido: invalido,
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 SquareGesture(
                                   name: 'Mulheres',
                                   icon:
@@ -406,7 +402,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         (item) => item["tipo"] == 'Religiosas')["icon-green"],
                                   invalido: invalido,
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 SquareGesture(
                                   name: 'Minorias',
                                   icon:
@@ -434,7 +430,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         (item) => item["tipo"] == 'Minorias')["icon-green"],
                                   invalido: invalido,
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 SquareGesture(
                                   name: 'Ambientais',
                                   icon:
@@ -496,7 +492,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         (item) => item["tipo"] == 'Culturais')["icon-green"],
                                   invalido: invalido,
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 SquareGesture(
                                   name: 'Reabilitação',
                                   icon:
@@ -524,7 +520,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                         (item) => item["tipo"] == 'Reabilitação')["icon-green"],
                                   invalido: invalido,
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 SquareGesture(
                                   name: 'Refugiados',
                                   icon:
@@ -576,8 +572,7 @@ class SquareGesture extends StatelessWidget {
   final bool isSelected;
   final bool invalido;
 
-  const SquareGesture({
-    Key? key,
+  const SquareGesture({super.key, 
     this.name,
     this.icon,
     this.onTap,

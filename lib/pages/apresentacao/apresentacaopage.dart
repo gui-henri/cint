@@ -4,7 +4,7 @@ import 'package:cint/pages/apresentacao/apresentacao3.dart';
 import 'package:flutter/material.dart';
 
 class ApresentacaoPage extends StatefulWidget {
-  const ApresentacaoPage({Key? key}) : super(key: key);
+  const ApresentacaoPage({super.key});
 
   static const routeName = '/ApresentacaoPage';
 
@@ -113,13 +113,11 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
   Widget pageTracker() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            telas.length,
-            (index) => buildDot(index, context),
-          ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          telas.length,
+          (index) => buildDot(index, context),
         ),
       ),
     );
@@ -129,7 +127,7 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
     return Container(
       height: 10,
       width: 10,
-      margin: EdgeInsets.only(left: 5, bottom: 40),
+      margin: const EdgeInsets.only(left: 5, bottom: 40),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: (currentPageIndex == index)
@@ -142,13 +140,11 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
   Widget linhaInferior() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        child: Row(
-          children: [
-            (currentPageIndex != 2) ? botaoPular() : Spacer(),
-            if (currentPageIndex == 2) botaoComecar(),
-          ],
-        ),
+      child: Row(
+        children: [
+          (currentPageIndex != 2) ? botaoPular() : const Spacer(),
+          if (currentPageIndex == 2) botaoComecar(),
+        ],
       ),
     );
   }
@@ -156,7 +152,7 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
   Padding modelobotaoInferior(String text) {
     return Padding(
       padding: const EdgeInsets.all(11.0),
-      child: Container(
+      child: SizedBox(
         width: (currentPageIndex != 2) ? 70 : 100,
         child: TextButton(
           onPressed: () {

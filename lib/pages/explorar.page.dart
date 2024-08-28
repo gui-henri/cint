@@ -197,7 +197,6 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   }
                       
                   }
-                  return SizedBox();
                   } }
                  /**//*if (digitando.isNotEmpty) {
                     print(digitando);
