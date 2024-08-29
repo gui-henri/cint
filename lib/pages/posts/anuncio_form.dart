@@ -54,6 +54,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
     var uuid = const Uuid();
     String uniqueKey = uuid.v4();  // Gera um UUID v4
     print('Unique Key: $uniqueKey');
+
+    //print('bucket aqui blabla: $bucket');
     final imageExtension = pickedImage.path.split('.').last.toLowerCase();
     final imageBytes = await pickedImage.readAsBytes();
     final userId = supabase.auth.currentUser!.id;
@@ -99,6 +101,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
                 setState(() {
                   fotosKeys.remove(foto);
                   Navigator.pop(context);
+                  final rep = AnunciosRepository();
+                  rep.deleteFoto(foto);
                 });
               },
               icon: Container(

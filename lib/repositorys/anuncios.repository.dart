@@ -53,7 +53,53 @@ class AnunciosRepository {
                             .eq('id', id);
     return response;
   }
-  
+
+
+/* Future<List<String>> listFileUrls(String folderId) async {
+  final supabase = Supabase.instance.client;
+
+  try {
+    // Listar arquivos dentro da pasta
+    final response = await supabase.storage.from('anuncio').list(path: folderId);
+
+    final List<String> fileUrls = [];
+
+    // Gerar URL pública para cada arquivo
+    for (var file in response) {
+      final fileName = file.name;
+      final fileResponse = await supabase.storage.from('anuncio').getPublicUrl('$folderId/$fileName');
+
+      fileUrls.add(fileResponse);
+    }
+
+    return fileUrls;
+  } catch (e) {
+    print('Erro ao listar arquivos ou gerar URLs: $e');
+    return [];
+  }
+} */
+
+  String extractLastSegmentFromUrl(String url) {
+    // Cria um objeto Uri a partir da URL
+    final uri = Uri.parse(url);
+
+    // Obtém os segmentos do caminho
+    final pathSegments = uri.pathSegments;
+
+    // Retorna o último segmento, se existir
+    if (pathSegments.isNotEmpty) {
+      return pathSegments.last;
+    } else {
+      throw Exception('URL não contém segmentos de caminho.');
+    }
+  }
+
+  Future deleteFoto(url) async {
+    final idFoto = extractLastSegmentFromUrl(url);
+    print('idFoto: $idFoto');
+    final response = await supabase.storage.from('anuncio').remove(['${supabase.auth.currentUser!.id}/$idFoto']);
+    return response;
+  }
 }
 
 class UserRepository {
