@@ -169,6 +169,13 @@ class _AnuncioFormState extends State<AnuncioForm> {
             ),
           ))),
           onPressed: () {
+            if (!isEditing) {
+              final rep = AnunciosRepository();
+              for (var foto in fotosKeys) {
+                rep.deleteFoto(foto);
+              }
+                  
+            }
             setState(() {
               isEditing = false;
               tempForm.clear();

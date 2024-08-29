@@ -43,8 +43,16 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
 Dismissible(
   key: UniqueKey(),
   onDismissed: (direction) async {
+    var i = 0;
+    for (var foto in widget.dadosMeusPosts[index].fotosPost) {
+      print('foto: $foto');
+      rep.deleteFoto(foto);
+      print(i);
+    }
+
     // Deleta o post do banco de dados
     await rep.deletePost(widget.dadosMeusPosts[index].id);
+
 
     // Atualiza o estado da lista
     setState(() {

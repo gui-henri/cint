@@ -46,7 +46,7 @@ class AnunciosRepository {
     return response;
   }
 
-  Future<List<Map<String, dynamic>>> deletePost(id) async {
+  Future<void> deletePost(id) async {
     final response = await Supabase.instance.client
                             .from('anuncio')
                             .delete()
