@@ -24,7 +24,7 @@ class AnunciosRepository {
   Future<List<Map<String, dynamic>>> getPostInfo(String coluna, obj) async {
     final response = await Supabase.instance.client
                             .from('anuncio')
-                            .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, texto_anuncio, tipo_id')
+                            .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, texto_anuncio, tipo_id, fotos')
                             .eq(coluna, obj as Object);
     return response;
   }

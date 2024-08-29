@@ -35,7 +35,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerInfo = TextEditingController();
   List fotos = [];
   List fotosKeys = [];
-  Map<String, dynamic> fotosMap = {};
+  Map<String, dynamic> fotosMap = {'fotos' : []};
 
   late List<dynamic> args;
 
@@ -74,7 +74,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         fotosKeys.add(imageUrl);
 
         // preparando map
-        fotosMap['$uniqueKey'] = imageUrl;
+        fotosMap['fotos'].add(imageUrl);
         print('fotosMap: $fotosMap');
       });
 
@@ -283,7 +283,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           int.parse(_controllerQuantidade.text),
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text),
-          jsonEncode(fotosMap)
+          jsonEncode(fotosKeys)
         );
         final postof = PostOferta(
           _controllerProduto.text, 
@@ -295,7 +295,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           '', 
           idPost, 
           0,
-
+          fotosKeys
           );
         if (mounted) {
           Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, postof]);

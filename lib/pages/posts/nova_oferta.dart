@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cint/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +64,7 @@ class _NovaOfertaState extends State<NovaOferta> {
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
 
+    final linhaPost = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', arguments[1]);
     // Define a lista de categorias
     final categories = [
       'Saúde',
@@ -111,7 +114,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                 }
                 tempForm.clear();
                 var novoPostData = await rep.getPostInfo('id', arguments[1]);
-                print('id!!!: ${novoPostData[0]['tipo_id']}');
+                print('id!!!: ${novoPostData[0]['fotos']}');
                 var novoPost = PostOferta(
                   novoPostData[0]['nome_produto'], 
                   novoPostData[0]['quantidade'], 
@@ -122,6 +125,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                   novoPostData[0]['texto_anuncio'], 
                   novoPostData[0]['id'], 
                   novoPostData[0]['tipo_id'], 
+                  jsonDecode(novoPostData[0]['fotos']), 
                 );
                 print('novopost: ${novoPost.id}');
                 Navigator.pushNamed(context, '/minhasofertas', arguments: [novoPost, selectedIconCategory]);

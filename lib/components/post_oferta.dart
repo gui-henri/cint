@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cint/components/icones_ong.dart';
 import 'package:cint/main.dart';
@@ -18,9 +19,9 @@ class PostOferta {
   int icon;
   String textoPrincipal;
   String id;
-  //List fotosPost;
+  List<dynamic> fotosPost;
   PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
-      this.telefone, this.info, this.textoPrincipal, this.id, this.icon);
+      this.telefone, this.info, this.textoPrincipal, this.id, this.icon, this.fotosPost);
 }
 
 class PostCard extends StatefulWidget {
@@ -67,6 +68,9 @@ class _PostCardState extends State<PostCard> {
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
     final preferencia = supabase.from('preferencia').stream(primaryKey: ['id']).eq('id', widget.oferta.icon);
+    //final fotosJsonString = supabase.from('anuncio').select('fotos').eq('id', widget.oferta.icon).asStream();
+
+    //
     return Row(
       children: [
         Expanded(
@@ -147,10 +151,9 @@ class _PostCardState extends State<PostCard> {
                         ],
                       ),
                     ),
-                    /* Row(
+                    Row(
                       children: [
-                        widget.oferta.fotosPost.isNotEmpty
-                            ? Expanded(
+                         Expanded(
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
@@ -159,14 +162,14 @@ class _PostCardState extends State<PostCard> {
                                       int index = widget.oferta.fotosPost
                                           .indexOf(photo);
                                       return GestureDetector(
-                                        onTap: () => _showImageDialog(index),
+                                        //onTap: () => _showImageDialog(index),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
-                                              child: Image.file(
+                                              child: Image.network(
                                                 photo,
                                                 height: 200.0,
                                                 width: 200.0,
@@ -177,12 +180,11 @@ class _PostCardState extends State<PostCard> {
                                         ),
                                       );
                                     }).toList(),
-                                  ),
+                                  )
                                 ),
                               )
-                            : const SizedBox(),
                       ],
-                    ), */
+                    ),
                   ],
                 ),
               ]),
@@ -207,9 +209,11 @@ class ListaMinhasOfertas {
   // Getter para a lista de posts
   List<PostOferta> get listaPosts => _listaPosts;
 
+
   // Atualiza a lista de posts e notifica os ouvintes
   void fillList(List<Map<String, dynamic>> newPosts) {
-    final newPostObjects = newPosts.map((post) => PostOferta(
+    final newPostObjects = newPosts.map((post) => 
+    PostOferta(
       post['nome_produto'],
       post['quantidade'],
       post['condicao'],
@@ -218,7 +222,8 @@ class ListaMinhasOfertas {
       post['informacao_relevante'],
       post['texto_anuncio'],
       post['id'],
-      post['tipo_id']
+      post['tipo_id'],
+      jsonDecode(post['fotos']),
     )).toList();
 
     // Atualiza a lista interna, adiciona novos posts e remove os deletados
