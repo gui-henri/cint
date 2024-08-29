@@ -82,22 +82,22 @@ class _AnuncioFormState extends State<AnuncioForm> {
     }
   }
 
-  void _showImageDialog(int index) {
+  void _showImageDialog(String foto) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           child: Stack(children: [
             Container(
-              child: Image.file(
-                fotos[index],
+              child: Image.network(
+                foto,
                 fit: BoxFit.contain,
               ),
             ),
             IconButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
-                  fotos.remove(fotos[index]);
+                  fotosKeys.remove(foto);
                   Navigator.pop(context);
                 });
               },
@@ -149,6 +149,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         _controllerCategoria.text = dadosPost.categoria.toString();
         _controllerTelefone.text = dadosPost.telefone;
         _controllerInfo.text = dadosPost.info;
+        fotosKeys = dadosPost.fotosPost;
       });
     } else {print('args 2 null');}
     print('está editandoForm: $isEditing');
@@ -218,19 +219,19 @@ class _AnuncioFormState extends State<AnuncioForm> {
                 ),
               ),
             ),
-            fotos.isNotEmpty
+            fotosKeys.isNotEmpty
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: fotos.map((photo) {
-                      int index = fotos.indexOf(photo);
+                    children: fotosKeys.map((photo) {
+                      int index = fotosKeys.indexOf(photo);
                       return GestureDetector(
-                        onTap: () => _showImageDialog(index),
+                        onTap: () => _showImageDialog(photo),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: Image.file(
+                              child: Image.network(
                                 photo,
                                 height: 60.0,
                                 width: 60.0,
@@ -309,7 +310,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
           _controllerProduto.text,
           int.parse(_controllerQuantidade.text),
           int.parse(_controllerCondicoes.text),
-          int.parse(_controllerCategoria.text)
+          int.parse(_controllerCategoria.text),
+          jsonEncode(fotosKeys)
         );
           if (mounted) {
             Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, args[2]]);
