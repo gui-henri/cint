@@ -34,6 +34,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
   List fotosKeys = [];
+  OverlayEntry? _currentOverlayEntry;
 
   late List<dynamic> args;
 
@@ -42,6 +43,20 @@ class _AnuncioFormState extends State<AnuncioForm> {
       super.didChangeDependencies();
       args = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
       isEditing = args[0] as bool;
+      if (args[2]!=null) {
+        print('aaaaaaaaaaaaa');
+        //final linha = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', args[1]);
+        final dadosPost = args[2] as PostOferta;
+        //setState(() {
+          _controllerProduto.text = dadosPost.produto;
+          _controllerQuantidade.text = dadosPost.quantidade.toString();
+          _controllerCondicoes.text = dadosPost.condicoes.toString();
+          _controllerCategoria.text = dadosPost.categoria.toString();
+          _controllerTelefone.text = dadosPost.telefone;
+          _controllerInfo.text = dadosPost.info;
+          fotosKeys = dadosPost.fotosPost;
+        //});
+      }
     }
 
   Future<void> _pickImage() async {
@@ -76,78 +91,98 @@ class _AnuncioFormState extends State<AnuncioForm> {
     }
   }
 
-  void _showImageDialog(String foto) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Stack(children: [
-            Container(
-              child: Image.network(
-                foto,
-                fit: BoxFit.contain,
-              ),
-            ),
-            IconButton(
-              onPressed: () async {
-                setState(() {
-                  fotosKeys.remove(foto);
-                  Navigator.pop(context);
-                  final rep = AnunciosRepository();
-                  rep.deleteFoto(foto);
-                });
-              },
-              icon: Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(10),
-                child: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
+  Future<void> _showImageOverlay(String foto) async {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: Material(
+          color: Colors.black54,
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.8,
+                  ),
+                  child: Image.network(
+                    foto,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-            )
-          ]),
-        );
-      },
+              Positioned(
+                top: 30,
+                left: 20,
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _currentOverlayEntry?.remove();
+                          _currentOverlayEntry = null;
+                        });
+                      },
+                      icon: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 30,
+                right: 20,
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          fotosKeys.remove(foto);
+                          _currentOverlayEntry?.remove();
+                          _currentOverlayEntry = null;
+                          final rep = AnunciosRepository();
+                          rep.deleteFoto(foto);
+                        });
+                      },
+                      icon: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        ),
+
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+
+    _currentOverlayEntry?.remove();  // Remove o overlay anterior, se houver
+    _currentOverlayEntry = overlayEntry;
+    overlay.insert(overlayEntry);
   }
 
   @override
   Widget build(BuildContext context) {
-    //final args = ModalRoute.of(context)!.settings.arguments as List;
-    //isEditing = args[0] as bool;
-/*     if (isEditing) {
-      setState(() {
-        dadosPostEditado =
-            ModalRoute.of(context)!.settings.arguments as PostOferta;
-        tempForm.clear();
-        tempForm = [
-          dadosPostEditado.produto,
-          dadosPostEditado.quantidade,
-          dadosPostEditado.condicoes,
-          dadosPostEditado.categoria,
-          dadosPostEditado.telefone,
-          dadosPostEditado.info,
-        ];
-        //fotos = dadosPostEditado.fotosPost;
-        ofertaEditada = dadosPostEditado;
-      });
-    } */
 
-    if (args[2]!=null) {
-      print('aaaaaaaaaaaaa');
-      //final linha = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', args[1]);
-      final dadosPost = args[2] as PostOferta;
-      setState(() {
-        _controllerProduto.text = dadosPost.produto;
-        _controllerQuantidade.text = dadosPost.quantidade.toString();
-        _controllerCondicoes.text = dadosPost.condicoes.toString();
-        _controllerCategoria.text = dadosPost.categoria.toString();
-        _controllerTelefone.text = dadosPost.telefone;
-        _controllerInfo.text = dadosPost.info;
-        fotosKeys = dadosPost.fotosPost;
-      });
-    } else {print('args 2 null');}
+print('args 2 null');
     print('está editandoForm: $isEditing');
     return Scaffold(
       appBar: AppBar(
@@ -228,7 +263,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
                     children: fotosKeys.map((photo) {
                       int index = fotosKeys.indexOf(photo);
                       return GestureDetector(
-                        onTap: () => _showImageDialog(photo),
+                        onTap: () => _showImageOverlay(photo),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
