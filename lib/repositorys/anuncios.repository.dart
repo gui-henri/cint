@@ -2,19 +2,35 @@ import 'package:cint/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AnunciosRepository {
-  Future<String> createPost(nome, quantidade, condicao, categoria, fotos) async {
+  Future<String> createPost(nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio,  fotos) async {
     final response = await Supabase.instance.client
                             .from('anuncio')
-                            .insert([{'nome_produto' : '$nome', 'quantidade' : '$quantidade', 'condicao' : '$condicao', 'categoria' : '$categoria', 'fotos' : '$fotos','user_email': '${supabase.auth.currentSession?.user.email}'}])
+                            .insert([{'nome_produto' : '$nome', 
+                            'quantidade' : '$quantidade', 
+                            'condicao' : '$condicao', 
+                            'categoria' : '$categoria', 
+                            'telefone' : '$telefone',
+                            'informacao_relevante' : '$informacaoRelevante',
+                            'texto_anuncio' : '$textoAnuncio',
+                            //'tipo_id' : '$tipoId',
+                            'fotos' : '$fotos',
+                            'user_email': '${supabase.auth.currentSession?.user.email}'}])
                             .select('id')
                             .single();
     return response['id'].toString();
   }
 
-  Future<String> updateForm(id, nome, quantidade, condicao, categoria, fotos) async {
+  Future<String> updateForm(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, fotos) async {
     final response = await Supabase.instance.client
                             .from('anuncio')
-                            .update({'nome_produto' : '$nome', 'quantidade' : '$quantidade', 'condicao' : '$condicao', 'categoria' : '$categoria', 'fotos' : '$fotos', 'user_email': '${supabase.auth.currentSession?.user.email}'})
+                            .update({'nome_produto' : '$nome',
+                            'quantidade' : '$quantidade', 
+                            'condicao' : '$condicao', 
+                            'categoria' : '$categoria', 
+                            'telefone' : '$telefone',
+                            'informacao_relevante' : '$informacaoRelevante',
+                            'fotos' : '$fotos',
+                            'user_email': '${supabase.auth.currentSession?.user.email}'})
                             .eq('id', id)
                             .select('id')
                             .single();

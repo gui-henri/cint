@@ -53,7 +53,7 @@ class _NovaOfertaState extends State<NovaOferta> {
         final postEditado = arguments[2] as PostOferta;
         print(postEditado);
         _controller.text = postEditado.textoPrincipal;
-      }
+      } else {print('nao tem 2');}
     }
 
     final user = supabase.auth.currentUser;
@@ -109,7 +109,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                 if (isEditing) {
                   setState(() {
                     rep.addTextoAndTipo(arguments[1], _controller.text, selectedIconCategory);
-                    isEditing = false;
+                    //isEditing = false;
                   });
                 }
                 tempForm.clear();

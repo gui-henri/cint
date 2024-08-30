@@ -26,6 +26,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
   }
   @override
   Widget build(BuildContext context) {
+    print('dadospost ${widget.dadosMeusPosts[0]}');
 
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),

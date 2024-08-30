@@ -33,9 +33,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerCategoria = TextEditingController();
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
-  List fotos = [];
   List fotosKeys = [];
-  Map<String, dynamic> fotosMap = {'fotos' : []};
 
   late List<dynamic> args;
 
@@ -71,13 +69,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
     if (pickedImage != null) {
       final arquivo = File(pickedImage.path); // Converte XFile para File
       setState(() {
-        fotos.add(arquivo);
-        print(fotos);
         fotosKeys.add(imageUrl);
-
-        // preparando map
-        fotosMap['fotos'].add(imageUrl);
-        print('fotosMap: $fotosMap');
       });
 
       
@@ -295,26 +287,29 @@ class _AnuncioFormState extends State<AnuncioForm> {
           int.parse(_controllerQuantidade.text),
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text),
-          jsonEncode(fotosKeys)
+          _controllerTelefone.text,
+          _controllerInfo.text,
+          '',
+          jsonEncode(fotosKeys),
         );
         final postof = PostOferta(
           _controllerProduto.text, 
           int.parse(_controllerQuantidade.text), 
           int.parse(_controllerCondicoes.text), 
           int.parse(_controllerCategoria.text), 
-          '', 
-          '', 
+          (_controllerTelefone.text.isEmpty) ? '' : _controllerTelefone.text,
+          (_controllerInfo.text.isEmpty) ? '' : _controllerInfo.text,
           '', 
           idPost, 
           0,
           fotosKeys
           );
         if (mounted) {
-          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, postof]);
+          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
         }
         print('Id da linha nova: $idPost');
         } else {
-          print('oioioioi');
+          print('oioioioi : ${_controllerProduto.text},');
           var idArgument = args[1];
           idPost = await rep.updateForm(
             idArgument,
@@ -322,10 +317,24 @@ class _AnuncioFormState extends State<AnuncioForm> {
           int.parse(_controllerQuantidade.text),
           int.parse(_controllerCondicoes.text),
           int.parse(_controllerCategoria.text),
+          _controllerTelefone.text,
+          _controllerInfo.text,
           jsonEncode(fotosKeys)
         );
+                final postof = PostOferta(
+          _controllerProduto.text, 
+          int.parse(_controllerQuantidade.text), 
+          int.parse(_controllerCondicoes.text), 
+          int.parse(_controllerCategoria.text), 
+          _controllerTelefone.text,
+          _controllerInfo.text,
+          (args[2] as PostOferta).textoPrincipal, 
+          idPost, 
+          (args[2] as PostOferta).icon,
+          fotosKeys
+          );
           if (mounted) {
-            Navigator.pushNamed(context, '/nova_oferta', arguments: [fotos, idPost, args[2]]);
+            Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
           }
           print('Id da linha editada: $idPost');
         }
@@ -405,3 +414,5 @@ class _AnuncioFormState extends State<AnuncioForm> {
     );
   }
 }
+
+
