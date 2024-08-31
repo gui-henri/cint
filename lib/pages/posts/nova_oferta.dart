@@ -29,11 +29,20 @@ class _NovaOfertaState extends State<NovaOferta> {
   var invalido = false;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _controller;
+  bool _hasChanged = false;
+  bool _iconChanged = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _controller.addListener(() {
+      if (!_hasChanged && _controller.text.isNotEmpty) {
+        setState(() {
+          _hasChanged = true;
+        });
+      }
+    });
   }
 
   @override
@@ -44,6 +53,7 @@ class _NovaOfertaState extends State<NovaOferta> {
 
   @override
   Widget build(BuildContext context) {
+    print('changed: $_hasChanged');
     final arguments = ModalRoute.of(context)!.settings.arguments as List;
     
     final fotosPost = arguments[0];
@@ -52,7 +62,9 @@ class _NovaOfertaState extends State<NovaOferta> {
       if (arguments[2]!=null) {
         final postEditado = arguments[2] as PostOferta;
         print(postEditado);
-        _controller.text = postEditado.textoPrincipal;
+        if (!_hasChanged) {
+          _controller.text = postEditado.textoPrincipal;
+        } else {print('uaaa');}
       } else {print('nao tem 2');}
     }
 
@@ -272,7 +284,8 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   });
                                 } */
                               },
-                              isSelected: selectedIconURL ==
+                              isSelected: 
+                              selectedIconURL ==
                                   iconesOng.firstWhere(
                                       (item) => item["tipo"] == category)["icon-green"],
                               invalido: invalido,
