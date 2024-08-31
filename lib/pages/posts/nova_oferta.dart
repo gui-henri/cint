@@ -266,11 +266,11 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   selectedIconCategory = category;
                                   selectedIconImage = Image.asset(selectedIconURL);
                                 });
-                                if (isEditing) {
+/*                                 if (isEditing) {
                                   setState(() {
                                     // ofertaEditada!.icon = selectedIcon;
                                   });
-                                }
+                                } */
                               },
                               isSelected: selectedIconURL ==
                                   iconesOng.firstWhere(
