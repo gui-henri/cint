@@ -47,11 +47,17 @@ class _PostCardState extends State<PostCard> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+<<<<<<< HEAD
           child: Container(
             child: Image.file(
               widget.oferta.fotosPost[index],
               fit: BoxFit.contain,
             ),
+=======
+          child: Image.network(
+            widget.oferta.fotosPost[index].path,
+            fit: BoxFit.contain,
+>>>>>>> e53bf8615c3af96e35310b8f1b48276503a32b9a
           ),
         );
       },

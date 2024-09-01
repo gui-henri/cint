@@ -129,18 +129,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-
-      //       },
-      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-
-      //   backgroundColor: const Color(0xFF6EB855),
-      //   tooltip: 'Mais ações',
-      //   child:  const Icon(Icons.widgets_outlined, color: Colors.white, size: 32,),
-      // ),
-    );
+      ));
   }
 }

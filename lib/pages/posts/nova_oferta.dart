@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cint/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
@@ -167,8 +166,8 @@ class _NovaOfertaState extends State<NovaOferta> {
             },
             foregroundColor: Colors.white,
             backgroundColor: const Color(0xFF6EB855),
-            child: Icon(Icons.send),
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
+            child: const Icon(Icons.send),
           ),
         ),
         body: Container(
@@ -278,11 +277,6 @@ class _NovaOfertaState extends State<NovaOferta> {
                                   selectedIconCategory = category;
                                   selectedIconImage = Image.asset(selectedIconURL);
                                 });
-/*                                 if (isEditing) {
-                                  setState(() {
-                                    // ofertaEditada!.icon = selectedIcon;
-                                  });
-                                } */
                               },
                               isSelected: 
                               selectedIconURL ==
@@ -309,8 +303,7 @@ class SquareGesture extends StatelessWidget {
   final bool isSelected;
   final bool invalido;
 
-  const SquareGesture({
-    Key? key,
+  const SquareGesture({super.key, 
     this.name,
     this.icon,
     this.onTap,

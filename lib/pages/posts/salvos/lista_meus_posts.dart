@@ -1,5 +1,7 @@
 import 'package:cint/main.dart';
+import 'package:cint/pages/posts/minhas_ofertas.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../repositorys/anuncios.repository.dart';
 import '../../../components/post_oferta.dart';
 
@@ -17,16 +19,33 @@ class ListaMeusPosts extends StatefulWidget {
 
 class _ListaMeusPostsState extends State<ListaMeusPosts> {
   final rep = AnunciosRepository();
-  late Future<List<Map<String, dynamic>>> futurePosts;
+  late SupabaseStreamBuilder streamPosts;
   final ListaMinhasOfertas listaMinhasOfertas = ListaMinhasOfertas();
     @override
   void initState() {
     super.initState();
-    futurePosts = rep.getPostInfo('user_email', supabase.auth.currentSession?.user.email);
+    streamPosts = supabase.from('anuncio').stream(primaryKey: ['id']).eq('user_email', supabase.auth.currentSession?.user.email as Object);
   }
   @override
   Widget build(BuildContext context) {
     print('dadospost ${widget.dadosMeusPosts[0]}');
+
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: streamPosts,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Ocorreu um erro: ${snapshot.error}'));
+        }
+
+        final posts = snapshot.data ?? [];
+
+        if (posts.isEmpty) {
+          return Center(child: semOfertas());
+        }
 
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -36,7 +55,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
         separatorBuilder: (context, index) => const SizedBox(
           height: 20,
         ),
-        itemCount: widget.dadosMeusPosts.length,
+        itemCount: posts.length,
         itemBuilder: (context, index) {
           
           return Column(
@@ -51,14 +70,15 @@ Dismissible(
       print(i);
     }
 
+
     // Deleta o post do banco de dados
     await rep.deletePost(widget.dadosMeusPosts[index].id);
 
-
     // Atualiza o estado da lista
     setState(() {
-      widget.dadosMeusPosts.removeAt(index);
+      widget.dadosMeusPosts.removeWhere((element) => element['id'] == widget.dadosMeusPosts[index].id);
     });
+
   },
   background: Container(
     decoration: BoxDecoration(
@@ -114,6 +134,6 @@ Dismissible(
           );
         },
       )
-  );
-  }
-}
+  );}
+  );}}
+

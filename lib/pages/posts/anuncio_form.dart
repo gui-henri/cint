@@ -373,22 +373,6 @@ print('args 2 null');
           }
           print('Id da linha editada: $idPost');
         }
-        
-
-
-      //}
-/*       if (isEditing) {
-        setState(() {
-          dadosPostEditado.produto = _controllerProduto.text;
-          dadosPostEditado.quantidade = int.parse(_controllerQuantidade.text);
-          dadosPostEditado.condicoes = int.parse(_controllerCondicoes.text);
-          dadosPostEditado.categoria = int.parse(_controllerCategoria.text);
-          dadosPostEditado.telefone = _controllerTelefone.text;
-          dadosPostEditado.info = _controllerInfo.text;
-        });
-        Navigator.pushNamed(context, '/nova_oferta', arguments: fotos);
-      } */
-      
     }
   }
 
@@ -409,10 +393,10 @@ print('args 2 null');
           ),
         ),
       ),
-      child: Container(
+      child: const SizedBox(
         width: 130,
         height: 30,
-        child: const Center(
+        child: Center(
           child: Text(
             'Enviar',
             style: TextStyle(
@@ -427,13 +411,6 @@ print('args 2 null');
 
   Widget BotaoFoto() {
     return TextButton(
-      child: Container(
-        height: 37,
-        width: 299,
-        child: const Center(
-          child: Text('Anexar foto do produto'),
-        ),
-      ),
       style: ButtonStyle(
         foregroundColor: const MaterialStatePropertyAll(Colors.white),
         backgroundColor: const MaterialStatePropertyAll(Color(0xFF28730E)),
@@ -446,6 +423,13 @@ print('args 2 null');
       onPressed: () {
         _pickImage();
       },
+      child: const SizedBox(
+        height: 37,
+        width: 299,
+        child: Center(
+          child: Text('Anexar foto do produto'),
+        ),
+      ),
     );
   }
 }

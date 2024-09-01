@@ -1,4 +1,6 @@
 import 'dart:io';
+
+import 'package:cint/pages/login_dev.page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -89,6 +91,26 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10.0),
                         color: const Color(0xFF28730E)),
                     child: const Text('Try Login with Google',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const LoginDevPage()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                        right: 20, left: 20, top: 10, bottom: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: const Color(0xFF28730E)),
+                    child: const Text('Login email e senha DEV',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,

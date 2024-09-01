@@ -1,3 +1,4 @@
+import 'package:cint/components/post_oferta.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,7 +9,6 @@ import '../../components/title_back.dart';
 import '../../main.dart';
 import '../../repositorys/anuncios.repository.dart';
 
-import '../../components/post_oferta.dart';
 
 import 'salvos/lista_meus_posts.dart';
 
@@ -91,8 +91,8 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           },
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6EB855),
-          child: Icon(Icons.add),
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );
