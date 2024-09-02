@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget titleBack(BuildContext context, String text) {
+Widget titleBack(BuildContext context, String text, String route, args) {
   return Padding(
     padding: const EdgeInsets.all(15.0),
     child: Row(children: [
@@ -8,7 +8,7 @@ Widget titleBack(BuildContext context, String text) {
         padding: const EdgeInsets.only(right: 10),
         child: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, route, arguments: args);
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,

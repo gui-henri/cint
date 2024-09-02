@@ -1,14 +1,22 @@
+import 'dart:convert';
+
+import 'package:cint/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:io';
 
 import '../../components/campo_texto.dart';
 
 import '../../components/post_oferta.dart';
 import '../posts/salvos/lista_meus_posts.dart';
+import 'package:cint/repositorys/anuncios.repository.dart';
 
 class AnuncioForm extends StatefulWidget {
-  const AnuncioForm({super.key});
+  final dynamic isEditing;
+
+  AnuncioForm({Key? key, this.isEditing}) : super(key: key);
 
   static const routeName = '/anuncio_form';
 
@@ -25,84 +33,157 @@ class _AnuncioFormState extends State<AnuncioForm> {
   final TextEditingController _controllerCategoria = TextEditingController();
   final TextEditingController _controllerTelefone = TextEditingController();
   final TextEditingController _controllerInfo = TextEditingController();
-  File? _image;
-  List fotos = [];
+  List fotosKeys = [];
+  OverlayEntry? _currentOverlayEntry;
+
+  late List<dynamic> args;
+
+    @override
+    void didChangeDependencies() {
+      super.didChangeDependencies();
+      args = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+      isEditing = args[0] as bool;
+      if (args[2]!=null) {
+        print('aaaaaaaaaaaaa');
+        //final linha = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', args[1]);
+        final dadosPost = args[2] as PostOferta;
+        //setState(() {
+          _controllerProduto.text = dadosPost.produto;
+          _controllerQuantidade.text = dadosPost.quantidade.toString();
+          _controllerCondicoes.text = dadosPost.condicoes.toString();
+          _controllerCategoria.text = dadosPost.categoria.toString();
+          _controllerTelefone.text = dadosPost.telefone;
+          _controllerInfo.text = dadosPost.info;
+          fotosKeys = dadosPost.fotosPost;
+        //});
+      }
+    }
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) {return;}
+    //envio remoto
+    var uuid = const Uuid();
+    String uniqueKey = uuid.v4();  // Gera um UUID v4
+    print('Unique Key: $uniqueKey');
+
+    //print('bucket aqui blabla: $bucket');
+    final imageExtension = pickedImage.path.split('.').last.toLowerCase();
+    final imageBytes = await pickedImage.readAsBytes();
+    final userId = supabase.auth.currentUser!.id;
+    final imagePath = '/$userId/$uniqueKey';
+    await supabase.storage
+      .from('anuncio')
+      .uploadBinary(imagePath, 
+      imageBytes, 
+      fileOptions: FileOptions(upsert: true, contentType: 'image/$imageExtension'));
+      final imageUrl = supabase.storage.from('anuncio').getPublicUrl(imagePath);
+      print('url: $imageUrl');
+    //lista local
     if (pickedImage != null) {
+      final arquivo = File(pickedImage.path); // Converte XFile para File
       setState(() {
-        _image = File(pickedImage.path);
-        fotos.add(_image!);
-        print(fotos);
+        fotosKeys.add(imageUrl);
       });
+
+      
     }
   }
 
-  void _showImageDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Stack(children: [
-            Image.network(
-              fotos[index].path,
-              fit: BoxFit.contain,
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  fotos.remove(fotos[index]);
-                  Navigator.pop(context);
-                });
-              },
-              icon: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(10),
-                child: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
+  Future<void> _showImageOverlay(String foto) async {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: Material(
+          color: Colors.black54,
+          child: Stack(
+            children: [
+              Center(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.8,
+                  ),
+                  child: Image.network(
+                    foto,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-            )
-          ]),
-        );
-      },
+              Positioned(
+                top: 30,
+                left: 20,
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _currentOverlayEntry?.remove();
+                          _currentOverlayEntry = null;
+                        });
+                      },
+                      icon: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 30,
+                right: 20,
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          fotosKeys.remove(foto);
+                          _currentOverlayEntry?.remove();
+                          _currentOverlayEntry = null;
+                          final rep = AnunciosRepository();
+                          rep.deleteFoto(foto);
+                        });
+                      },
+                      icon: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                        ),
+
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+
+    _currentOverlayEntry?.remove();  // Remove o overlay anterior, se houver
+    _currentOverlayEntry = overlayEntry;
+    overlay.insert(overlayEntry);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isEditing) {
-      setState(() {
-        dadosPostEditado =
-            ModalRoute.of(context)!.settings.arguments as PostOferta;
-        tempForm.clear();
-        tempForm = [
-          dadosPostEditado.produto,
-          dadosPostEditado.quantidade,
-          dadosPostEditado.condicoes,
-          dadosPostEditado.categoria,
-          dadosPostEditado.telefone,
-          dadosPostEditado.info,
-        ];
-        fotos = dadosPostEditado.fotosPost;
-        ofertaEditada = dadosPostEditado;
-      });
-    }
 
-    if (tempForm.isNotEmpty) {
-      setState(() {
-        _controllerProduto.text = tempForm[0];
-        _controllerQuantidade.text = tempForm[1];
-        _controllerCondicoes.text = tempForm[2];
-        _controllerCategoria.text = tempForm[3];
-        _controllerTelefone.text = tempForm[4];
-        _controllerInfo.text = tempForm[5];
-      });
-    }
-
+print('args 2 null');
+    print('está editandoForm: $isEditing');
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -115,11 +196,18 @@ class _AnuncioFormState extends State<AnuncioForm> {
             ),
           ))),
           onPressed: () {
+            if (!isEditing) {
+              final rep = AnunciosRepository();
+              for (var foto in fotosKeys) {
+                rep.deleteFoto(foto);
+              }
+                  
+            }
             setState(() {
               isEditing = false;
               tempForm.clear();
             });
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/minhasofertas');
           },
         ),
         title: FractionallySizedBox(
@@ -169,22 +257,24 @@ class _AnuncioFormState extends State<AnuncioForm> {
                 ),
               ),
             ),
-            fotos.isNotEmpty
+            fotosKeys.isNotEmpty
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: fotos.map((photo) {
-                      int index = fotos.indexOf(photo);
+                    children: fotosKeys.map((photo) {
+                      int index = fotosKeys.indexOf(photo);
                       return GestureDetector(
-                        onTap: () => _showImageDialog(index),
+                        onTap: () => _showImageOverlay(photo),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              photo.path,
-                              height: 60.0,
-                              width: 60.0,
-                              fit: BoxFit.cover,
+                          child: Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                photo,
+                                height: 60.0,
+                                width: 60.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -206,9 +296,14 @@ class _AnuncioFormState extends State<AnuncioForm> {
     );
   }
 
-  void enviarForm() {
-    if (_formKey.currentState!.validate()) {
-      if (isEditing == false) {
+  Future<void> enviarForm() async {
+    if (_formKey.currentState!.validate()) {  
+             
+        final rep = AnunciosRepository();
+        final userEmail = rep.getUserEmail();
+        print('id do user é...: $userEmail');
+
+      //if (isEditing == false) {
         tempForm = [
           _controllerProduto.text,
           _controllerQuantidade.text,
@@ -219,18 +314,65 @@ class _AnuncioFormState extends State<AnuncioForm> {
           null,
           null,
         ];
-      }
-      if (isEditing) {
-        setState(() {
-          dadosPostEditado.produto = _controllerProduto.text;
-          dadosPostEditado.quantidade = _controllerQuantidade.text;
-          dadosPostEditado.condicoes = _controllerCondicoes.text;
-          dadosPostEditado.categoria = _controllerCategoria.text;
-          dadosPostEditado.telefone = _controllerTelefone.text;
-          dadosPostEditado.info = _controllerInfo.text;
-        });
-      }
-      Navigator.pushNamed(context, '/nova_oferta', arguments: fotos);
+
+        late dynamic idPost;
+        if (!isEditing) {
+          idPost = await rep.createPost(
+          _controllerProduto.text,
+          int.parse(_controllerQuantidade.text),
+          int.parse(_controllerCondicoes.text),
+          int.parse(_controllerCategoria.text),
+          _controllerTelefone.text,
+          _controllerInfo.text,
+          '',
+          jsonEncode(fotosKeys),
+        );
+        final postof = PostOferta(
+          _controllerProduto.text, 
+          int.parse(_controllerQuantidade.text), 
+          int.parse(_controllerCondicoes.text), 
+          int.parse(_controllerCategoria.text), 
+          (_controllerTelefone.text.isEmpty) ? '' : _controllerTelefone.text,
+          (_controllerInfo.text.isEmpty) ? '' : _controllerInfo.text,
+          '', 
+          idPost, 
+          0,
+          fotosKeys
+          );
+        if (mounted) {
+          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
+        }
+        print('Id da linha nova: $idPost');
+        } else {
+          print('oioioioi : ${_controllerProduto.text},');
+          var idArgument = args[1];
+          idPost = await rep.updateForm(
+            idArgument,
+          _controllerProduto.text,
+          int.parse(_controllerQuantidade.text),
+          int.parse(_controllerCondicoes.text),
+          int.parse(_controllerCategoria.text),
+          _controllerTelefone.text,
+          _controllerInfo.text,
+          jsonEncode(fotosKeys)
+        );
+                final postof = PostOferta(
+          _controllerProduto.text, 
+          int.parse(_controllerQuantidade.text), 
+          int.parse(_controllerCondicoes.text), 
+          int.parse(_controllerCategoria.text), 
+          _controllerTelefone.text,
+          _controllerInfo.text,
+          (args[2] as PostOferta).textoPrincipal, 
+          idPost, 
+          (args[2] as PostOferta).icon,
+          fotosKeys
+          );
+          if (mounted) {
+            Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
+          }
+          print('Id da linha editada: $idPost');
+        }
     }
   }
 
@@ -291,3 +433,5 @@ class _AnuncioFormState extends State<AnuncioForm> {
     );
   }
 }
+
+
