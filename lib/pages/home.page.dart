@@ -29,9 +29,11 @@ class _HomePageState extends State<HomePage> {
   final rep = OngRepository(); 
   late Future<List<Map<String, dynamic>>> futureOngs;
   late SupabaseStreamBuilder streamONGs;
-  List ongsInstancias = [];
+  final ongsInstancias = ListaInstituicoes().ongsInstancias;
   Set<Marker> markers = Set<Marker>();
   LatLng? _currentPosition;
+    double? maisProxima;
+    int? indexMaisProxima;
   @override
   @override
   void initState() {
@@ -39,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     _checkLocationPermission();
     streamONGs = supabase.from('instituicao').stream(primaryKey: ['id']);
     futureOngs = rep.getAllWithPhotos();
-    ongsInstancias.clear();
+    //ongsInstancias.clear();
   }
 
   Future<void> _getCurrentPosition() async {
@@ -106,6 +108,28 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+    Future<void> calcularDistanciaMaisProxima() async {
+      for (var index = 0; index < ongsInstancias.length; index++) {
+        var item = ongsInstancias[index];
+        var coords = await rep.getCoordinates(item.endereco, dotenv.env['MAPS_KEY']);
+        
+        if (_currentPosition != null) {
+          double distancia = Geolocator.distanceBetween(
+            _currentPosition!.latitude,
+            _currentPosition!.longitude,
+            coords[0],
+            coords[1],
+          );
+
+          if (maisProxima == null || distancia < maisProxima!) {
+            maisProxima = distancia;
+            indexMaisProxima = index;
+            
+          }
+        }
+      }
+    }
+
   @override
 
 /*   @override
@@ -167,57 +191,13 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 15,
             ),
-StreamBuilder(
-  stream: streamONGs,
-  builder: (context, snapshot) {
-    if (!snapshot.hasData) {
-      return Center(child: CircularProgressIndicator());
-    }
-
-    final data = snapshot.data!;
-    if (data.isEmpty) {
-      return Center(child: Text('Nenhuma ONG encontrada.'));
-    }
-
-    ongsInstancias.clear();
-    for (var ong in data) {
-      ongsInstancias.add(Instituicao.fromJson(ong));
-    }
-
-    if (ongsInstancias.isEmpty) {
-      return Center(child: Text('Nenhuma instituição disponível.'));
-    }
-    print('ongsInstancias: $ongsInstancias');
-    double? maisProxima;
-    int? indexMaisProxima;
-
-    // Função para calcular a distância mais próxima
-    Future<void> calcularDistanciaMaisProxima() async {
-      for (var index = 0; index < ongsInstancias.length; index++) {
-        var item = ongsInstancias[index];
-        var coords = await rep.getCoordinates(item.endereco, dotenv.env['MAPS_KEY']);
-        
-        if (_currentPosition != null) {
-          double distancia = Geolocator.distanceBetween(
-            _currentPosition!.latitude,
-            _currentPosition!.longitude,
-            coords[0],
-            coords[1],
-          );
-
-          if (maisProxima == null || distancia < maisProxima!) {
-            maisProxima = distancia;
-            indexMaisProxima = index;
-          }
-        }
-      }
-    }
 
     // Executar a função para obter a ONG mais próxima
-    return FutureBuilder(
+    FutureBuilder(
       future: calcularDistanciaMaisProxima(),
       builder: (context, _) {
         if (indexMaisProxima == null) {
+          print('aa ${ongsInstancias}');
           return Center(child: CircularProgressIndicator());
         }
     print(ongsInstancias[indexMaisProxima!].nome);
@@ -285,7 +265,7 @@ StreamBuilder(
       },
     );
   },
-);})
+),
 
           ],
         ),

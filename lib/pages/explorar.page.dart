@@ -1,3 +1,4 @@
+import 'package:cint/objetos/instituicao.dart';
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
@@ -22,6 +23,8 @@ class _ExplorarPageState extends State<ExplorarPage> {
     final rep = OngRepository(); 
     late Future<List<Map<String, dynamic>>> futureOngs;
     late Future<List<Map<String, dynamic>>> futureCategorias;
+
+  final ongsInstancias = ListaInstituicoes().ongsInstancias;
 
 
   @override
@@ -55,6 +58,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
     });
     return Scaffold(
         appBar: Header(
+          showTextField: true,
           textoSalvo: digitando,
           atualizarBusca: (value) {
             textoPesquisado = value;

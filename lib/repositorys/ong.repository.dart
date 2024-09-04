@@ -1,3 +1,4 @@
+import 'package:cint/objetos/instituicao.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -51,4 +52,20 @@ Future<List<double>> getCoordinates(String address, apiKey) async {
 
   return coordenadas;
 }
+
+  Future<List<Map<String, dynamic>>> getOngs() async {
+    final ongs = await Supabase.instance.client
+                        .from('instituicao')
+                        .select('id, nome, nota, endereco, descricao, pix, missao, historia, meta, id_categoria, foto');
+    return ongs;
+  }
+
+  gerarOngs() async {
+    List<Instituicao> lista = [];
+    final get = await getOngs();
+    for (var ong in get) {
+      lista.add(Instituicao.fromJson(ong));
+    }
+    return lista;
+  }
 }

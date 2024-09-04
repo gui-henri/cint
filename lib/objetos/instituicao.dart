@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:cint/repositorys/ong.repository.dart';
+
 class Instituicao {
   final String id;
   final String nome;
@@ -52,4 +54,24 @@ class Instituicao {
       'endereco': endereco,
     };
   } */
+}
+
+/* final rep = OngRepository();
+//List ongsInstancias = [];
+
+final List<Instituicao> ongsInstancias = rep.gerarOngs(ongsInstancias); */
+
+class ListaInstituicoes {
+  ListaInstituicoes._privateConstructor();
+  static final ListaInstituicoes _instance = ListaInstituicoes._privateConstructor();
+  factory ListaInstituicoes() {
+    return _instance;
+  }
+
+  final OngRepository _ongRepository = OngRepository();
+  List<Instituicao> ongsInstancias = [];
+
+  Future<void> loadOngs() async {
+    ongsInstancias = await _ongRepository.gerarOngs();
+  }
 }
