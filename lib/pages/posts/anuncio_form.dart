@@ -44,7 +44,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
       args = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
       isEditing = args[0] as bool;
       if (args[2]!=null) {
-        print('aaaaaaaaaaaaa');
         //final linha = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', args[1]);
         final dadosPost = args[2] as PostOferta;
         //setState(() {
@@ -182,8 +181,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
   @override
   Widget build(BuildContext context) {
 
-print('args 2 null');
-    print('está editandoForm: $isEditing');
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

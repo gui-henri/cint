@@ -14,10 +14,14 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   supabase_flutter: ^2.5.1
   google_sign_in: ^6.2.1
-  flutter_dotenv: 
+  flutter_dotenv: ^5.0.2
   google_sign_in_web: ^0.12.4
   image_picker: ^1.1.1
   uuid: ^3.0.6
+  google_maps_flutter: ^2.7.0
+  geolocator: ^12.0.0
+  flutter_config: ^2.0.0
+  http: 1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +33,4 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
