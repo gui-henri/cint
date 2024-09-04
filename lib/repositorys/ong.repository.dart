@@ -15,7 +15,7 @@ class OngRepository {
   Future<List<Map<String, dynamic>>> getCategoria() async {
     final response = await Supabase.instance.client
                             .from('preferencia')
-                            .select('id, nome, instituicao(id, nome, foto_instituicao (url), descricao, id_categoria)')
+                            .select('id, nome')
                             .order('id', ascending: true);
     return response;
   }
