@@ -46,20 +46,24 @@ class Instituicao {
     );
   }
 
-/*   // Método para converter uma instância de Instituicao de volta para JSON
+   // Método para converter uma instância de Instituicao de volta para JSON
   Map<String, dynamic> toJson() {
     return {
-      'nome': nome,
-      'nota': nota,
-      'endereco': endereco,
+      id: id,
+      nome: nome,
+      nota.toString(): nota,
+      endereco: endereco,
+      descricao: descricao,
+      pix: pix,
+      missao: missao,
+      historia: historia,
+      meta.toString(): meta,
+      idCategoria.toString(): idCategoria,
+      foto: foto,
     };
-  } */
+  }
 }
 
-/* final rep = OngRepository();
-//List ongsInstancias = [];
-
-final List<Instituicao> ongsInstancias = rep.gerarOngs(ongsInstancias); */
 
 class ListaInstituicoes {
   ListaInstituicoes._privateConstructor();

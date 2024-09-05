@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cint/components/icones_ong.dart';
 import 'package:cint/main.dart';
+import 'package:cint/repositorys/ong.repository.dart';
 import 'package:flutter/material.dart';
 import '../../components/icones_ong.dart';
 
@@ -20,8 +21,49 @@ class PostOferta {
   String textoPrincipal;
   String id;
   List<dynamic> fotosPost;
-  PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
-      this.telefone, this.info, this.textoPrincipal, this.id, this.icon, this.fotosPost);
+
+  PostOferta(
+    this.telefone,
+    this.info,
+    this.id,
+    {
+    required this.produto,
+    required this.quantidade,
+    required this.condicoes,
+    required this.categoria,
+    required this.icon,
+    required this.textoPrincipal,
+    required this.fotosPost,
+  });
+
+  factory PostOferta.fromJson(Map<String, dynamic> json) {
+    return PostOferta(
+      json['telefone'],
+      json['informacao_relevante'],
+      json['id'],
+      produto: json['nome_produto'],
+      quantidade: json['quantidade'],
+      condicoes: json['condicao'],
+      categoria: json['categoria'],
+      icon: json['tipo_id'],
+      textoPrincipal: json['texto_anuncio'],
+      fotosPost: json['fotos'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nome_produto': produto,
+      'quantidade': quantidade,
+      'condicao': condicoes,
+      'categoria': categoria,
+      'tipo_id': icon,
+      'telefone' : telefone,
+      'informacao_relevante' : info,
+      'texto_anuncio': textoPrincipal,
+      'fotos': fotosPost,
+    };
+  }
 }
 
 class PostCard extends StatefulWidget {
@@ -179,7 +221,9 @@ class _PostCardState extends State<PostCard> {
 }
 
 
-class ListaMinhasOfertas {
+
+
+/* class ListaMinhasOfertas {
   List<PostOferta> _listaPosts = [];
   final _controller = StreamController<List<PostOferta>>.broadcast();
 
@@ -196,16 +240,16 @@ class ListaMinhasOfertas {
   void fillList(List<Map<String, dynamic>> newPosts) {
     final newPostObjects = newPosts.map((post) => 
     PostOferta(
-      post['nome_produto'],
-      post['quantidade'],
-      post['condicao'],
-      post['categoria'],
       post['telefone'],
       post['informacao_relevante'],
-      post['texto_anuncio'],
       post['id'],
-      post['tipo_id'],
-      jsonDecode(post['fotos']),
+      produto: post['nome_produto'],
+      quantidade: post['quantidade'],
+      condicoes: post['condicao'],
+      categoria: post['categoria'],
+      textoPrincipal:  post['texto_anuncio'],
+      icon: post['tipo_id'],
+      fotosPost: jsonDecode(post['fotos']),
     )).toList();
 
     // Atualiza a lista interna, adiciona novos posts e remove os deletados
@@ -240,38 +284,5 @@ class ListaMinhasOfertas {
   // Feche o controller quando não for mais necessário
   void dispose() {
     _controller.close();
-  }
-}
-
-
-/* class ListaMinhasOfertas {
-  List<PostOferta> listaPosts;
-  ListaMinhasOfertas(this.listaPosts);
-
-  List<PostOferta> getList() {
-    return listaPosts;
-  }
-
-  addPost(value) {
-    listaPosts.add(value);
-  }
-
-  fillList(value) {
-    for (var post in value) {
-      if (!(listaPosts.contains(post))) {
-        listaPosts.add(
-          PostOferta(
-          post['nome_produto'], 
-          post['quantidade'], 
-          post['condicao'], 
-          post['categoria'], 
-          post['telefone'], 
-          post['informacao_relevante'], 
-          post['texto_anuncio'], 
-          post['id']
-          )
-        );
-      }
-    }
   }
 } */

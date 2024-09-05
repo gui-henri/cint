@@ -1,3 +1,4 @@
+import 'package:cint/objetos/posts.dart';
 import 'package:cint/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
@@ -18,6 +19,8 @@ void main() async {
   );
   final listaOngs = ListaInstituicoes();
   await listaOngs.loadOngs();
+  final listaPosts = ListaMinhasOfertas();
+  await listaPosts.loadPosts();
 
   runApp(const MyApp());
 }

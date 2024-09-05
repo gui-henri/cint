@@ -1,3 +1,4 @@
+import 'package:cint/components/post_oferta.dart';
 import 'package:cint/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,6 +19,35 @@ class AnunciosRepository {
                             .select('id')
                             .single();
     return response['id'].toString();
+  }
+
+  criarPost(data) async {
+    await Supabase.instance.client
+            .from('anuncio')
+            .insert([data]);
+  }
+
+  updatePost(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio, icon, fotos) async {
+    await Supabase.instance.client
+            .from('anuncio')
+            .update({'nome_produto' : nome, 'quantidade' : quantidade, 'condicao' : condicao, 'categoria' : categoria, 'telefone' : telefone, 'informacao_relevante' : informacaoRelevante, 'texto_anuncio' : textoAnuncio, 'tipo_id': icon, 'fotos' : fotos})
+            .eq('id', id);
+  }
+
+  Future<List<Map<String, dynamic>>> getPosts() async {
+    final ongs = await Supabase.instance.client
+                        .from('anuncio')
+                        .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, fotos, tipo_id, texto_anuncio');
+    return ongs;
+  }
+
+  gerarPosts() async {
+    List<PostOferta> lista = [];
+    final get = await getPosts();
+    for (var post in get) {
+      lista.add(PostOferta.fromJson(post));
+    }
+    return lista;
   }
 
   Future<String> updateForm(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, fotos) async {

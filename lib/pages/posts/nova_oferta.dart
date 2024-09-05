@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cint/main.dart';
+import 'package:cint/objetos/posts.dart';
 import 'package:flutter/material.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
@@ -54,7 +55,7 @@ class _NovaOfertaState extends State<NovaOferta> {
   Widget build(BuildContext context) {
     print('changed: $_hasChanged');
     final arguments = ModalRoute.of(context)!.settings.arguments as List;
-    
+    final postNovo = arguments[2] as PostOferta;
     final fotosPost = arguments[0];
     
     if (isEditing) {
@@ -74,22 +75,24 @@ class _NovaOfertaState extends State<NovaOferta> {
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
+    final List<PostOferta> postsInstancias = ListaMinhasOfertas().anunciosInstancias;
 
     final linhaPost = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', arguments[1]);
     // Define a lista de categorias
     final categories = [
-      'Saúde',
-      'Educação',
       'Crianças',
-      'Idosos',
-      'Sem-teto',
-      'Mulheres',
-      'Religiosas',
-      'Minorias',
       'Reciclagem',
-      'Culturais',
+      'Animais',
+      'Educação',
+      'Idosos',
       'Reabilitação',
+      'Culturais',
+      'Minorias',
+      'Mulheres',
       'Refugiados',
+      'Religiosas',
+      'Saúde',
+      'Sem-teto',
     ];
 
     return Scaffold(
@@ -114,32 +117,33 @@ class _NovaOfertaState extends State<NovaOferta> {
               if (selectedIconCategory != null && _formKey.currentState!.validate()) {
                 if (isEditing == false) {
                   setState(() {
-                    rep.addTextoAndTipo(arguments[1], _controller.text, selectedIconCategory);
+                    postNovo.textoPrincipal = _controller.text;
+                    postNovo.icon = categories.indexOf(selectedIconCategory)+1;
                   });
+                  print('postNovo: $postNovo');
+                  postsInstancias.add(postNovo);
+                  await rep.criarPost(postNovo.toJson());
+
                 }
                 if (isEditing) {
                   setState(() {
-                    rep.addTextoAndTipo(arguments[1], _controller.text, selectedIconCategory);
-                    //isEditing = false;
+                    postNovo.textoPrincipal = _controller.text;
+                    postNovo.icon = categories.indexOf(selectedIconCategory)+1;
                   });
+                  await rep.updatePost(
+                    postNovo.id,
+                    postNovo.produto, 
+                    postNovo.quantidade, 
+                    postNovo.condicoes, 
+                    postNovo.categoria, 
+                    postNovo.telefone, 
+                    postNovo.info, 
+                    postNovo.textoPrincipal,
+                    postNovo.icon,
+                    postNovo.fotosPost);
                 }
-                tempForm.clear();
-                var novoPostData = await rep.getPostInfo('id', arguments[1]);
-                print('id!!!: ${novoPostData[0]['fotos']}');
-                var novoPost = PostOferta(
-                  novoPostData[0]['nome_produto'], 
-                  novoPostData[0]['quantidade'], 
-                  novoPostData[0]['condicao'], 
-                  novoPostData[0]['categoria'], 
-                  novoPostData[0]['telefone'], 
-                  novoPostData[0]['informacao_relevante'], 
-                  novoPostData[0]['texto_anuncio'], 
-                  novoPostData[0]['id'], 
-                  novoPostData[0]['tipo_id'], 
-                  jsonDecode(novoPostData[0]['fotos']), 
-                );
-                print('novopost: ${novoPost.id}');
-                Navigator.pushNamed(context, '/minhasofertas', arguments: [novoPost, selectedIconCategory]);
+
+                Navigator.pushNamed(context, '/minhasofertas', arguments: [postNovo, selectedIconCategory]);
               } else {
                 if (selectedIconImage == null) {
                   Future.delayed(const Duration(seconds: 1), () {
