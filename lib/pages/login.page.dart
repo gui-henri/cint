@@ -82,7 +82,7 @@ if (response.session != null) {
     }
     try {
       if (!contaJaExiste) {
-        final usuarioLogado = Usuario();
+        final usuarioLogado = Usuario(id: user!.id, nome: fullName, titulo: 0, nota: 0, meta: 0, endereco: '', foto: profileImageUrl, posts: [], email: email);
         await repUser.criarUser(usuarioLogado.toJson());
       }
     } catch (e) {
@@ -90,11 +90,11 @@ if (response.session != null) {
     }
     try {
       if (contaJaExiste) {
-      final usuarioLogadoJson = await repUser.getMyUser();
-      print('usuariologado: $usuarioLogadoJson');
-      // Atualiza o estado compartilhado do Usuario
-      Usuario.fromJson(usuarioLogadoJson[0]);
-        print('usuario: ${Usuario().email}'); 
+        final usuarioLogadoJson = await repUser.getMyUser();
+        print('usuariologado: $usuarioLogadoJson');
+        // Atualiza o estado compartilhado do Usuario
+        Usuario.fromJson(usuarioLogadoJson[0]);
+          print('usuario: ${Usuario().email}'); 
       }
     } catch (e) {
       print('Erro ao carregar usuário: $e');
