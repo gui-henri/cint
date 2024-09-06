@@ -1,5 +1,6 @@
 import 'package:cint/components/post_oferta.dart';
 import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,13 +25,13 @@ class MinhasOfertas extends StatefulWidget {
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
   final rep = AnunciosRepository();
+ // final myUser = Usuario();
   @override
   void initState() {
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: Header(
         atualizarBusca: (value) {},

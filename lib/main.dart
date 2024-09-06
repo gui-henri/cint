@@ -1,4 +1,6 @@
 import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:cint/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';

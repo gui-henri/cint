@@ -70,10 +70,10 @@ if (response.session != null) {
   final user = supabase.auth.currentUser;
   final profileImageUrl = googleUser.photoUrl;
   final fullName = user?.userMetadata?['full_name'];
-    final usuarioLogado = Usuario(user!.id, 0, 0, '', nome: fullName, nota: 0, foto: profileImageUrl, posts: [], email: email);
+    
     //final authUsers = await repUser.getAuthUsers(email);
     final users = await repUser.getUsers();
-    print('!!!!!!!!!!userid: ${user.id}');
+    //print('!!!!!!!!!!userid: ${user.id}');
     bool contaJaExiste = false;
     for (var map in users) {
       if (map['user_email'] == email) {
@@ -82,10 +82,22 @@ if (response.session != null) {
     }
     try {
       if (!contaJaExiste) {
-        await repUser.criarUser(usuarioLogado.toFirstJson());
+        final usuarioLogado = Usuario();
+        await repUser.criarUser(usuarioLogado.toJson());
       }
     } catch (e) {
       print('Erro ao criar usuário: $e');
+    }
+    try {
+      if (contaJaExiste) {
+      final usuarioLogadoJson = await repUser.getMyUser();
+      print('usuariologado: $usuarioLogadoJson');
+      // Atualiza o estado compartilhado do Usuario
+      Usuario.fromJson(usuarioLogadoJson[0]);
+        print('usuario: ${Usuario().email}'); 
+      }
+    } catch (e) {
+      print('Erro ao carregar usuário: $e');
     }
 } else {
   print('Erro na autenticação');

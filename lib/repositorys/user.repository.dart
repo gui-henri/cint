@@ -1,6 +1,7 @@
 
 
 import 'package:cint/main.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserRepository {
@@ -10,6 +11,14 @@ class UserRepository {
                           .from('usuario')
                           .select('user_email');
     return emails;
+  }
+
+  getMyUser() async {
+    final user = await Supabase.instance.client
+                          .from('usuario')
+                          .select()
+                          .eq('user_email', '${supabase.auth.currentSession?.user.email}');
+    return user;
   }
 
   criarUser(data) async {
