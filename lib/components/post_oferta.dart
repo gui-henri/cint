@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cint/components/icones_ong.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 import 'package:flutter/material.dart';
 import '../../components/icones_ong.dart';
@@ -86,9 +87,8 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
-    final user = supabase.auth.currentUser;
-    final profileImageUrl = user?.userMetadata?['avatar_url'];
-    final fullName = user?.userMetadata?['full_name'];
+    final profileImageUrl = Usuario().foto;
+    final fullName = Usuario().nome;
     List<String> nomes = fullName.split(" ");
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";

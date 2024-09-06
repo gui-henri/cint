@@ -1,5 +1,6 @@
 import 'package:cint/components/footer.dart';
 import 'package:cint/components/header.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,8 +36,8 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
-    final profileImageUrl = user?.userMetadata?['avatar_url'];
-    final fullName = user?.userMetadata?['full_name'];
+    final profileImageUrl = Usuario().foto;
+    final fullName = Usuario().nome;
     List<String> nomes = fullName.split(" ");
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
