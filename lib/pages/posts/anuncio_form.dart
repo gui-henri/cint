@@ -309,8 +309,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
           '',
           produto: _controllerProduto.text, 
           quantidade: int.parse(_controllerQuantidade.text), 
-          condicoes: int.parse(_controllerCondicoes.text), 
-          categoria: int.parse(_controllerCategoria.text), 
+          condicoes: _controllerCondicoes.text, 
+          categoria: _controllerCategoria.text, 
           textoPrincipal: '', 
           icon: 0,
           fotosPost: fotosKeys
@@ -328,8 +328,8 @@ class _AnuncioFormState extends State<AnuncioForm> {
           postof.id = idPost;
           postof.produto = _controllerProduto.text;
           postof.quantidade = int.parse(_controllerQuantidade.text);
-          postof.condicoes = int.parse(_controllerCondicoes.text);
-          postof.categoria = int.parse(_controllerCategoria.text);
+          postof.condicoes = _controllerCondicoes.text;
+          postof.categoria = _controllerCategoria.text;
           /* postof.textoPrincipal = (args[2] as PostOferta).textoPrincipal;
           icon: (args[2] as PostOferta).icon;
           fotosPost: fotosKeys */

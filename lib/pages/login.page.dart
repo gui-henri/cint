@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cint/objetos/user.dart';
 import 'package:cint/pages/login_dev.page.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,6 +19,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final repUser = UserRepository();
   String? _userId;
   @override
   void initState() {
@@ -54,12 +57,44 @@ class _LoginPageState extends State<LoginPage> {
     if (idToken == null) {
       throw 'No ID Token found.';
     }
+    final email = googleUser.email;
+    print('Email do usuário: $email');
+final AuthResponse response = await supabase.auth.signInWithIdToken(
+  provider: OAuthProvider.google,
+  idToken: idToken,
+  accessToken: accessToken,
+);
 
-    return supabase.auth.signInWithIdToken(
-      provider: OAuthProvider.google,
-      idToken: idToken,
-      accessToken: accessToken,
-    );
+// Verifica se a autenticação foi bem-sucedida antes de acessar o usuário
+if (response.session != null) {
+  final user = supabase.auth.currentUser;
+  final profileImageUrl = googleUser.photoUrl;
+  final fullName = user?.userMetadata?['full_name'];
+    final usuarioLogado = Usuario(user!.id, 0, 0, '', nome: fullName, nota: 0, foto: profileImageUrl, posts: [], email: email);
+    //final authUsers = await repUser.getAuthUsers(email);
+    final users = await repUser.getUsers();
+    print('!!!!!!!!!!userid: ${user.id}');
+    bool contaJaExiste = false;
+    for (var map in users) {
+      if (map['user_email'] == email) {
+        contaJaExiste = true;
+      }
+    }
+    try {
+      if (!contaJaExiste) {
+        await repUser.criarUser(usuarioLogado.toFirstJson());
+      }
+    } catch (e) {
+      print('Erro ao criar usuário: $e');
+    }
+} else {
+  print('Erro na autenticação');
+}
+
+return response;
+
+
+
   }
 
   @override

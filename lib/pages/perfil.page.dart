@@ -2,6 +2,7 @@ import 'package:cint/components/footer.dart';
 import 'package:cint/components/header.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '/components/custom_text_button.dart';
 
@@ -317,6 +318,8 @@ void showLogoutDialog(BuildContext context) {
             onPressed: () async {
               // Lógica para desconectar
               await supabase.auth.signOut();
+              final GoogleSignIn googleSignIn = GoogleSignIn();
+              await googleSignIn.signOut();
               if (context.mounted) {
                 Navigator.pushNamed(context, '/');
               }

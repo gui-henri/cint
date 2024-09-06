@@ -48,7 +48,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                   }
 
                   // Deletar o post do banco de dados
-                  await rep.deletePost(postsInstancias[index].id);
+                  //await rep.deletePost(postsInstancias[index].id);
 
                   // Atualizar o estado da lista
                   setState(() {

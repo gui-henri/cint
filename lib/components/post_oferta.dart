@@ -13,8 +13,8 @@ PostOferta? ofertaEditada;
 class PostOferta {
   String produto;
   int quantidade;
-  int condicoes;
-  int categoria;
+  String condicoes;
+  String categoria;
   String telefone;
   String info;
   int icon;
