@@ -21,8 +21,8 @@ void main() async {
   );
   final listaOngs = ListaInstituicoes();
   await listaOngs.loadOngs();
-  final listaPosts = ListaMinhasOfertas();
-  await listaPosts.loadPosts();
+/*   final listaPosts = ListaMinhasOfertas();
+  await listaPosts.loadPosts(); */
 
   runApp(const MyApp());
 }

@@ -22,11 +22,13 @@ class PostOferta {
   String textoPrincipal;
   String id;
   List<dynamic> fotosPost;
+  String usuario;
 
   PostOferta(
     this.telefone,
     this.info,
     this.id,
+    this.usuario,
     {
     required this.produto,
     required this.quantidade,
@@ -42,6 +44,7 @@ class PostOferta {
       json['telefone'],
       json['informacao_relevante'],
       json['id'],
+      json['usuario'],
       produto: json['nome_produto'],
       quantidade: json['quantidade'],
       condicoes: json['condicao'],
@@ -63,6 +66,7 @@ class PostOferta {
       'informacao_relevante' : info,
       'texto_anuncio': textoPrincipal,
       'fotos': fotosPost,
+      'usuario' : usuario,
     };
   }
 }

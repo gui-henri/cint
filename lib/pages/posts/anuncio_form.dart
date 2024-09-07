@@ -307,6 +307,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           (_controllerTelefone.text.isEmpty) ? '' : _controllerTelefone.text,
           (_controllerInfo.text.isEmpty) ? '' : _controllerInfo.text,
           '',
+          '',
           produto: _controllerProduto.text, 
           quantidade: int.parse(_controllerQuantidade.text), 
           condicoes: _controllerCondicoes.text, 

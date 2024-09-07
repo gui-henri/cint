@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:cint/main.dart';
 import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:flutter/material.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
@@ -26,6 +28,7 @@ class _NovaOfertaState extends State<NovaOferta> {
   late var selectedIconURL = null;
   late var selectedIconImage = null;
   late var selectedIconCategory = null;
+  final UserRepository repUser = UserRepository();
   var invalido = false;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _controller;
@@ -75,7 +78,7 @@ class _NovaOfertaState extends State<NovaOferta> {
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
-    final List<PostOferta> postsInstancias = ListaMinhasOfertas().anunciosInstancias;
+    //final List<PostOferta> postsInstancias = ListaMinhasOfertas();
 
     final linhaPost = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', arguments[1]);
     // Define a lista de categorias
@@ -119,10 +122,17 @@ class _NovaOfertaState extends State<NovaOferta> {
                   setState(() {
                     postNovo.textoPrincipal = _controller.text;
                     postNovo.icon = categories.indexOf(selectedIconCategory)+1;
+                    postNovo.usuario = Usuario().id;
                   });
-                  print('postNovo: $postNovo');
-                  postsInstancias.add(postNovo);
+                  
+                  
+
+                  print('postNovo: ${postNovo.usuario}');
+                  print('usuario nome: ${Usuario().nome}');
                   await rep.criarPost(postNovo.toJson());
+/*                   final posts = await rep.gerarPosts();
+                  repUser.sendPosts(posts); */
+                  
 
                 }
                 if (isEditing) {
@@ -132,6 +142,10 @@ class _NovaOfertaState extends State<NovaOferta> {
                   });
                   await rep.updatePost(
                     postNovo.id,
+                    postNovo
+                    );
+/*                   await rep.updatePost(
+                    postNovo.id,
                     postNovo.produto, 
                     postNovo.quantidade, 
                     postNovo.condicoes, 
@@ -140,7 +154,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                     postNovo.info, 
                     postNovo.textoPrincipal,
                     postNovo.icon,
-                    postNovo.fotosPost);
+                    postNovo.fotosPost); */
                 }
 
                 Navigator.pushNamed(context, '/minhasofertas', arguments: [postNovo, selectedIconCategory]);

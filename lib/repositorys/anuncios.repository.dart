@@ -1,5 +1,6 @@
 import 'package:cint/components/post_oferta.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AnunciosRepository {
@@ -27,21 +28,30 @@ class AnunciosRepository {
             .insert([data]);
   }
 
-  updatePost(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio, icon, fotos) async {
+/*   updatePost(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio, icon, fotos) async {
     await Supabase.instance.client
             .from('anuncio')
             .update({'nome_produto' : nome, 'quantidade' : quantidade, 'condicao' : condicao, 'categoria' : categoria, 'telefone' : telefone, 'informacao_relevante' : informacaoRelevante, 'texto_anuncio' : textoAnuncio, 'tipo_id': icon, 'fotos' : fotos})
             .eq('id', id);
-  }
+  } */
+
+updatePost(id, PostOferta postOferta) async {
+  await Supabase.instance.client
+      .from('anuncio')
+      .update(postOferta.toJson())  // Utiliza o método toJson()
+      .eq('id', id);
+}
+
 
   Future<List<Map<String, dynamic>>> getPosts() async {
     final ongs = await Supabase.instance.client
                         .from('anuncio')
-                        .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, fotos, tipo_id, texto_anuncio');
+                        .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, fotos, tipo_id, texto_anuncio, usuario')
+                        .eq('usuario', Usuario().id);
     return ongs;
   }
 
-  gerarPosts() async {
+  Future<List<PostOferta>> gerarPosts() async {
     List<PostOferta> lista = [];
     final get = await getPosts();
     for (var post in get) {

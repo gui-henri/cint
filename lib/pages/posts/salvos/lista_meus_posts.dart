@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:cint/objetos/posts.dart';
+import 'package:cint/components/post_oferta.dart';
 import 'package:cint/pages/posts/minhas_ofertas.dart';
 import 'package:cint/repositorys/anuncios.repository.dart';
-import 'package:cint/components/post_oferta.dart';
+import 'package:flutter/material.dart';
 
 class ListaMeusPosts extends StatefulWidget {
   const ListaMeusPosts({super.key});
@@ -12,106 +11,117 @@ class ListaMeusPosts extends StatefulWidget {
 }
 
 class _ListaMeusPostsState extends State<ListaMeusPosts> {
+  late Future<List<PostOferta>> meusPosts; // Declarado como late
+
   final AnunciosRepository rep = AnunciosRepository();
-  final List<PostOferta> postsInstancias = ListaMinhasOfertas().anunciosInstancias;
 
   @override
   void initState() {
     super.initState();
-    
-    print('entrouuuUU na lista');
+    meusPosts = rep.gerarPosts(); // Inicializado no initState
+    print('Entro na lista de posts.');
   }
 
   @override
   Widget build(BuildContext context) {
-    if (postsInstancias.isEmpty) {
-      return Center(child: semOfertas()); // Exibir um indicador de carregamento se a lista estiver vazia
-    }
+    return FutureBuilder<List<PostOferta>>(
+      future: meusPosts, // Usa o Future inicializado no initState
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Erro: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: semOfertas()); // Exibir um indicador se não houver ofertas
+        } else {
+          final postsInstancias = snapshot.data!;
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(bottom: 30),
-        separatorBuilder: (context, index) => const SizedBox(height: 20),
-        itemCount: postsInstancias.length,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Dismissible(
-                key: UniqueKey(),
-                onDismissed: (direction) async {
-                  await postsInstancias;
-                  // Deletar fotos do post
-                  for (var foto in postsInstancias[index].fotosPost) {
-                    await rep.deleteFoto(foto);
-                  }
+          return Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 30),
+              separatorBuilder: (context, index) => const SizedBox(height: 20),
+              itemCount: postsInstancias.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (direction) async {
+                        // Deletar fotos do post
+                        for (var foto in postsInstancias[index].fotosPost) {
+                          await rep.deleteFoto(foto);
+                        }
 
-                  // Deletar o post do banco de dados
-                  //await rep.deletePost(postsInstancias[index].id);
+                        // Deletar o post do banco de dados
+                        await rep.deletePost(postsInstancias[index].id);
 
-                  // Atualizar o estado da lista
-                  setState(() {
-                    postsInstancias.removeAt(index);
-                  });
-                },
-                background: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.redAccent,
-                  ),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Icon(Icons.delete, color: Colors.white),
+                        // Atualizar o estado da lista
+                        setState(() {
+                          postsInstancias.removeAt(index);
+                        });
+                      },
+                      background: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.redAccent,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      secondaryBackground: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.redAccent,
+                        ),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      child: PostCard(
+                        oferta: postsInstancias[index],
+                        deletar: () {
+                          setState(() {
+                            postsInstancias.removeAt(index);
+                          });
+                        },
+                        editar: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/anuncio_form',
+                            arguments: [
+                              true,
+                              postsInstancias[index].id,
+                              postsInstancias[index],
+                            ],
+                          );
+                        },
+                        detalhes: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/editar_form',
+                            arguments: postsInstancias[index],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ),
-                secondaryBackground: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.redAccent,
-                  ),
-                  child: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
-                  ),
-                ),
-                child: PostCard(
-                  oferta: postsInstancias[index],
-                  deletar: () {
-                    setState(() {
-                      postsInstancias.removeAt(index);
-                    });
-                  },
-                  editar: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/anuncio_form',
-                      arguments: [
-                        true,
-                        postsInstancias[index].id,
-                        postsInstancias[index],
-                      ],
-                    );
-                  },
-                  detalhes: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/editar_form',
-                      arguments: postsInstancias[index],
-                    );
-                  },
-                ),
-              ),
-            ],
+                  ],
+                );
+              },
+            ),
           );
-        },
-      ),
+        }
+      },
     );
   }
 }

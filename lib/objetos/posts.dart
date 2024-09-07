@@ -1,17 +1,20 @@
-import 'package:cint/components/post_oferta.dart';
+/* import 'package:cint/components/post_oferta.dart';
 import 'package:cint/repositorys/anuncios.repository.dart';
 
 class ListaMinhasOfertas {
-  ListaMinhasOfertas._privateConstructor();
-  static final ListaMinhasOfertas _instance = ListaMinhasOfertas._privateConstructor();
-  factory ListaMinhasOfertas() {
-    return _instance;
-  }
+  // Variáveis estáticas para compartilhar o estado entre todas as instâncias
+  static final AnunciosRepository _anuncioRepository = AnunciosRepository();
+  static List<PostOferta> _anunciosInstancias = [];
 
-  final AnunciosRepository _anuncioRepository = AnunciosRepository();
-  List<PostOferta> anunciosInstancias = [];
+  // Construtor padrão
+  ListaMinhasOfertas._();
 
-  Future<void> loadPosts() async {
-    anunciosInstancias = await _anuncioRepository.gerarPosts();
+  // Getter para acessar a lista de anúncios
+  static List<PostOferta> get anunciosInstancias => _anunciosInstancias;
+
+  // Método para carregar os posts
+  static Future<void> loadPosts() async {
+    _anunciosInstancias = await _anuncioRepository.gerarPosts();
   }
 }
+ */

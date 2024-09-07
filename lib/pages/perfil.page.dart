@@ -1,5 +1,6 @@
 import 'package:cint/components/footer.dart';
 import 'package:cint/components/header.dart';
+import 'package:cint/objetos/posts.dart';
 import 'package:cint/objetos/user.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/main.dart';
@@ -324,6 +325,7 @@ void showLogoutDialog(BuildContext context) {
               if (context.mounted) {
                 Navigator.pushNamed(context, '/');
               }
+              //ListaMinhasOfertas().anunciosInstancias.clear();
             },
             child: const Text(
               'Desconectar',

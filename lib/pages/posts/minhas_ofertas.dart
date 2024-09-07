@@ -32,6 +32,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
   }
   @override
   Widget build(BuildContext context) {
+    print('user: ${Usuario().id}');
     return Scaffold(
       appBar: Header(
         atualizarBusca: (value) {},
