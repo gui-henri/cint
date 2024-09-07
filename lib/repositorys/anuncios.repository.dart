@@ -1,5 +1,6 @@
 import 'package:cint/components/post_oferta.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/posts.dart';
 import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
