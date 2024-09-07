@@ -1,3 +1,4 @@
+import 'package:cint/objetos/posts.dart';
 import 'package:flutter/material.dart';
 import '../../components/post_oferta.dart';
 

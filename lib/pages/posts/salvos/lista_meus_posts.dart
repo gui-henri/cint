@@ -1,4 +1,5 @@
 import 'package:cint/components/post_oferta.dart';
+import 'package:cint/objetos/posts.dart';
 import 'package:cint/objetos/user.dart';
 import 'package:cint/pages/posts/minhas_ofertas.dart';
 import 'package:cint/repositorys/anuncios.repository.dart';

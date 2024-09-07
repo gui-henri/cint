@@ -1,4 +1,5 @@
 import 'package:cint/components/post_oferta.dart';
+import 'package:cint/objetos/posts.dart';
 import 'package:cint/repositorys/user.repository.dart';
 
 class Usuario {
