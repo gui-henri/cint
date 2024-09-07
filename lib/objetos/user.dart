@@ -57,7 +57,7 @@ class Usuario {
       meta: json['meta'],
       endereco: json['endereco'],
       foto: json['foto'],
-      posts: List<PostOferta>.from(json['posts'] ?? []),
+      posts: [],
       email: json['user_email'],
     );
   }

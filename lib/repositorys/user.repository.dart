@@ -27,6 +27,14 @@ class UserRepository {
             .insert([data]);
   }
 
+
+  updateUserPosts(data) async {
+    await Supabase.instance.client
+            .from('usuario')
+            .update({'posts':data})
+            .eq('id', Usuario().id);
+  }
+
 /*   getAuthUsers() async {
     final users = await supabase.auth.
                           .from('users')

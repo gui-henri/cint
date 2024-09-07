@@ -130,8 +130,6 @@ class _NovaOfertaState extends State<NovaOferta> {
                   print('postNovo: ${postNovo.usuario}');
                   print('usuario nome: ${Usuario().nome}');
                   await rep.criarPost(postNovo.toJson());
-/*                   final posts = await rep.gerarPosts();
-                  repUser.sendPosts(posts); */
                   
 
                 }
@@ -144,17 +142,6 @@ class _NovaOfertaState extends State<NovaOferta> {
                     postNovo.id,
                     postNovo
                     );
-/*                   await rep.updatePost(
-                    postNovo.id,
-                    postNovo.produto, 
-                    postNovo.quantidade, 
-                    postNovo.condicoes, 
-                    postNovo.categoria, 
-                    postNovo.telefone, 
-                    postNovo.info, 
-                    postNovo.textoPrincipal,
-                    postNovo.icon,
-                    postNovo.fotosPost); */
                 }
 
                 Navigator.pushNamed(context, '/minhasofertas', arguments: [postNovo, selectedIconCategory]);

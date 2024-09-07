@@ -1,6 +1,8 @@
 import 'package:cint/components/post_oferta.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:cint/pages/posts/minhas_ofertas.dart';
 import 'package:cint/repositorys/anuncios.repository.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:flutter/material.dart';
 
 class ListaMeusPosts extends StatefulWidget {
@@ -14,6 +16,8 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
   late Future<List<PostOferta>> meusPosts; // Declarado como late
 
   final AnunciosRepository rep = AnunciosRepository();
+  final UserRepository repUser = UserRepository();        
+  List postIds = [];
 
   @override
   void initState() {
@@ -32,10 +36,19 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Erro: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          postIds.clear();
+          repUser.updateUserPosts(postIds);
           return Center(child: semOfertas()); // Exibir um indicador se não houver ofertas
         } else {
           final postsInstancias = snapshot.data!;
-
+{        Usuario().update(posts: postsInstancias);
+        postIds.clear();
+        for (var post in Usuario().posts) {
+          postIds.add(post.id);
+        }
+        print('tdspsts: $postIds');
+        repUser.updateUserPosts(postIds);}
+        print('usuario posts: ${Usuario().posts}');
           return Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: ListView.separated(
@@ -56,6 +69,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
 
                         // Deletar o post do banco de dados
                         await rep.deletePost(postsInstancias[index].id);
+                        
 
                         // Atualizar o estado da lista
                         setState(() {
