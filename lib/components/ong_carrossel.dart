@@ -47,7 +47,7 @@ class OngsCarouselState extends State<OngsCarousel> {
             return OngButton(
               nomeOng: ong['nome'],
               imgOng: ong['foto_instituicao'][0]['url'],
-              navegar: '/home',
+              navegar: ong['id'],
             );
           }).toList(),
         );

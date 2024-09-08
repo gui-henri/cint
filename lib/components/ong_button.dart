@@ -1,3 +1,4 @@
+import 'package:cint/pages/ong.page.dart';
 import 'package:flutter/material.dart';
 
 class OngButton extends StatelessWidget {
@@ -13,7 +14,7 @@ class OngButton extends StatelessWidget {
 
     return GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(navegar);
+                Navigator.of(context).pushNamed('/ong', arguments: OngArguments(ongId: navegar));
               },
               child: Container(
                 margin: const EdgeInsets.only(right: 10, left: 10),
