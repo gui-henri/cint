@@ -26,7 +26,6 @@ class _HeaderState extends State<Header> {
           widget.atualizarBusca(input);
         },
         onSubmitted: (value) {
-          //widget.atualizarBusca(value);
           Navigator.of(context).pushNamed('/explorar', arguments: value);
         },
         style: const TextStyle(color: Colors.black, fontSize: 12),

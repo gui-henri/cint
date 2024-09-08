@@ -42,28 +42,6 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-/*   void _showImageDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-<<<<<<< HEAD
-          child: Container(
-            child: Image.file(
-              widget.oferta.fotosPost[index],
-              fit: BoxFit.contain,
-            ),
-=======
-          child: Image.network(
-            widget.oferta.fotosPost[index].path,
-            fit: BoxFit.contain,
->>>>>>> e53bf8615c3af96e35310b8f1b48276503a32b9a
-          ),
-        );
-      },
-    );
-  } */
-
   @override
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
@@ -74,9 +52,7 @@ class _PostCardState extends State<PostCard> {
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
     final preferencia = supabase.from('preferencia').stream(primaryKey: ['id']).eq('id', widget.oferta.icon);
-    //final fotosJsonString = supabase.from('anuncio').select('fotos').eq('id', widget.oferta.icon).asStream();
 
-    //
     return Row(
       children: [
         Expanded(
