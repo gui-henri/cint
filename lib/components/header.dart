@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class Header extends StatefulWidget implements PreferredSizeWidget {
   final ValueChanged<String> atualizarBusca;
   final String textoSalvo;
-  const Header({super.key, required this.atualizarBusca, this.textoSalvo = ''});
+  final bool showTextField;
+  const Header({super.key, required this.atualizarBusca, this.textoSalvo = '', this.showTextField = false});
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -20,13 +21,14 @@ class _HeaderState extends State<Header> {
     return AppBar(
       elevation: 1,
       backgroundColor: const Color(0xFF28730E),
-      title: TextField(
+      title: 
+      widget.showTextField ?
+      TextField(
         controller: _searchController,
         onChanged: (input) {
           widget.atualizarBusca(input);
         },
         onSubmitted: (value) {
-          //widget.atualizarBusca(value);
           Navigator.of(context).pushNamed('/explorar', arguments: value);
         },
         style: const TextStyle(color: Colors.black, fontSize: 12),
@@ -46,10 +48,13 @@ class _HeaderState extends State<Header> {
               borderSide: BorderSide.none),
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
         ),
-      ),
+      )
+      
+      :
+      SizedBox(),
       leadingWidth: 95.0,
       leading: Padding(
-        padding: const EdgeInsets.only(left: 15),
+        padding: const EdgeInsets.only(left: 15, top: 10),
         child: Center(
           child: Image.asset('assets/images/logo-1.png'),
         ),

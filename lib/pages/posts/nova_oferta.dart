@@ -1,17 +1,19 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:cint/main.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:flutter/material.dart';
-import 'package:cint/routes.dart';
 import '../../components/campo_texto.dart';
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/post_oferta.dart';
 import '../../components/title_back.dart';
+import '../../repositorys/anuncios.repository.dart';
 import 'salvos/lista_meus_posts.dart';
-import 'anuncio_form.dart';
 import '../../components/icones_ong.dart';
+
 
 class NovaOferta extends StatefulWidget {
   const NovaOferta({super.key});
@@ -24,20 +26,51 @@ class NovaOferta extends StatefulWidget {
 
 class _NovaOfertaState extends State<NovaOferta> {
   late var selectedIconURL = null;
-  late var selectedIcon = null;
+  late var selectedIconImage = null;
+  late var selectedIconCategory = null;
+  final UserRepository repUser = UserRepository();
   var invalido = false;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _controller = TextEditingController();
+  late TextEditingController _controller;
+  bool _hasChanged = false;
+  bool _iconChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _controller.addListener(() {
+      if (!_hasChanged && _controller.text.isNotEmpty) {
+        setState(() {
+          _hasChanged = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final fotosPost = ModalRoute.of(context)!.settings.arguments as List;
+    print('changed: $_hasChanged');
+    final arguments = ModalRoute.of(context)!.settings.arguments as List;
+    final postNovo = arguments[2] as PostOferta;
+    final fotosPost = arguments[0];
+    
     if (isEditing) {
-      setState(() {
-        selectedIcon = ofertaEditada!.icon;
-        _controller.text = ofertaEditada!.textoPrincipal;
-      });
+      if (arguments[2]!=null) {
+        final postEditado = arguments[2] as PostOferta;
+        print(postEditado);
+        if (!_hasChanged) {
+          _controller.text = postEditado.textoPrincipal;
+        } else {print('uaaa');}
+      } else {print('nao tem 2');}
     }
+
     final user = supabase.auth.currentUser;
     final profileImageUrl = user?.userMetadata?['avatar_url'];
     final fullName = user?.userMetadata?['full_name'];
@@ -45,6 +78,26 @@ class _NovaOfertaState extends State<NovaOferta> {
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
+    //final List<PostOferta> postsInstancias = ListaMinhasOfertas();
+
+    final linhaPost = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', arguments[1]);
+    // Define a lista de categorias
+    final categories = [
+      'Crianças',
+      'Reciclagem',
+      'Animais',
+      'Educação',
+      'Idosos',
+      'Reabilitação',
+      'Culturais',
+      'Minorias',
+      'Mulheres',
+      'Refugiados',
+      'Religiosas',
+      'Saúde',
+      'Sem-teto',
+    ];
+
     return Scaffold(
         appBar: Header(
           atualizarBusca: (value) {},
@@ -54,37 +107,46 @@ class _NovaOfertaState extends State<NovaOferta> {
           width: 60,
           height: 60,
           child: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
+              final rep = AnunciosRepository();
               setState(() {
                 invalido = (_formKey.currentState!.validate());
               });
-              print(isEditing);
+              
+              print('arguments: $arguments');
+              print('texto: ${_controller.text}');
+              print('está editando: $isEditing');
               (_formKey.currentState!.validate());
-              if (selectedIcon != null && _formKey.currentState!.validate()) {
+              if (selectedIconCategory != null && _formKey.currentState!.validate()) {
                 if (isEditing == false) {
-                  meusPosts.add(PostOferta(
-                    tempForm[0],
-                    tempForm[1],
-                    tempForm[2],
-                    tempForm[3],
-                    tempForm[4],
-                    tempForm[5],
-                    selectedIcon,
-                    _controller.text,
-                    fotosPost,
-                  ));
+                  setState(() {
+                    postNovo.textoPrincipal = _controller.text;
+                    postNovo.icon = categories.indexOf(selectedIconCategory)+1;
+                    postNovo.usuario = Usuario().id;
+                  });
+                  
+                  
+
+                  print('postNovo: ${postNovo.usuario}');
+                  print('usuario nome: ${Usuario().nome}');
+                  await rep.criarPost(postNovo.toJson());
+                  
+
                 }
                 if (isEditing) {
                   setState(() {
-                    ofertaEditada!.icon = selectedIcon;
-                    ofertaEditada!.textoPrincipal = _controller.text;
-                    isEditing = false;
+                    postNovo.textoPrincipal = _controller.text;
+                    postNovo.icon = categories.indexOf(selectedIconCategory)+1;
                   });
+                  await rep.updatePost(
+                    postNovo.id,
+                    postNovo
+                    );
                 }
-                tempForm.clear();
-                Navigator.pushNamed(context, '/minhasofertas');
+
+                Navigator.pushNamed(context, '/minhasofertas', arguments: [postNovo, selectedIconCategory]);
               } else {
-                if (selectedIcon == null) {
+                if (selectedIconImage == null) {
                   Future.delayed(const Duration(seconds: 1), () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -109,8 +171,8 @@ class _NovaOfertaState extends State<NovaOferta> {
             },
             foregroundColor: Colors.white,
             backgroundColor: const Color(0xFF6EB855),
-            child: Icon(Icons.send),
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
+            child: const Icon(Icons.send),
           ),
         ),
         body: Container(
@@ -119,10 +181,11 @@ class _NovaOfertaState extends State<NovaOferta> {
               heightFactor: 1,
               widthFactor: 1,
               child: SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 100.0),
                 child: Stack(
                   children: [
                     Column(children: [
-                      titleBack(context, 'Nova oferta', '/anuncio_form'),
+                      titleBack(context, 'Nova oferta', '/anuncio_form', [true, arguments[1], (arguments[2] !=null) ? arguments[2] as PostOferta : null]),
                       const SizedBox(
                         height: 30,
                       ),
@@ -174,7 +237,7 @@ class _NovaOfertaState extends State<NovaOferta> {
                                             ),
                                             color: Colors.white,
                                           ),
-                                          child: selectedIcon,
+                                          child: selectedIconImage
                                         ),
                                       ],
                                     ),
@@ -195,369 +258,38 @@ class _NovaOfertaState extends State<NovaOferta> {
                       ),
                       FractionallySizedBox(
                         widthFactor: 0.9,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                SquareGesture(
-                                  name: 'Saúde',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Saúde')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Saúde')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Saúde')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Saúde')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                const Spacer(),
-                                SquareGesture(
-                                  name: 'Educação',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Educação')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Educação')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Educação')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Educação')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                const Spacer(),
-                                SquareGesture(
-                                  name: 'Crianças',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Crianças')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Crianças')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Crianças')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Crianças')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                SquareGesture(
-                                  name: 'Idosos',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Idosos')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Idosos')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Idosos')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Idosos')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                Spacer(),
-                                SquareGesture(
-                                  name: 'Sem-teto',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Sem-teto')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Sem-teto')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Sem-teto')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Sem-teto')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                Spacer(),
-                                SquareGesture(
-                                  name: 'Mulheres',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Mulheres')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Mulheres')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Mulheres')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Mulheres')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                SquareGesture(
-                                  name: 'Religiosas',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Religiosas')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Religiosas')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Religiosas')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Religiosas')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                Spacer(),
-                                SquareGesture(
-                                  name: 'Minorias',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Minorias')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Minorias')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Minorias')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Minorias')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                Spacer(),
-                                SquareGesture(
-                                  name: 'Ambientais',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Ambientais')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Ambientais')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Ambientais')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Ambientais')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              children: [
-                                SquareGesture(
-                                  name: 'Culturais',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Culturais')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Culturais')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Culturais')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Culturais')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                Spacer(),
-                                SquareGesture(
-                                  name: 'Reabilitação',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Reabilitação')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Reabilitação')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Reabilitação')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Reabilitação')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                                Spacer(),
-                                SquareGesture(
-                                  name: 'Refugiados',
-                                  icon:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Refugiados')["icon-green"],
-                                  iconSelected:
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Refugiados')["icon-white"],
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIconURL =
-                                        iconesOng.firstWhere(
-                                          (item) => item["tipo"] == 'Refugiados')["icon-green"];
-                                      selectedIcon =
-                                          Image.asset(selectedIconURL);
-                                    });
-                                    if (isEditing) {
-                                      setState(() {
-                                        ofertaEditada!.icon = selectedIcon;
-                                      });
-                                    }
-                                  },
-                                  isSelected: selectedIconURL ==
-                                      iconesOng.firstWhere(
-                                        (item) => item["tipo"] == 'Refugiados')["icon-green"],
-                                  invalido: invalido,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10.0,
+                            mainAxisSpacing: 10.0,
+                          ),
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            final category = categories[index];
+                            return SquareGesture(
+                              name: category,
+                              icon: iconesOng.firstWhere(
+                                  (item) => item["tipo"] == category)["icon-green"],
+                              iconSelected: iconesOng.firstWhere(
+                                  (item) => item["tipo"] == category)["icon-white"],
+                              onTap: () {
+                                setState(() {
+                                  selectedIconURL = iconesOng.firstWhere(
+                                      (item) => item["tipo"] == category)["icon-green"];
+                                  selectedIconCategory = category;
+                                  selectedIconImage = Image.asset(selectedIconURL);
+                                });
+                              },
+                              isSelected: 
+                              selectedIconURL ==
+                                  iconesOng.firstWhere(
+                                      (item) => item["tipo"] == category)["icon-green"],
+                              invalido: invalido,
+                            );
+                          },
                         ),
                       ),
                     ])
@@ -576,8 +308,7 @@ class SquareGesture extends StatelessWidget {
   final bool isSelected;
   final bool invalido;
 
-  const SquareGesture({
-    Key? key,
+  const SquareGesture({super.key, 
     this.name,
     this.icon,
     this.onTap,
@@ -591,8 +322,6 @@ class SquareGesture extends StatelessWidget {
     return GestureDetector(
       onTap: onTap as void Function()?,
       child: Container(
-        width: 100,
-        height: 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
@@ -603,22 +332,21 @@ class SquareGesture extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                isSelected ? Image.asset(iconSelected!) : Image.asset(icon!),
-              ],
+            Center(
+              child: isSelected
+                  ? Image.asset(iconSelected!)
+                  : Image.asset(icon!),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  name!,
-                  style: TextStyle(
-                      color:
-                          isSelected ? Colors.white : const Color(0xFF28730E)),
-                ),
-              ],
+            const SizedBox(
+              height: 8,
+            ),
+            Text(
+              name!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: isSelected ? Colors.white : const Color(0xFF28730E),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

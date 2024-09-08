@@ -1,13 +1,16 @@
+import 'package:cint/components/post_oferta.dart';
+import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:flutter/material.dart';
-import 'package:cint/routes.dart';
 import 'package:flutter/widgets.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../components/footer.dart';
 import '../../components/header.dart';
 import '../../components/title_back.dart';
-import 'anuncio_form.dart';
+import '../../main.dart';
+import '../../repositorys/anuncios.repository.dart';
 
-import '../../components/post_oferta.dart';
 
 import 'salvos/lista_meus_posts.dart';
 
@@ -21,8 +24,15 @@ class MinhasOfertas extends StatefulWidget {
 }
 
 class _MinhasOfertasState extends State<MinhasOfertas> {
+  final rep = AnunciosRepository();
+ // final myUser = Usuario();
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    print('user: ${Usuario().id}');
     return Scaffold(
       appBar: Header(
         atualizarBusca: (value) {},
@@ -30,41 +40,24 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
       bottomNavigationBar: const Footer(),
       body: Container(
           color: const Color(0xFFF6F4EB),
-          child: FractionallySizedBox(
-            widthFactor: 1,
-            heightFactor: 1,
-            child: Stack(children: [
-              titleBack(context, 'Minhas Ofertas', '/home'),
-              (meusPosts.isEmpty)
-                  ? Column(children: [
-                      Container(
-                        child: semOfertas(),
-                        padding: EdgeInsets.only(top: 70),
-                      ),
-                    ])
-                  : FractionallySizedBox(
-                      widthFactor: 1,
-                      child: Container(
-                        child: ListaMeusPosts(),
-                        padding: EdgeInsets.only(top: 70),
-                      ),
-                    ),
-            ]),
-          )),
+          child: Stack(children: [
+                            titleBack(context, 'Minhas Ofertas', '/home', null),
+                            Container(
+                              padding: const EdgeInsets.only(top: 70),
+                              child: ListaMeusPosts(),
+                            )
+                          ]),),
       floatingActionButton: SizedBox(
         width: 60,
         height: 60,
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AnuncioForm()),
-            );
+            Navigator.pushNamed(context, '/anuncio_form', arguments: [false, null, null]);
           },
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6EB855),
-          child: Icon(Icons.add),
-          shape: CircleBorder(),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );

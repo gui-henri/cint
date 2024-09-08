@@ -1,3 +1,4 @@
+import 'package:cint/objetos/instituicao.dart';
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
@@ -19,29 +20,25 @@ class _ExplorarPageState extends State<ExplorarPage> {
   late String textoPesquisado = '';
   late String digitando = '';
 
-    final rep = OngRepository(); 
-    late Future<List<Map<String, dynamic>>> futureOngs;
-    late Future<List<Map<String, dynamic>>> futureCategorias;
-
+  late Future<List<Map<String, dynamic>>> futureCategorias;
+  late List<Instituicao> ongsInstancias = ListaInstituicoes().ongsInstancias;
 
   @override
   void initState() {
     super.initState();
-    futureOngs = rep.getAllWithPhotos();
-    futureCategorias = rep.getCategoria();
-
+    futureCategorias = OngRepository().getCategoria();
   }
+
 
   @override
   Widget build(BuildContext context) {
-  Future<Map<String, List<Map<String, dynamic>>>> fetchBothData() async {
-    final data1 = await futureOngs;
-    final data2 = await futureCategorias;
-    return {
-      'futureOngs': data1,
-      'futureCategorias': data2,
-    };
-  }
+    Future<Map<String, List<Map<String, dynamic>>>> fetchData() async {
+      final data1 = await futureCategorias;
+      return {
+        'futureCategorias': data1,
+      };
+    }
+
     var args = ModalRoute.of(context)?.settings.arguments;
     String argsText = args != null ? args.toString() : '';
     if (digitando != '') {
@@ -53,181 +50,137 @@ class _ExplorarPageState extends State<ExplorarPage> {
         digitando = argsText;
       }
     });
+
     return Scaffold(
-        appBar: Header(
-          textoSalvo: digitando,
-          atualizarBusca: (value) {
-            textoPesquisado = value;
-            setState(() {
-              digitando = value;
-            }); 
-          },
-        ),
-        bottomNavigationBar: const Footer(),
-        body: Column(
-          children: [
-            Row(children: [
-              titleExplorar(),
-              Image.asset('assets/icons/icon-explore.png'),
-              const Spacer(),
-              botaoFiltrar(),
-            ]),
-            Expanded(
-              child: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
-                future: fetchBothData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return const Center(child: Text('Erro ao carregar ONGs'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('Nenhuma ONG encontrada'));
-                  }
-                  final data = snapshot.data!;
-                  final ongsSnapshot = data['futureOngs']!;
-                  final categoriasSnapshot = data['futureCategorias']!;
+      appBar: Header(
+        showTextField: true,
+        textoSalvo: digitando,
+        atualizarBusca: (value) {
+          textoPesquisado = value;
+          setState(() {
+            digitando = value;
+          });
+        },
+      ),
+      bottomNavigationBar: const Footer(),
+      body: Column(
+        children: [
+          Row(children: [
+            titleExplorar(),
+            Image.asset('assets/icons/icon-explore.png'),
+            const Spacer(),
+            botaoFiltrar(),
+          ]),
+          Expanded(
+            child: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
+              future: fetchData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: Text('Erro ao carregar categorias'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('Nenhuma categoria encontrada'));
+                }
 
-                  // Cria um mapa para acesso rápido às categorias das ONGs
-                  final categoriaMap = {
-                    for (var categoria in categoriasSnapshot)
-                      categoria['id']: categoria['nome']
-                  };
-                  // Cria um mapa para acesso rápido aos nomes das ONGs
-                  final ongNomeMap = {
-                    for (var ong in ongsSnapshot)
-                      ong['id']: ong['nome']
-                  };
+                final categoriasSnapshot = snapshot.data!['futureCategorias']!;
+                
+                // Cria um mapa para acesso rápido às categorias das ONGs
+                final categoriaMap = {
+                  for (var categoria in categoriasSnapshot)
+                    categoria['id']: categoria['nome']
+                };
 
-                  // Filtra as ONGs com base nas categorias
-                  final filteredSnapshot = ongsSnapshot.where((ong) {
-                    final categoriaNome = categoriaMap[ong['id_categoria']];
-                    return ongsFiltradas.isEmpty || ongsFiltradas.contains(categoriaNome);
-                  }).toList();
+                // Filtra as ONGs com base nas categorias
+                final filteredSnapshot = ongsInstancias.where((ong) {
+                  final categoriaNome = categoriaMap[ong.idCategoria];
+                  return ongsFiltradas.isEmpty || ongsFiltradas.contains(categoriaNome);
+                }).toList();
 
-                  // Pesquisa por texto
-                  final searchSnapshot = ongsSnapshot.where((ong) {
-                    final ongNome = ongNomeMap[ong['id']];
-                    return digitando.isNotEmpty && ongNome.toLowerCase().contains(digitando.toLowerCase());
-                  }).toList();
+                // Pesquisa por texto
+                final searchSnapshot = ongsInstancias.where((ong) {
+                  return digitando.isNotEmpty && ong.nome.toLowerCase().contains(digitando.toLowerCase());
+                }).toList();
 
-                  // Pesquisa por texto e filtro
-                  final searchandfilterSnapshot = ongsSnapshot.where((ong) {
-                    final categoriaNome = categoriaMap[ong['id_categoria']];
-                    final ongNome = ongNomeMap[ong['id']];
-                    return digitando.isNotEmpty && ongNome.toLowerCase().contains(digitando.toLowerCase()) && ongsFiltradas.contains(categoriaNome);
-                  }).toList();
+                // Pesquisa por texto e filtro
+                final searchandfilterSnapshot = ongsInstancias.where((ong) {
+                  final categoriaNome = categoriaMap[ong.idCategoria];
+                  return digitando.isNotEmpty &&
+                         ong.nome.toLowerCase().contains(digitando.toLowerCase()) &&
+                         ongsFiltradas.contains(categoriaNome);
+                }).toList();
 
-                  // se apenas estiver filtrando, retorna uma listview com
-                  // as ongs filtradas
-                  if (ongsFiltradas.isNotEmpty && digitando.isEmpty)
-                  {
-                    return ListView.builder(
+                if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
+                  return ListView.builder(
                     itemCount: filteredSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = filteredSnapshot[index];
-                      final categoriaNome = categoriaMap[ong['id_categoria']];
+                      final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
-                        nome: ong['nome'],
-                        descricao: ong['descricao'],
-                        imagem: ong['foto_instituicao'][0]['url'],
+                        nome: ong.nome,
+                        descricao: ong.descricao,
+                        imagem: ong.foto,
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
                       );
                     },
-                  );} else {
-                  // se apenas estiver pesquisando por texto, retorna uma listview com
-                  // as ongs as quais o nome contem o que foi digitado/pesquisado
-                    if (digitando.isNotEmpty && ongsFiltradas.isEmpty) {
-                      print(digitando);
-                    return ListView.builder(
+                  );
+                } else if (digitando.isNotEmpty && ongsFiltradas.isEmpty) {
+                  return ListView.builder(
                     itemCount: searchSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = searchSnapshot[index];
-                      final categoriaNome = categoriaMap[ong['id_categoria']];
-                      final ongNome = ongNomeMap[ong['id']];
+                      final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
-                        nome: ongNome,
-                        descricao: ong['descricao'],
-                        imagem: ong['foto_instituicao'][0]['url'],
+                        nome: ong.nome,
+                        descricao: ong.descricao,
+                        imagem: ong.foto,
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
                       );
                     },
-                  ); } else
-                  // se estiver filtrando e pesquisando por texto ao mesmo tempo,
-                  // retorna uma listview com as ongs que estao no filtro por tipo
-                  // e que o nome contem o que foi digitado/pesquisado
-                  {if (digitando.isNotEmpty && ongsFiltradas.isNotEmpty) {
-              return ListView.builder(
+                  );
+                } else if (digitando.isNotEmpty && ongsFiltradas.isNotEmpty) {
+                  return ListView.builder(
                     itemCount: searchandfilterSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = searchandfilterSnapshot[index];
-                      final categoriaNome = categoriaMap[ong['id_categoria']];
-                      final ongNome = ongNomeMap[ong['id']];
+                      final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
-                        nome: ongNome,
-                        descricao: ong['descricao'],
-                        imagem: ong['foto_instituicao'][0]['url'],
+                        nome: ong.nome,
+                        descricao: ong.descricao,
+                        imagem: ong.foto,
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
                       );
                     },
                   );
-                  }
-                  else {
-                    return ListView.builder(
-                    itemCount: ongsSnapshot.length,
+                } else {
+                  return ListView.builder(
+                    itemCount: ongsInstancias.length,
                     itemBuilder: (context, index) {
-                      final ong = ongsSnapshot[index];
-                      final categoriaNome = categoriaMap[ong['id_categoria']];
-                      final ongNome = ongNomeMap[ong['id']];
+                      final ong = ongsInstancias[index];
+                      final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
-                        nome: ongNome,
-                        descricao: ong['descricao'],
-                        imagem: ong['foto_instituicao'][0]['url'],
+                        nome: ong.nome,
+                        descricao: ong.descricao,
+                        imagem: ong.foto,
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
                       );
                     },
                   );
-                  }
-                      
-                  }
-                  return SizedBox();
-                  } }
-                 /**//*if (digitando.isNotEmpty) {
-                    print(digitando);
-                    var ongs = ongsSnapshot.toList().where((ong) => ong['nome'].toString().toLowerCase().contains(digitando.toLowerCase()));
-                    return (ongs.length > 0) ?
-                    ListView(
-                      children: ongs
-                      .map((ong) {
-                        return OngCard(
-                        nome: ong['nome'],
-                        descricao: 'blablabla',
-                        imagem: ong['foto_instituicao'][0]['url'],
-                        iconTipo: iconesOng.firstWhere((item) =>
-                        item["tipo"] == 'Saúde')['icon-white'],
-                        )
-                      ;}).toList()
-                    ) :
-                    const Center(
-                      child: Text(
-                        'Nenhuma ONG correspondente à pesquisa',
-                        style: TextStyle(color: Color(0xFF28730E)),
-                        textAlign: TextAlign.center,                        
-                        ),
-                    );
-                 }  */
-                  
-  ),
+                }
+              },
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   // Dropdown de tipos de ONG do botão de filtro

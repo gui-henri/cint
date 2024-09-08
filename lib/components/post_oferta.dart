@@ -1,22 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cint/components/icones_ong.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
+import 'package:cint/repositorys/ong.repository.dart';
 import 'package:flutter/material.dart';
+import '../../components/icones_ong.dart';
 
 bool isEditing = false;
 PostOferta? ofertaEditada;
 
-class PostOferta {
-  String produto;
-  String quantidade;
-  String condicoes;
-  String categoria;
-  String telefone;
-  String info;
-  Image icon;
-  String textoPrincipal;
-  List fotosPost;
-  PostOferta(this.produto, this.quantidade, this.condicoes, this.categoria,
-      this.telefone, this.info, this.icon, this.textoPrincipal, this.fotosPost);
-}
+
 
 class PostCard extends StatefulWidget {
   final PostOferta oferta;
@@ -36,31 +32,16 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  void _showImageDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            child: Image.network(
-              widget.oferta.fotosPost[index].path,
-              fit: BoxFit.contain,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final user = supabase.auth.currentUser;
-    final profileImageUrl = user?.userMetadata?['avatar_url'];
-    final fullName = user?.userMetadata?['full_name'];
+    final profileImageUrl = Usuario().foto;
+    final fullName = Usuario().nome;
     List<String> nomes = fullName.split(" ");
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
+    final preferencia = supabase.from('preferencia').stream(primaryKey: ['id']).eq('id', widget.oferta.icon);
+
     return Row(
       children: [
         Expanded(
@@ -112,7 +93,17 @@ class _PostCardState extends State<PostCard> {
                         ),
                         color: Colors.white,
                       ),
-                      child: widget.oferta.icon,
+                      child: StreamBuilder(
+                        stream: preferencia, 
+                        builder: (context, snapshot) {
+                          final data = snapshot.data;
+                          if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null) {
+                          return const Center(child: CircularProgressIndicator(color: Color(0xFF28730E),));
+                          }
+                          return Image.asset(iconesOng.firstWhere(
+                                      (item) => item["tipo"] == data![0]['nome'])["icon-green"]);
+                      },
+                      )
                     ),
                   ],
                 ),
@@ -133,17 +124,16 @@ class _PostCardState extends State<PostCard> {
                     ),
                     Row(
                       children: [
-                        widget.oferta.fotosPost.isNotEmpty
-                            ? Expanded(
+                         Expanded(
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
-                                  child: Wrap(
+                                  child: Row(
                                     children:
                                         widget.oferta.fotosPost.map((photo) {
                                       int index = widget.oferta.fotosPost
                                           .indexOf(photo);
                                       return GestureDetector(
-                                        onTap: () => _showImageDialog(index),
+                                        //onTap: () => _showImageDialog(index),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
@@ -151,9 +141,9 @@ class _PostCardState extends State<PostCard> {
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
                                               child: Image.network(
-                                                photo.path,
-                                                height: 60.0,
-                                                width: 60.0,
+                                                photo,
+                                                height: 200.0,
+                                                width: 200.0,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -161,10 +151,9 @@ class _PostCardState extends State<PostCard> {
                                         ),
                                       );
                                     }).toList(),
-                                  ),
+                                  )
                                 ),
                               )
-                            : const SizedBox(),
                       ],
                     ),
                   ],
@@ -177,3 +166,70 @@ class _PostCardState extends State<PostCard> {
     );
   }
 }
+
+
+
+
+/* class ListaMinhasOfertas {
+  List<PostOferta> _listaPosts = [];
+  final _controller = StreamController<List<PostOferta>>.broadcast();
+
+  ListaMinhasOfertas();
+
+  // Getter para o stream
+  Stream<List<PostOferta>> get stream => _controller.stream;
+
+  // Getter para a lista de posts
+  List<PostOferta> get listaPosts => _listaPosts;
+
+
+  // Atualiza a lista de posts e notifica os ouvintes
+  void fillList(List<Map<String, dynamic>> newPosts) {
+    final newPostObjects = newPosts.map((post) => 
+    PostOferta(
+      post['telefone'],
+      post['informacao_relevante'],
+      post['id'],
+      produto: post['nome_produto'],
+      quantidade: post['quantidade'],
+      condicoes: post['condicao'],
+      categoria: post['categoria'],
+      textoPrincipal:  post['texto_anuncio'],
+      icon: post['tipo_id'],
+      fotosPost: jsonDecode(post['fotos']),
+    )).toList();
+
+    // Atualiza a lista interna, adiciona novos posts e remove os deletados
+    _listaPosts = _updatePosts(_listaPosts, newPostObjects);
+
+    // Notifica os ouvintes sobre as mudanças
+    _controller.sink.add(_listaPosts);
+  }
+
+  // Adiciona um post individual e atualiza o stream
+  void addPost(PostOferta post) {
+    _listaPosts.add(post);
+    _controller.sink.add(_listaPosts);
+  }
+
+  // Atualiza a lista de posts, removendo posts antigos e adicionando novos
+  List<PostOferta> _updatePosts(List<PostOferta> currentPosts, List<PostOferta> newPosts) {
+    final existingIds = currentPosts.map((post) => post.id).toSet();
+    final updatedPosts = List<PostOferta>.from(currentPosts);
+
+    for (var post in newPosts) {
+      if (!existingIds.contains(post.id)) {
+        updatedPosts.add(post);
+      }
+    }
+
+    // Remove posts que não estão mais na lista de novos posts
+    updatedPosts.removeWhere((post) => !newPosts.any((newPost) => newPost.id == post.id));
+    return updatedPosts;
+  }
+
+  // Feche o controller quando não for mais necessário
+  void dispose() {
+    _controller.close();
+  }
+} */
