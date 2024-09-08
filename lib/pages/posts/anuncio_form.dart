@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cint/main.dart';
+import 'package:cint/objetos/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -202,7 +203,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
             }
             setState(() {
               isEditing = false;
-              tempForm.clear();
             });
             Navigator.pushNamed(context, '/minhasofertas');
           },
@@ -301,70 +301,41 @@ class _AnuncioFormState extends State<AnuncioForm> {
         print('id do user é...: $userEmail');
 
       //if (isEditing == false) {
-        tempForm = [
-          _controllerProduto.text,
-          _controllerQuantidade.text,
-          _controllerCondicoes.text,
-          _controllerCategoria.text,
-          _controllerTelefone.text,
-          _controllerInfo.text,
-          null,
-          null,
-        ];
 
         late dynamic idPost;
         if (!isEditing) {
-          idPost = await rep.createPost(
-          _controllerProduto.text,
-          int.parse(_controllerQuantidade.text),
-          int.parse(_controllerCondicoes.text),
-          int.parse(_controllerCategoria.text),
-          _controllerTelefone.text,
-          _controllerInfo.text,
-          '',
-          jsonEncode(fotosKeys),
-        );
         final postof = PostOferta(
-          _controllerProduto.text, 
-          int.parse(_controllerQuantidade.text), 
-          int.parse(_controllerCondicoes.text), 
-          int.parse(_controllerCategoria.text), 
           (_controllerTelefone.text.isEmpty) ? '' : _controllerTelefone.text,
           (_controllerInfo.text.isEmpty) ? '' : _controllerInfo.text,
-          '', 
-          idPost, 
-          0,
-          fotosKeys
+          '',
+          '',
+          produto: _controllerProduto.text, 
+          quantidade: int.parse(_controllerQuantidade.text), 
+          condicoes: _controllerCondicoes.text, 
+          categoria: _controllerCategoria.text, 
+          textoPrincipal: '', 
+          icon: 0,
+          fotosPost: fotosKeys
           );
         if (mounted) {
-          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
+          Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, '', postof]);
         }
-        print('Id da linha nova: $idPost');
+
         } else {
           print('oioioioi : ${_controllerProduto.text},');
-          var idArgument = args[1];
-          idPost = await rep.updateForm(
-            idArgument,
-          _controllerProduto.text,
-          int.parse(_controllerQuantidade.text),
-          int.parse(_controllerCondicoes.text),
-          int.parse(_controllerCategoria.text),
-          _controllerTelefone.text,
-          _controllerInfo.text,
-          jsonEncode(fotosKeys)
-        );
-                final postof = PostOferta(
-          _controllerProduto.text, 
-          int.parse(_controllerQuantidade.text), 
-          int.parse(_controllerCondicoes.text), 
-          int.parse(_controllerCategoria.text), 
-          _controllerTelefone.text,
-          _controllerInfo.text,
-          (args[2] as PostOferta).textoPrincipal, 
-          idPost, 
-          (args[2] as PostOferta).icon,
-          fotosKeys
-          );
+          var idPost = args[1];
+          final postof = args[2] as PostOferta;
+          postof.telefone = _controllerTelefone.text;
+          postof.info = _controllerInfo.text;
+          postof.id = idPost;
+          postof.produto = _controllerProduto.text;
+          postof.quantidade = int.parse(_controllerQuantidade.text);
+          postof.condicoes = _controllerCondicoes.text;
+          postof.categoria = _controllerCategoria.text;
+          /* postof.textoPrincipal = (args[2] as PostOferta).textoPrincipal;
+          icon: (args[2] as PostOferta).icon;
+          fotosPost: fotosKeys */
+          
           if (mounted) {
             Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
           }

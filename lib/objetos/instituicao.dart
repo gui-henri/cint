@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:cint/repositorys/ong.repository.dart';
+
 class Instituicao {
   final String id;
   final String nome;
@@ -44,12 +46,36 @@ class Instituicao {
     );
   }
 
-/*   // Método para converter uma instância de Instituicao de volta para JSON
+   // Método para converter uma instância de Instituicao de volta para JSON
   Map<String, dynamic> toJson() {
     return {
-      'nome': nome,
-      'nota': nota,
-      'endereco': endereco,
+      id: id,
+      nome: nome,
+      nota.toString(): nota,
+      endereco: endereco,
+      descricao: descricao,
+      pix: pix,
+      missao: missao,
+      historia: historia,
+      meta.toString(): meta,
+      idCategoria.toString(): idCategoria,
+      foto: foto,
     };
-  } */
+  }
+}
+
+
+class ListaInstituicoes {
+  ListaInstituicoes._privateConstructor();
+  static final ListaInstituicoes _instance = ListaInstituicoes._privateConstructor();
+  factory ListaInstituicoes() {
+    return _instance;
+  }
+
+  final OngRepository _ongRepository = OngRepository();
+  List<Instituicao> ongsInstancias = [];
+
+  Future<void> loadOngs() async {
+    ongsInstancias = await _ongRepository.gerarOngs();
+  }
 }

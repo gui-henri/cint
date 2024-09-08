@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cint/components/ong_button.dart';
+import 'package:cint/objetos/instituicao.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class OngsCarousel extends StatefulWidget {
 class OngsCarouselState extends State<OngsCarousel> {
   final rep = OngRepository(); 
   late Future<List<Map<String, dynamic>>> futureOngs;
+  final ongsInstancias = ListaInstituicoes().ongsInstancias;
 
   @override
   void initState() {
@@ -43,10 +45,10 @@ class OngsCarouselState extends State<OngsCarousel> {
             enableInfiniteScroll: false,
             scrollDirection: Axis.horizontal,
           ),
-          items: ongs.map((ong) {
+          items: ongsInstancias.map((ong) {
             return OngButton(
-              nomeOng: ong['nome'],
-              imgOng: ong['foto_instituicao'][0]['url'],
+              nomeOng: ong.nome,
+              imgOng: ong.foto,
               navegar: '/home',
             );
           }).toList(),

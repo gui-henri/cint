@@ -1,4 +1,7 @@
+import 'package:cint/components/post_oferta.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AnunciosRepository {
@@ -18,6 +21,44 @@ class AnunciosRepository {
                             .select('id')
                             .single();
     return response['id'].toString();
+  }
+
+  criarPost(data) async {
+    await Supabase.instance.client
+            .from('anuncio')
+            .insert([data]);
+  }
+
+/*   updatePost(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio, icon, fotos) async {
+    await Supabase.instance.client
+            .from('anuncio')
+            .update({'nome_produto' : nome, 'quantidade' : quantidade, 'condicao' : condicao, 'categoria' : categoria, 'telefone' : telefone, 'informacao_relevante' : informacaoRelevante, 'texto_anuncio' : textoAnuncio, 'tipo_id': icon, 'fotos' : fotos})
+            .eq('id', id);
+  } */
+
+updatePost(id, PostOferta postOferta) async {
+  await Supabase.instance.client
+      .from('anuncio')
+      .update(postOferta.toJson())  // Utiliza o método toJson()
+      .eq('id', id);
+}
+
+
+  Future<List<Map<String, dynamic>>> getPosts() async {
+    final ongs = await Supabase.instance.client
+                        .from('anuncio')
+                        .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, fotos, tipo_id, texto_anuncio, usuario')
+                        .eq('usuario', Usuario().id);
+    return ongs;
+  }
+
+  Future<List<PostOferta>> gerarPosts() async {
+    List<PostOferta> lista = [];
+    final get = await getPosts();
+    for (var post in get) {
+      lista.add(PostOferta.fromJson(post));
+    }
+    return lista;
   }
 
   Future<String> updateForm(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, fotos) async {
@@ -70,31 +111,6 @@ class AnunciosRepository {
     return response;
   }
 
-
-/* Future<List<String>> listFileUrls(String folderId) async {
-  final supabase = Supabase.instance.client;
-
-  try {
-    // Listar arquivos dentro da pasta
-    final response = await supabase.storage.from('anuncio').list(path: folderId);
-
-    final List<String> fileUrls = [];
-
-    // Gerar URL pública para cada arquivo
-    for (var file in response) {
-      final fileName = file.name;
-      final fileResponse = await supabase.storage.from('anuncio').getPublicUrl('$folderId/$fileName');
-
-      fileUrls.add(fileResponse);
-    }
-
-    return fileUrls;
-  } catch (e) {
-    print('Erro ao listar arquivos ou gerar URLs: $e');
-    return [];
-  }
-} */
-
   String extractLastSegmentFromUrl(String url) {
     // Cria um objeto Uri a partir da URL
     final uri = Uri.parse(url);
@@ -117,52 +133,3 @@ class AnunciosRepository {
     return response;
   }
 }
-
-class UserRepository {
-
-}
-
-
-/* import 'package:cint/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../components/post_oferta.dart';
-
-class AnunciosRepository {
-  Future<PostOferta> createPost(nome, quantidade, condicao, categoria) async {
-    final response = await Supabase.instance.client
-                            .from('anuncio')
-                            .insert([{'nome_produto' : '$nome', 'quantidade' : '$quantidade', 'condicao' : '$condicao', 'categoria' : '$categoria', 'user_email': '${supabase.auth.currentSession?.user.email}'}])
-                            .select('id')
-                            .single();
-    final dadosPost = PostOferta(response['nome_produto'], response['quantidade'], response['condicao'], response['categoria'], response['id'].toString());
-    
-    return dadosPost;
-  }
-
-  Future<List<Map<String, dynamic>>> getPostInfo() async {
-    final response = await Supabase.instance.client
-                            .from('anuncio')
-                            .select('id, nome_produto, quantidade, condicao, categoria, telefone, informacao_relevante, texto_anuncio')
-                            .eq('user_email', supabase.auth.currentSession?.user.email as Object);
-    return response;
-  }
-
-  getUserEmail() {
-    final response = supabase.auth.currentSession?.user.email;
-    return response;
-  }
-
-  Future<List<Map<String, dynamic>>> addTextoAndTipo(id, texto) async {
-    final response = await Supabase.instance.client
-                            .from('anuncio')
-                            .update({'texto_anuncio' : '$texto'})
-                            .eq('id', id);
-    return response;
-  }
-  
-}
-
-class UserRepository {
-
-} */

@@ -1,7 +1,10 @@
 import 'package:cint/components/footer.dart';
 import 'package:cint/components/header.dart';
+import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '/components/custom_text_button.dart';
 
@@ -34,8 +37,8 @@ class _PerfilPageState extends State<PerfilPage> {
   @override
   Widget build(BuildContext context) {
     final user = supabase.auth.currentUser;
-    final profileImageUrl = user?.userMetadata?['avatar_url'];
-    final fullName = user?.userMetadata?['full_name'];
+    final profileImageUrl = Usuario().foto;
+    final fullName = Usuario().nome;
     List<String> nomes = fullName.split(" ");
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
@@ -317,9 +320,12 @@ void showLogoutDialog(BuildContext context) {
             onPressed: () async {
               // Lógica para desconectar
               await supabase.auth.signOut();
+              final GoogleSignIn googleSignIn = GoogleSignIn();
+              await googleSignIn.signOut();
               if (context.mounted) {
                 Navigator.pushNamed(context, '/');
               }
+              //ListaMinhasOfertas().anunciosInstancias.clear();
             },
             child: const Text(
               'Desconectar',
