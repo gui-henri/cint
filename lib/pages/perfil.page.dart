@@ -160,7 +160,7 @@ class _PerfilPageState extends State<PerfilPage> {
                 children: [
                   CustomTextButton(
                     text: 'Preferêcnias de Instituições',
-                    onPressed: () => {Navigator.pushNamed(context, '/minhasofertas')},
+                    onPressed: () => {Navigator.pushReplacementNamed(context, '/apresentacao4')},
                   ),
                   const SizedBox(height: 8.0), // Espaço entre o texto/ícone e a GridView
                   SizedBox(

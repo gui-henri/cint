@@ -1,6 +1,7 @@
 import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacao2.dart';
 import 'package:cint/pages/apresentacao/apresentacao3.dart';
+import 'package:cint/pages/apresentacao/apresentacao4.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,8 +116,8 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
 
   initialAppBar() {
     return AppBar(
+      backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
-      forceMaterialTransparency: true,
       actions: [
         backButton(),
         const Spacer(),
@@ -177,11 +178,11 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
             if (currentPageIndex == 2) {
               await _setIntroSeen();  // Marcar que a introdução foi vista
             }
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacementNamed(context, '/apresentacao4');
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(7.0),
                 side: BorderSide(
