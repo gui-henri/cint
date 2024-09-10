@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  carousel_slider: 4.2.1
+  carousel_slider: ^5.0.0
+  shared_preferences: ^2.0.0
   google_fonts: ^6.2.1
   flutter_speed_dial: ^7.0.0
   supabase_flutter: ^2.5.1

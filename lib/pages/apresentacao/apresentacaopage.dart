@@ -2,6 +2,7 @@ import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacao2.dart';
 import 'package:cint/pages/apresentacao/apresentacao3.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApresentacaoPage extends StatefulWidget {
   const ApresentacaoPage({super.key});
@@ -23,8 +24,24 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
 
   @override
   void initState() {
-    _pageController = PageController(initialPage: 0);
     super.initState();
+    _pageController = PageController(initialPage: 0);
+    _checkFirstTime();
+  }
+
+  Future<void> _checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? hasSeenIntro = prefs.getBool('hasSeenIntro');
+
+    if (hasSeenIntro == true) {
+      // Se o usuário já viu a apresentação, redirecionar para a página principal
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
+  Future<void> _setIntroSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenIntro', true);
   }
 
   @override
@@ -35,14 +52,15 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Tela principal, que recebe os widgets e as páginas 1 2 e 3
     return Scaffold(
       appBar: initialAppBar(),
-      body: Stack(children: [
-        screenPages(),
-        pageTracker(),
-        linhaInferior(),
-      ]),
+      body: Stack(
+        children: [
+          screenPages(),
+          pageTracker(),
+          linhaInferior(),
+        ],
+      ),
     );
   }
 
@@ -155,8 +173,11 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
       child: SizedBox(
         width: (currentPageIndex != 2) ? 70 : 100,
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/home');
+          onPressed: () async {
+            if (currentPageIndex == 2) {
+              await _setIntroSeen();  // Marcar que a introdução foi vista
+            }
+            Navigator.pushReplacementNamed(context, '/home');
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.white),

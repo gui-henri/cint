@@ -11,9 +11,9 @@ class OngsDetalhes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Wrap(
           children: [
             Image.network(
@@ -22,7 +22,7 @@ class OngsDetalhes extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.cover,
             ),
-            Padding(padding: EdgeInsets.all(24), child: Column(
+            Padding(padding: const EdgeInsets.all(24), child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -49,9 +49,32 @@ class OngsDetalhes extends StatelessWidget {
                           )['icon-green'],),
                   ],
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 Text(ong.historia, textAlign: TextAlign.left,),
-                SizedBox(height: 40,),
+                const SizedBox(height: 20,),
+
+                Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // IMPORTANTE: Colocar para ir para a página da ONG 
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                        right: 20, left: 20, top: 10, bottom: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: const Color(0xFF28730E)
+                    ),
+                    child: const Text(
+                      'Ver mais',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+              ),
+            )
               ],
             ),)
           ],
