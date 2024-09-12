@@ -220,9 +220,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   // const SizedBox(height: 10),
                   // CustomTextButton(
                   //   text: 'Central de Ajuda',
-                  //   onPressed: () {
-                  //     // Ação ao pressionar o botão
-                  //   },
+                  //   onPressed: () => {Navigator.pushNamed(context, '/MetaBatida')},
                   // ),
                   // const SizedBox(height: 10),
                   // CustomTextButton(

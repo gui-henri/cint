@@ -8,7 +8,6 @@ Widget titleBack(BuildContext context, String text, String route, args) {
         padding: const EdgeInsets.only(right: 10),
         child: IconButton(
           onPressed: () {
-            print('CLIQUEI POOO');
             Navigator.pop(context);
           },
           icon: const Icon(

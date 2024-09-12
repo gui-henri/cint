@@ -7,6 +7,7 @@ import 'package:cint/pages/apresentacao/apresentacao3.dart';
 import 'package:cint/pages/desempenho.page.dart';
 import 'package:cint/pages/home.page.dart';
 import 'package:cint/pages/login_dev.page.dart';
+import 'package:cint/pages/meta_batida.page.dart';
 import 'package:cint/pages/ongsmap.page.dart';
 import 'package:cint/pages/perfil.page.dart';
 import 'package:cint/pages/posts/anuncio_form.dart';
@@ -37,4 +38,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       LoginDevPage.routeName: (context) => const LoginDevPage(),
       OngsMap.routeName: (context) => const OngsMap(),
       Desempenho.routeName: (context) => const Desempenho(),
+      MetaBatida.routeName: (context) => const MetaBatida(),
     };
