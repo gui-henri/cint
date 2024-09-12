@@ -4,6 +4,7 @@ import 'package:cint/pages/apresentacao/apresentacaopage.dart';
 import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacao2.dart';
 import 'package:cint/pages/apresentacao/apresentacao3.dart';
+import 'package:cint/pages/desempenho.page.dart';
 import 'package:cint/pages/home.page.dart';
 import 'package:cint/pages/login_dev.page.dart';
 import 'package:cint/pages/ongsmap.page.dart';
@@ -35,4 +36,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       ExplorarPage.routeName: (context) => const ExplorarPage(),
       LoginDevPage.routeName: (context) => const LoginDevPage(),
       OngsMap.routeName: (context) => const OngsMap(),
+      Desempenho.routeName: (context) => const Desempenho(),
     };

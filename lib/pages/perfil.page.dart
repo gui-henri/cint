@@ -45,7 +45,7 @@ class _PerfilPageState extends State<PerfilPage> {
     final userName = '$primeiroNome $ultimoNome';
     return Scaffold(
       appBar: Header(
-        atualizarBusca: (value) {},
+        atualizarBusca: (value) {}, 
       ),
       bottomNavigationBar: const Footer(),
       body: Container(
@@ -215,9 +215,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   const SizedBox(height: 10),
                   CustomTextButton(
                     text: 'Desempenho',
-                    onPressed: () {
-                      // Ação ao pressionar o botão
-                    },
+                    onPressed: () => {Navigator.pushNamed(context, '/Desempenho')},
                   ),
                   // const SizedBox(height: 10),
                   // CustomTextButton(
