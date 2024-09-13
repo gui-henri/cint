@@ -8,14 +8,14 @@ Widget titleBack(BuildContext context, String text, String route, args) {
         padding: const EdgeInsets.only(right: 10),
         child: IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, route, arguments: args);
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black,
           ),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(const CircleBorder(
+              shape: WidgetStateProperty.all(const CircleBorder(
             side: BorderSide(
               width: 1,
               color: Colors.black,

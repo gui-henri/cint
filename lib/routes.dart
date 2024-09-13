@@ -1,9 +1,13 @@
+import 'package:cint/pages/apresentacao/apresentacao4.dart';
+import 'package:cint/pages/apresentacao/apresentacao5.dart';
 import 'package:cint/pages/apresentacao/apresentacaopage.dart';
 import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacao2.dart';
 import 'package:cint/pages/apresentacao/apresentacao3.dart';
+import 'package:cint/pages/desempenho.page.dart';
 import 'package:cint/pages/home.page.dart';
 import 'package:cint/pages/login_dev.page.dart';
+import 'package:cint/pages/meta_batida.page.dart';
 import 'package:cint/pages/ongsmap.page.dart';
 import 'package:cint/pages/perfil.page.dart';
 import 'package:cint/pages/posts/anuncio_form.dart';
@@ -24,6 +28,8 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       Apresentacao1.routeName: (context) => const Apresentacao1(),
       Apresentacao2.routeName: (context) => const Apresentacao2(),
       Apresentacao3.routeName: (context) => const Apresentacao3(),
+      Apresentacao4.routeName: (context) => const Apresentacao4(),
+      Apresentacao5.routeName: (context) => const Apresentacao5(),
       MinhasOfertas.routeName: (context) => const MinhasOfertas(),
       NovaOferta.routeName: (context) => const NovaOferta(),
       AnuncioForm.routeName: (context) => AnuncioForm(),
@@ -31,4 +37,6 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       ExplorarPage.routeName: (context) => const ExplorarPage(),
       LoginDevPage.routeName: (context) => const LoginDevPage(),
       OngsMap.routeName: (context) => const OngsMap(),
+      Desempenho.routeName: (context) => const Desempenho(),
+      MetaBatida.routeName: (context) => const MetaBatida(),
     };
