@@ -32,9 +32,7 @@ class _LoginDevPageState extends State<LoginDevPage> {
         password: _passwordController.text,
       );
       if (response.session != null) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomePage()),
-        );
+        Navigator.pushNamed(context, '/ApresentacaoPage');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login failed')),

@@ -4,7 +4,7 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
   final ValueChanged<String> atualizarBusca;
   final String textoSalvo;
   final bool showTextField;
-  const Header({super.key, required this.atualizarBusca, this.textoSalvo = '', this.showTextField = false});
+  const Header({super.key, required this.atualizarBusca, this.textoSalvo = '', this.showTextField = true});
 
   @override
   _HeaderState createState() => _HeaderState();

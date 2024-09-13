@@ -84,18 +84,18 @@ class _OngsMapState extends State<OngsMap> {
       key: appKey,
       appBar: AppBar(
         backgroundColor: const Color(0xFF28730E),
-        
+        foregroundColor: Colors.white,
       ),
       body: StreamBuilder(
   stream: streamONGs,
   builder: (context, snapshot) {
     if (!snapshot.hasData) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
 
     final data = snapshot.data!;
     if (data.isEmpty) {
-      return Center(child: Text('Nenhuma ONG encontrada.'));
+      return const Center(child: Text('Nenhuma ONG encontrada.'));
     }
 
     ongsInstancias = data.map((item) => Instituicao.fromJson(item)).toList();
@@ -104,19 +104,19 @@ class _OngsMapState extends State<OngsMap> {
     }
 
     if (ongsInstancias.isEmpty) {
-      return Center(child: Text('Nenhuma instituição disponível.'));
+      return const Center(child: Text('Nenhuma instituição disponível.'));
     }
 
     return FutureBuilder<List<double>>(
       future: rep.getCoordinates(ongInicial.endereco, dotenv.env['MAPS_KEY']),
       builder: (context, coordinatesSnapshot) {
         if (!coordinatesSnapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         final coordinates = coordinatesSnapshot.data!;
         if (coordinates.isEmpty) {
-          return Center(child: Text('Coordenadas não encontradas.'));
+          return const Center(child: Text('Coordenadas não encontradas.'));
         }
 
         final latitude = coordinates[0];

@@ -45,7 +45,7 @@ class _PerfilPageState extends State<PerfilPage> {
     final userName = '$primeiroNome $ultimoNome';
     return Scaffold(
       appBar: Header(
-        atualizarBusca: (value) {},
+        atualizarBusca: (value) {}, 
       ),
       bottomNavigationBar: const Footer(),
       body: Container(
@@ -160,7 +160,7 @@ class _PerfilPageState extends State<PerfilPage> {
                 children: [
                   CustomTextButton(
                     text: 'Preferêcnias de Instituições',
-                    onPressed: () => {Navigator.pushNamed(context, '/minhasofertas')},
+                    onPressed: () => {Navigator.pushReplacementNamed(context, '/apresentacao4')},
                   ),
                   const SizedBox(height: 8.0), // Espaço entre o texto/ícone e a GridView
                   SizedBox(
@@ -215,16 +215,12 @@ class _PerfilPageState extends State<PerfilPage> {
                   const SizedBox(height: 10),
                   CustomTextButton(
                     text: 'Desempenho',
-                    onPressed: () {
-                      // Ação ao pressionar o botão
-                    },
+                    onPressed: () => {Navigator.pushNamed(context, '/Desempenho')},
                   ),
                   // const SizedBox(height: 10),
                   // CustomTextButton(
                   //   text: 'Central de Ajuda',
-                  //   onPressed: () {
-                  //     // Ação ao pressionar o botão
-                  //   },
+                  //   onPressed: () => {Navigator.pushNamed(context, '/MetaBatida')},
                   // ),
                   // const SizedBox(height: 10),
                   // CustomTextButton(
