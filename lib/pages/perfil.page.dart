@@ -26,13 +26,45 @@ class _PerfilPageState extends State<PerfilPage> {
       'Iniciante Generoso'; // Título que o usuário terá (pode ser mudado)
   String userAvaliation = '5.0'; // Avaliação do usuário (pode ser mudado)
 
-  final List<String> preferences = [
-    'Orfanatos',
-    'Asilos',
-    'Creches',
-    'Religiosas',
-    'Sem-teto',
-  ];
+  List<String> preferences = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserPreferences();
+  }
+
+  Future<void> _loadUserPreferences() async {
+    final user = supabase.auth.currentUser;
+    
+    if (user != null) {
+      final response = await supabase
+        .from('usuario_preferencia')
+        .select('id_preferencia')
+        .eq('id_usuario', user.id);
+
+      if (response.isNotEmpty) {
+        // Carregar as preferências
+        List<String> loadedPreferences = [];
+        
+        for (var pref in response) {
+          final preferenceData = await supabase
+            .from('preferencia')
+            .select('nome')
+            .eq('id', pref['id_preferencia'])
+            .single();
+
+          if (preferenceData['nome'] != null) {
+            loadedPreferences.add(preferenceData['nome']);
+          }
+        }
+
+        setState(() {
+          preferences = loadedPreferences;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,220 +80,209 @@ class _PerfilPageState extends State<PerfilPage> {
         atualizarBusca: (value) {}, 
       ),
       bottomNavigationBar: const Footer(),
-      body: Container(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: ListView( 
-          children: <Widget>[
-        Padding(
-        padding: const EdgeInsets.fromLTRB(26.0, 42.0, 26.0, 0), // Ajuste o padding conforme necessário
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          ListView(
+            padding: const EdgeInsets.only(bottom: 80.0), // Ajuste o padding inferior para dar espaço ao botão fixo
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(26.0, 42.0, 26.0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          userName,
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8.0), // Espaçamento ajustado
-                        Row(
-                          children: [
-                            const Text(
-                              'Título: ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  userTitle,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userName,
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                const SizedBox(width: 5), // Espaçamento entre o texto e o ícone
-                                Container(
-                                  width: 30, // Largura do ícone
-                                  height: 30, // Altura do ícone
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/images/icone_doador.png'),
-                                      fit: BoxFit.contain,
+                              ),
+                              const SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Título: ',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8.0), // Espaçamento ajustado
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 5), // Espaçamento entre o ícone e o número
-                            Text(
-                              userAvaliation,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        userTitle,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Container(
+                                        width: 30,
+                                        height: 30,
+                                        decoration: const BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage('assets/images/icone_doador.png'),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    userAvaliation,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        (profileImageUrl != null) ?
+                            ClipOval(
+                              child: Image.network(
+                                profileImageUrl,
+                                width: 90,
+                                height: 90,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                        :
+                        CircleAvatar(
+                          radius: 44,
+                          backgroundImage: AssetImage(userProfileImage),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 10), // Espaçamento entre o nome e a foto de perfil
-                  (profileImageUrl != null) ?
-                      ClipOval(
-                        child: Image.network(
-                          profileImageUrl,
-                          width: 90,
-                          height: 90,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                  :
-                  CircleAvatar(
-                    radius: 44,
-                    backgroundImage: AssetImage(userProfileImage),
-                  ),
-                ],
-              ),
-            
-
-            const SizedBox(height: 10),
-
-            const Divider(
-              color: Color.fromARGB(100, 0, 0, 0),
-              thickness: 1,
-            ),
-
-            // Preferências de Instituições
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTextButton(
-                    text: 'Preferêcnias de Instituições',
-                    onPressed: () => {Navigator.pushReplacementNamed(context, '/apresentacao4')},
-                  ),
-                  const SizedBox(height: 8.0), // Espaço entre o texto/ícone e a GridView
-                  SizedBox(
-                    height: 100,
-                    child: GridView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: preferences.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Máximo de 3 por linha
-                        crossAxisSpacing: 30.0, // Espaço horizontal entre os itens
-                        mainAxisSpacing: 20.0, // Espaço vertical entre os itens
-                        childAspectRatio: 3, // Proporção entre largura e altura
-                        mainAxisExtent: 40.0, // Altura dos itens
-                      ),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF28730E),
-                            borderRadius: BorderRadius.circular(10.0), // Radius dos botões
+                    const SizedBox(height: 10),
+                    const Divider(
+                      color: Color.fromARGB(100, 0, 0, 0),
+                      thickness: 1,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextButton(
+                            text: 'Preferências de Instituições',
+                            onPressed: () => {Navigator.pushReplacementNamed(context, '/apresentacao4')},
                           ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            preferences[index],
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(height: 8.0),
+                          SizedBox(
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemCount: preferences.length,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 30.0,
+                                mainAxisSpacing: 20.0,
+                                childAspectRatio: 3,
+                                mainAxisExtent: 40.0,
+                              ),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF28730E),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    preferences[index],
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const Divider(
+                      color: Color.fromARGB(100, 0, 0, 0),
+                      thickness: 1,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextButton(
+                            text: 'Minhas Ofertas',
+                            onPressed: () => {Navigator.pushNamed(context, '/minhasofertas')},
+                          ),
+                          const SizedBox(height: 10),
+                          CustomTextButton(
+                            text: 'Desempenho',
+                            onPressed: () => {Navigator.pushNamed(context, '/Desempenho')},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            const Divider(
-              color: Color.fromARGB(100, 0, 0, 0),
-              thickness: 1,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200.0), // Ajuste o padding conforme necessário
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTextButton(
-                    text: 'Minhas Ofertas',
-                    onPressed: () => {Navigator.pushNamed(context, '/minhasofertas')},
-                  ),
-                  const SizedBox(height: 10),
-                  CustomTextButton(
-                    text: 'Desempenho',
-                    onPressed: () => {Navigator.pushNamed(context, '/Desempenho')},
-                  ),
-                  // const SizedBox(height: 10),
-                  // CustomTextButton(
-                  //   text: 'Central de Ajuda',
-                  //   onPressed: () => {Navigator.pushNamed(context, '/MetaBatida')},
-                  // ),
-                  // const SizedBox(height: 10),
-                  // CustomTextButton(
-                  //   text: 'Envie-nos seu Feedback',
-                  //   onPressed: () {
-                  //     // Ação ao pressionar o botão
-                  //   },
-                  // ),
-                ],
-              ),
-            ),
-
-            // Botão de desconectar
-            Center(
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Center(
               child: GestureDetector(
                 onTap: () {
                   showLogoutDialog(context);
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(
-                      right: 20, left: 20, top: 10, bottom: 10),
+                  margin: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: const Color(0xFFC61C1C)),
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color(0xFFC61C1C),
+                  ),
                   child: const Text(
                     'Desconectar',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
-  ]
-  )
-  )
-  );
+    );
   }
 }
 
@@ -279,10 +300,10 @@ void showLogoutDialog(BuildContext context) {
           fontSize: 20,
         ),
         content: const Column(
-          mainAxisSize: MainAxisSize.min, // Ajusta o tamanho da coluna ao conteúdo
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 20.0, bottom: 15.0), // Margem no topo e na parte inferior
+              padding: EdgeInsets.only(top: 20.0, bottom: 15.0),
               child: Text(
                 'Tem certeza?',
                 textAlign: TextAlign.center,
@@ -298,7 +319,7 @@ void showLogoutDialog(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Fecha a modal
+              Navigator.of(context).pop();
             },
             child: const Text(
               'Voltar',
@@ -311,24 +332,23 @@ void showLogoutDialog(BuildContext context) {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFC61C1C), // Cor hexadecimal para o botão 'Desconectar'
+              backgroundColor: const Color(0xFFC61C1C),
             ),
             onPressed: () async {
-              // Lógica para desconectar
               await supabase.auth.signOut();
               final GoogleSignIn googleSignIn = GoogleSignIn();
               await googleSignIn.signOut();
               if (context.mounted) {
                 Navigator.pushNamed(context, '/');
               }
-              //ListaMinhasOfertas().anunciosInstancias.clear();
             },
             child: const Text(
               'Desconectar',
               style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold),
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold
+              ),
             ),
           ),
         ],
