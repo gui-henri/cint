@@ -47,6 +47,9 @@ class _OngsMapState extends State<OngsMap> {
     markers.clear();
     ongsInstancias.forEach((ong) async {
       final coords = await rep.getCoordinates(ong.endereco, dotenv.env['MAPS_KEY']);
+      if (coords.isEmpty) {
+        return;
+      }
       final latitude = coords[0];
       final longitude = coords[1];
 

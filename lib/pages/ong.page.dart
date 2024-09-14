@@ -34,11 +34,20 @@ class OngPageState extends State<OngPage> {
         } else if (snapshot.hasError) {
           return const Center(child: Text('Erro ao carregar ONG'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('Nenhuma ONG encontrada'));
+          return const Center(child: Text('ONG não encontrada'));
         }
 
-        final img = Image.network(
+        bool hasMultiplePhotos = true;
+        try {
+          hasMultiplePhotos = snapshot.data![0]['foto_instituicao'].length > 0;
+        } catch (e) {
+          hasMultiplePhotos = false;
+        }
+        final img = hasMultiplePhotos ? Image.network(
           snapshot.data![0]['foto_instituicao'][0]['url'],
+          fit: BoxFit.fill,
+        ) : Image.network(
+          snapshot.data![0]['foto'],
           fit: BoxFit.fill,
         );
 
