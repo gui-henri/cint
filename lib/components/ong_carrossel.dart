@@ -3,6 +3,7 @@ import 'package:cint/components/ong_button.dart';
 import 'package:cint/objetos/instituicao.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; // Importe o Supabase
 
 class OngsCarousel extends StatefulWidget {
   const OngsCarousel({super.key});
@@ -12,14 +13,49 @@ class OngsCarousel extends StatefulWidget {
 }
 
 class OngsCarouselState extends State<OngsCarousel> {
-  final rep = OngRepository(); 
-  late Future<List<Map<String, dynamic>>> futureOngs;
+  final rep = OngRepository();
+  Future<List<Map<String, dynamic>>> futureOngs = Future.value([]);
   final ongsInstancias = ListaInstituicoes().ongsInstancias;
+
+  List<String> userPreferences = [];
+  final supabase = Supabase.instance.client;
 
   @override
   void initState() {
     super.initState();
+    _loadUserPreferences();
     futureOngs = rep.getAllWithPhotos();
+  }
+
+  Future<void> _loadUserPreferences() async {
+    final user = supabase.auth.currentUser;
+    
+    if (user != null) {
+      final response = await supabase
+          .from('usuario_preferencia')
+          .select('id_preferencia')
+          .eq('id_usuario', user.id);
+
+      if (response.isNotEmpty) {
+        List<String> loadedPreferences = response.map<String>((pref) {
+          return pref['id_preferencia']?.toString() ?? '';
+        }).toList();
+        
+        setState(() {
+          userPreferences = loadedPreferences.where((pref) => pref.isNotEmpty).toList(); 
+          futureOngs = _loadOngsByPreferences();
+        });
+      }
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _loadOngsByPreferences() async {
+    final allOngs = await rep.getAllWithPhotos();
+    
+    return allOngs.where((ong) {
+      final idCategoria = ong['id_categoria']?.toString();
+      return idCategoria != null && userPreferences.contains(idCategoria);
+    }).toList();
   }
 
   @override
@@ -45,10 +81,13 @@ class OngsCarouselState extends State<OngsCarousel> {
             enableInfiniteScroll: false,
             scrollDirection: Axis.horizontal,
           ),
-          items: ongsInstancias.map((ong) {
+          items: ongs.map((ong) {
+            final nomeOng = ong['nome']?.toString() ?? 'ONG sem nome';
+            final imgOng = ong['foto']?.toString() ?? '';
+
             return OngButton(
-              nomeOng: ong.nome,
-              imgOng: ong.foto,
+              nomeOng: nomeOng,
+              imgOng: imgOng,
               navegar: ong.id,
             );
           }).toList(),
