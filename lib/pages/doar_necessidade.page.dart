@@ -322,7 +322,41 @@ class _NecessidadeFormState extends State<NecessidadeForm> {
   Widget BotaoEnviar() {
     return TextButton(
       onPressed: () {
-        
+        showDialog(
+          context: context, 
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              contentPadding: const EdgeInsets.all(16),
+              content: const Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Envio de produto",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Parabéns por esse passo! A instituição entrará em contato com você para combinar a entrega do produto.",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            );
+          }
+        );
       },
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
