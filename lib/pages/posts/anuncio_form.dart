@@ -187,7 +187,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(const CircleBorder(
+              shape: WidgetStateProperty.all(const CircleBorder(
             side: BorderSide(
               width: 1,
               color: Colors.black,

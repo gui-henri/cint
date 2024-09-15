@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cint/repositorys/ong.repository.dart';
 
 class Instituicao {

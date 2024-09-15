@@ -29,7 +29,7 @@ class OngsCarouselState extends State<OngsCarousel> {
 
   Future<void> _loadUserPreferences() async {
     final user = supabase.auth.currentUser;
-    
+
     if (user != null) {
       final response = await supabase
           .from('usuario_preferencia')
@@ -40,18 +40,21 @@ class OngsCarouselState extends State<OngsCarousel> {
         List<String> loadedPreferences = response.map<String>((pref) {
           return pref['id_preferencia']?.toString() ?? '';
         }).toList();
-        
-        setState(() {
-          userPreferences = loadedPreferences.where((pref) => pref.isNotEmpty).toList(); 
-          futureOngs = _loadOngsByPreferences();
-        });
+
+        if (mounted) {
+          setState(() {
+            userPreferences =
+                loadedPreferences.where((pref) => pref.isNotEmpty).toList();
+            futureOngs = _loadOngsByPreferences();
+          });
+        }
       }
     }
   }
 
   Future<List<Map<String, dynamic>>> _loadOngsByPreferences() async {
     final allOngs = await rep.getAllWithPhotos();
-    
+
     return allOngs.where((ong) {
       final idCategoria = ong['id_categoria']?.toString();
       return idCategoria != null && userPreferences.contains(idCategoria);
@@ -84,11 +87,12 @@ class OngsCarouselState extends State<OngsCarousel> {
           items: ongs.map((ong) {
             final nomeOng = ong['nome']?.toString() ?? 'ONG sem nome';
             final imgOng = ong['foto']?.toString() ?? '';
+            final ongId = ong['id']?.toString() ?? '';
 
             return OngButton(
               nomeOng: nomeOng,
               imgOng: imgOng,
-              navegar: '/home',
+              navegar: ongId,
             );
           }).toList(),
         );
