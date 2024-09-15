@@ -5,6 +5,7 @@ import 'package:cint/pages/apresentacao/apresentacao1.dart';
 import 'package:cint/pages/apresentacao/apresentacao2.dart';
 import 'package:cint/pages/apresentacao/apresentacao3.dart';
 import 'package:cint/pages/desempenho.page.dart';
+import 'package:cint/pages/doar_necessidade.page.dart';
 import 'package:cint/pages/home.page.dart';
 import 'package:cint/pages/login_dev.page.dart';
 import 'package:cint/pages/meta_batida.page.dart';
@@ -41,4 +42,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       OngsMap.routeName: (context) => const OngsMap(),
       Desempenho.routeName: (context) => const Desempenho(),
       MetaBatida.routeName: (context) => const MetaBatida(),
+      NecessidadeForm.routeName: (context) => const NecessidadeForm(),
     };
