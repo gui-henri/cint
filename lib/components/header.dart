@@ -35,7 +35,7 @@ class _HeaderState extends State<Header> {
         decoration: const InputDecoration(
           filled: true,
           fillColor: Color(0xFFF6F4EB),
-          hintText: 'Buscar necessidade ou Instituição',
+          hintText: 'Buscar Instituição',
           hintStyle: TextStyle(color: Colors.black54),
           prefixIcon: Icon(
             Icons.search,
