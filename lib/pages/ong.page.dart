@@ -110,118 +110,121 @@ class OngPageState extends State<OngPage> {
               ],
             ),
           ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(snapshot.data![0]['nome'], 
-                    style: const TextStyle(
-                      fontSize: 24, 
-                      fontWeight: FontWeight.bold
-                      )
-                    ),
-                  ),
-                  const Icon(
-                    Icons.star_outline, 
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  Text(snapshot.data![0]['nota'].toString(), 
-                    style: const TextStyle(
-                      fontSize: 18, 
-                      fontWeight: FontWeight.bold
-                      )
-                    ),
-                  const SizedBox(width: 10),
-                  const Icon(
-                    Icons.chat,
-                    size: 30,
-                  ),
-                  const SizedBox(width: 5),
-                  const Icon(
-                    Icons.phone,
-                    size: 30,
-                  ),
-              ],),
-              FractionallySizedBox(
-                widthFactor: 0.9,
-                child: Column(
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
                   children: [
-                    AddressBox(address: snapshot.data![0]['endereco']),
-                    const Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                      indent: 4,
-                      endIndent: 4,
-                    )
-                  ],
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(snapshot.data![0]['nome'], 
+                      style: const TextStyle(
+                        fontSize: 24, 
+                        fontWeight: FontWeight.bold
+                        )
+                      ),
+                    ),
+                    const Icon(
+                      Icons.star_outline, 
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                    Text(snapshot.data![0]['nota'].toString(), 
+                      style: const TextStyle(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.bold
+                        )
+                      ),
+                    const SizedBox(width: 10),
+                    const Icon(
+                      Icons.chat,
+                      size: 30,
+                    ),
+                    const SizedBox(width: 5),
+                    const Icon(
+                      Icons.phone,
+                      size: 30,
+                    ),
+                ],),
+                FractionallySizedBox(
+                  widthFactor: 0.9,
+                  child: Column(
+                    children: [
+                      AddressBox(address: snapshot.data![0]['endereco']),
+                      const Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                        indent: 4,
+                        endIndent: 4,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              FractionallySizedBox(
-                widthFactor: 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        "Necessidades atuais:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
+                const SizedBox(height: 10),
+                FractionallySizedBox(
+                  widthFactor: 0.9,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                       const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text(
+                          "Necessidades atuais:",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
                       ),
-                    ),
-                    Necessidades(future: necessidades),
-                    const Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                      indent: 4,
-                      endIndent: 4,
-                    )
-                  ],
+                      Necessidades(future: necessidades),
+                      const Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                        indent: 4,
+                        endIndent: 4,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              FractionallySizedBox(
-                widthFactor: 0.9,
-                child :Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    snapshot.data![0]['descricao'],
-                    style: const TextStyle(
-                      fontSize: 16,
+                const SizedBox(height: 10),
+                FractionallySizedBox(
+                  widthFactor: 0.9,
+                  child :Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      snapshot.data![0]['descricao'],
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              FractionallySizedBox(
-                widthFactor: 0.2,
-                child: SizedBox(
-                  height: 50,
-                  width: 75,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      textStyle: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
+                const SizedBox(height: 10),
+                FractionallySizedBox(
+                  widthFactor: 0.2,
+                  child: SizedBox(
+                    height: 50,
+                    width: 75,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        textStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                      onPressed: () {},
+                      child: const Text('Doar'),
                     ),
-                    onPressed: () {},
-                    child: const Text('Doar'),
                   ),
                 ),
-              )
-            ],
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
           bottomNavigationBar: const Footer(),
         );
