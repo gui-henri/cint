@@ -1,6 +1,7 @@
 import 'package:cint/components/icones_ong.dart';
 import 'package:cint/components/main_title.dart';
 import 'package:cint/objetos/instituicao.dart';
+import 'package:cint/pages/ong.page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,7 @@ class OngsDetalhes extends StatelessWidget {
                 Center(
                 child: GestureDetector(
                   onTap: () {
-                    // IMPORTANTE: Colocar para ir para a página da ONG 
+                    Navigator.of(context).pushNamed('/ong', arguments: OngArguments(ongId: ong.id));
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
