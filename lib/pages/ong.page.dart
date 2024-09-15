@@ -1,5 +1,6 @@
 import 'package:cint/components/adress_box.dart';
 import 'package:cint/components/footer.dart';
+import 'package:cint/components/necessidades.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +25,12 @@ class OngPageState extends State<OngPage> {
   Widget build(BuildContext context) {
 
     final args = ModalRoute.of(context)!.settings.arguments as OngArguments;
-    late final ong = OngRepository().getOneWithPhotos(args.ongId);
+    final ongRepository = OngRepository();
+    late final ong = ongRepository.getOneWithPhotos(args.ongId);
+    late var necessidades = ongRepository.getNecessidades(args.ongId);
 
     return FutureBuilder(
-      future: ong, 
+      future: ong,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -107,18 +110,44 @@ class OngPageState extends State<OngPage> {
               ],
             ),
           ),
-          body: Row(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
+              Row(
                 children: [
-                  Text(snapshot.data![0]['nome']),
-                  const Icon(Icons.star, color: Colors.yellow),
-                  Text(snapshot.data![0]['nota'].toString()),
-                  const Icon(Icons.chat),
-                  const Icon(Icons.phone),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(snapshot.data![0]['nome'], 
+                    style: const TextStyle(
+                      fontSize: 24, 
+                      fontWeight: FontWeight.bold
+                      )
+                    ),
+                  ),
+                  const Icon(
+                    Icons.star_outline, 
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  Text(snapshot.data![0]['nota'].toString(), 
+                    style: const TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold
+                      )
+                    ),
+                  const SizedBox(width: 10),
+                  const Icon(
+                    Icons.chat,
+                    size: 30,
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.phone,
+                    size: 30,
+                  ),
               ],),
-              SizedBox(
-                width: 200,
+              FractionallySizedBox(
+                widthFactor: 0.9,
                 child: Column(
                   children: [
                     AddressBox(address: snapshot.data![0]['endereco']),
@@ -131,9 +160,67 @@ class OngPageState extends State<OngPage> {
                   ],
                 ),
               ),
-              // Text(snapshot.data![0]['nome']),
-              // Text(snapshot.data![0]['endereco']),
-              // Text(snapshot.data![0]['nota'].toString()),
+              const SizedBox(height: 10),
+              FractionallySizedBox(
+                widthFactor: 0.9,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                     const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        "Necessidades atuais:",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                    Necessidades(future: necessidades),
+                    const Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      indent: 4,
+                      endIndent: 4,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              FractionallySizedBox(
+                widthFactor: 0.9,
+                child :Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    snapshot.data![0]['descricao'],
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              FractionallySizedBox(
+                widthFactor: 0.2,
+                child: SizedBox(
+                  height: 50,
+                  width: 75,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      textStyle: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text('Doar'),
+                  ),
+                ),
+              )
             ],
           ),
           bottomNavigationBar: const Footer(),
