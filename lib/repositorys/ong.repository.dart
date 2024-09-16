@@ -10,7 +10,7 @@ class OngRepository {
   Future<List<Map<String, dynamic>>> getOneWithPhotos(String id) async {
     final response = await Supabase.instance.client
                             .from('instituicao')
-                            .select('id, nome, foto_instituicao (url), foto, descricao, id_categoria, nota, endereco')
+                            .select('id, nome, foto_instituicao (url), foto, descricao, id_categoria, nota, endereco, pix')
                             .eq('id', id);
     return response;
   }

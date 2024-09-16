@@ -1,4 +1,5 @@
 import 'package:cint/objetos/instituicao.dart';
+import 'package:cint/pages/ong.page.dart';
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/footer.dart';
@@ -117,6 +118,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                       final ong = filteredSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
+                        id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
                         imagem: ong.foto,
@@ -133,6 +135,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                       final ong = searchSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
+                        id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
                         imagem: ong.foto,
@@ -149,6 +152,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                       final ong = searchandfilterSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
                       return OngCard(
+                        id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
                         imagem: ong.foto,
@@ -168,6 +172,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         nome: ong.nome,
                         descricao: ong.descricao,
                         imagem: ong.foto,
+                        id: ong.id,
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
@@ -553,12 +558,14 @@ class OngCard extends StatefulWidget {
   final String descricao;
   final String imagem;
   final String iconTipo;
+  final String id;
   const OngCard({
     super.key,
     required this.nome,
     required this.imagem,
     required this.descricao,
     required this.iconTipo,
+    required this.id,
   });
 
   @override
@@ -570,76 +577,81 @@ class _OngCardState extends State<OngCard> {
   Widget build(BuildContext context) {
     return Card(
       color: const Color(0xFF6EB855),
-      child: Row(
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, '/ong', arguments: OngArguments(ongId: widget.id));
+        },
+        child: Row(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(widget.imagem),
+                      fit: BoxFit.cover,
+                      )
+                  ),
+                )
+              ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(widget.imagem),
-                    fit: BoxFit.cover,
-                    )
-                ),
-              )
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5, top: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Text(
-                      widget.nome,
-                      style: const TextStyle(
-                        color: Color(0xFF28730E),
+            Expanded(
+              flex: 5,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5, top: 5),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        widget.nome,
+                        style: const TextStyle(
+                          color: Color(0xFF28730E),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    widget.descricao,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    style: const TextStyle(color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      widget.descricao,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 30,
-                  width: 30,
-                  child: Image.asset(
-                    widget.iconTipo,
-                    fit: BoxFit.cover,
+            Expanded(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: Image.asset(
+                      widget.iconTipo,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-              ],
-            ),
-          )
-        ],
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

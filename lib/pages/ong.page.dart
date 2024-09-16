@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 class OngArguments {
   final String ongId;
+  final bool? donated;
 
-  OngArguments({required this.ongId});
+  OngArguments({required this.ongId, this.donated});
 }
 
 class OngPage extends StatefulWidget {
@@ -217,7 +218,9 @@ class OngPageState extends State<OngPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/doar_inicio', arguments: snapshot.data![0]['pix']);
+                      },
                       child: const Text('Doar'),
                     ),
                   ),
