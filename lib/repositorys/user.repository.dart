@@ -35,6 +35,18 @@ class UserRepository {
             .eq('id', Usuario().id);
   }
 
+  updateUserFavoritas(data) async {
+    var lista = [];
+    for (var ong in data) {
+      lista.add(ong.id);
+      print('aaa: $ong');
+    }
+    await Supabase.instance.client
+            .from('usuario')
+            .update({'favoritas':lista})
+            .eq('id', Usuario().id);
+  }
+
 /*   getAuthUsers() async {
     final users = await supabase.auth.
                           .from('users')

@@ -1,7 +1,10 @@
 import 'package:cint/components/adress_box.dart';
 import 'package:cint/components/footer.dart';
 import 'package:cint/components/necessidades.dart';
+import 'package:cint/objetos/instituicao.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:cint/repositorys/ong.repository.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:flutter/material.dart';
 
 class OngArguments {
@@ -29,6 +32,7 @@ class OngPageState extends State<OngPage> {
     final ongRepository = OngRepository();
     late final ong = ongRepository.getOneWithPhotos(args.ongId);
     late var necessidades = ongRepository.getNecessidades(args.ongId);
+    final userRepository = UserRepository();
 
     return FutureBuilder(
       future: ong,
@@ -106,7 +110,21 @@ class OngPageState extends State<OngPage> {
                     height: 80,
                     child: const Icon(Icons.favorite_border, color: Color(0xFFe74c3c), size: 30),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    //mudar cor depois
+                    // checar se a ong ja esta favoritada
+                    // atualizar lista local de favoritas do usuario
+                    print('fav: ${snapshot.data!}');
+                    try {
+/*                       final List<Map<String, dynamic>> usuarioLogadoJson = await userRepository.getMyUser();
+                      final usuarioFromJson = Usuario.fromJson(usuarioLogadoJson[0]); */
+                      Usuario().favoritas.add(Instituicao.fromJson(snapshot.data![0]));
+                      var user = Usuario().toJson();
+                      print('favoroar: ${Usuario().email}');
+                      userRepository.updateUserFavoritas(user['favoritas']);
+                    } catch(e) {print('erro de fav: $e');}
+                    print('Ong adicionada! ${Usuario().favoritas}');
+                  },
                 ),
               ],
             ),
