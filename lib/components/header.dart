@@ -4,7 +4,8 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
   final ValueChanged<String> atualizarBusca;
   final String textoSalvo;
   final bool showTextField;
-  const Header({super.key, required this.atualizarBusca, this.textoSalvo = '', this.showTextField = true});
+  final String telaPesquisada;
+  const Header({super.key, required this.atualizarBusca, this.textoSalvo = '', this.showTextField = true, this.telaPesquisada = '/explorar'});
 
   @override
   _HeaderState createState() => _HeaderState();
@@ -29,7 +30,7 @@ class _HeaderState extends State<Header> {
           widget.atualizarBusca(input);
         },
         onSubmitted: (value) {
-          Navigator.of(context).pushNamed('/explorar', arguments: value);
+          Navigator.of(context).pushNamed(widget.telaPesquisada, arguments: value);
         },
         style: const TextStyle(color: Colors.black, fontSize: 12),
         decoration: const InputDecoration(

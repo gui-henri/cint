@@ -8,6 +8,7 @@ import 'package:cint/pages/desempenho.page.dart';
 import 'package:cint/pages/doacao/comprovante.dart';
 import 'package:cint/pages/doacao/inicio.dart';
 import 'package:cint/pages/doar_necessidade.page.dart';
+import 'package:cint/pages/favoritas.page.dart';
 import 'package:cint/pages/home.page.dart';
 import 'package:cint/pages/login_dev.page.dart';
 import 'package:cint/pages/meta_batida.page.dart';
@@ -47,4 +48,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       NecessidadeForm.routeName: (context) => const NecessidadeForm(),
       DoarInicio.routeName: (context) => const DoarInicio(),
       Comprovante.routeName: (context) => const Comprovante(),
+      FavoritasPage.routeName: (context) => const FavoritasPage(),
     };
