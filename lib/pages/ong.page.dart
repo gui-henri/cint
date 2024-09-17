@@ -59,6 +59,10 @@ class OngPageState extends State<OngPage> {
           fit: BoxFit.fill,
         );
 
+        
+        final instituicao = Instituicao.fromJson(snapshot.data![0]);
+
+
         return Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(235),
@@ -99,33 +103,7 @@ class OngPageState extends State<OngPage> {
                   ),
                   onPressed: () {},
                 ),
-                IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.fromBorderSide(BorderSide(color: Colors.black)),
-                    ),
-                    height: 80,
-                    child: const Icon(Icons.favorite_border, color: Color(0xFFe74c3c), size: 30),
-                  ),
-                  onPressed: () async {
-                    //mudar cor depois
-                    // checar se a ong ja esta favoritada
-                    // atualizar lista local de favoritas do usuario
-                    print('fav: ${snapshot.data!}');
-                    try {
-/*                       final List<Map<String, dynamic>> usuarioLogadoJson = await userRepository.getMyUser();
-                      final usuarioFromJson = Usuario.fromJson(usuarioLogadoJson[0]); */
-                      Usuario().favoritas.add(Instituicao.fromJson(snapshot.data![0]));
-                      var user = Usuario().toJson();
-                      print('favoroar: ${Usuario().email}');
-                      userRepository.updateUserFavoritas(user['favoritas']);
-                    } catch(e) {print('erro de fav: $e');}
-                    print('Ong adicionada! ${Usuario().favoritas}');
-                  },
-                ),
+                FavButton(instituicao: instituicao),
               ],
             ),
           ),
@@ -250,5 +228,66 @@ class OngPageState extends State<OngPage> {
           bottomNavigationBar: const Footer(),
         );
       });
+  }
+}
+
+
+class FavButton extends StatefulWidget {
+  final Instituicao instituicao;
+  const FavButton({super.key, required this.instituicao});
+
+  @override
+  State<FavButton> createState() => _FavButtonState();
+}
+
+class _FavButtonState extends State<FavButton> {
+  bool isFavorited = false;
+  final userRepository = UserRepository();
+  @override
+  Widget build(BuildContext context) {
+        for (var ong in Usuario().favoritas) {
+          if (ong.id == widget.instituicao.id) {
+            isFavorited = true;
+            print('TRUE');
+          }
+        }
+    return                 IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.fromBorderSide(BorderSide(color: Colors.black)),
+                    ),
+                    height: 80,
+                    child: !isFavorited ? 
+                      const Icon(Icons.favorite_border, color: Color(0xFFe74c3c), size: 30) :
+                      const Icon(Icons.favorite, color: Color(0xFFe74c3c), size: 30)
+                  ),
+                  onPressed: () async {
+                    //mudar cor depois
+                    // checar se a ong ja esta favoritada
+                    
+                    // atualizar lista local de favoritas do usuario
+                    try {
+
+
+                      if (isFavorited) {
+                        Usuario().favoritas.removeWhere((item) => item.id == widget.instituicao.id);
+                        setState(() {
+                          isFavorited = false;
+                        });
+                      }
+                      else
+                      {Usuario().favoritas.add(widget.instituicao);
+                        setState(() {
+                          isFavorited = true;
+                        });}
+                      var user = Usuario().toJson();
+                      userRepository.updateUserFavoritas(user['favoritas']);
+                    } catch(e) {print('erro de fav: $e');}
+                    print('Ong adicionada! ${Usuario().favoritas}');
+                  },
+                );
   }
 }
