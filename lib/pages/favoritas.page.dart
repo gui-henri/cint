@@ -25,7 +25,7 @@ class _FavoritasPageState extends State<FavoritasPage> {
   late String digitando = '';
 
   late Future<List<Map<String, dynamic>>> futureCategorias;
-  late List<Instituicao> ongsInstancias = Usuario().favoritas;
+  List<Instituicao> ongsInstancias = Usuario().favoritas;
 
   @override
   void initState() {
@@ -180,17 +180,23 @@ class _FavoritasPageState extends State<FavoritasPage> {
                     },
                   );
                 } else {
-                  return ListView.builder(
+                  return Usuario().favoritas.isEmpty ?
+                  nenhumaFavorita() :
+                  ListView.builder(
                     itemCount: ongsInstancias.length,
                     itemBuilder: (context, index) {
                       final ong = ongsInstancias[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
                       return Dismissible(
                         key: UniqueKey(),
-                        onDismissed: (direction) {
-                          Usuario().favoritas.removeWhere((item) => item.id == ong.id);
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
                           var user = Usuario().toJson();
-                          userRepository.updateUserFavoritas(user['favoritas']);
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
                         },
                         child: OngCard(
                           nome: ong.nome,
