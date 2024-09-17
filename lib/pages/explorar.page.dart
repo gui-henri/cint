@@ -68,7 +68,6 @@ class _ExplorarPageState extends State<ExplorarPage> {
         children: [
           Row(children: [
             titleExplorar(),
-            Image.asset('assets/icons/icon-explore.png'),
             const Spacer(),
             botaoFiltrar(),
           ]),
@@ -658,11 +657,13 @@ class _OngCardState extends State<OngCard> {
 }
 
 Widget titleExplorar() {
-  return const Padding(
-    padding: EdgeInsets.all(15.0),
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
     child: Row(
       children: [
-        Text(
+        Image.asset('assets/icons/icon-explore.png'),
+        const SizedBox(width: 5,),
+        const Text(
           'Instituições',
           style: TextStyle(
               fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),

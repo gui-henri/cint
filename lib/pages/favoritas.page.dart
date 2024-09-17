@@ -7,6 +7,8 @@ import '../components/footer.dart';
 import '../components/icones_ong.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 
+import '../repositorys/user.repository.dart';
+
 class FavoritasPage extends StatefulWidget {
 
   const FavoritasPage({super.key});
@@ -34,6 +36,7 @@ class _FavoritasPageState extends State<FavoritasPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userRepository = UserRepository();
     Future<Map<String, List<Map<String, dynamic>>>> fetchData() async {
       final data1 = await futureCategorias;
       return {
@@ -70,7 +73,6 @@ class _FavoritasPageState extends State<FavoritasPage> {
         children: [
           Row(children: [
             titleFavoritas(),
-            Image.asset('assets/icons/icon-explore.png'),
             const Spacer(),
             botaoFiltrar(),
           ]),
@@ -84,6 +86,8 @@ class _FavoritasPageState extends State<FavoritasPage> {
                   return const Center(child: Text('Erro ao carregar categorias'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text('Nenhuma categoria encontrada'));
+                } else if (Usuario().favoritas.isEmpty){
+                  return nenhumaFavorita();
                 }
 
                 final categoriasSnapshot = snapshot.data!['futureCategorias']!;
@@ -181,14 +185,22 @@ class _FavoritasPageState extends State<FavoritasPage> {
                     itemBuilder: (context, index) {
                       final ong = ongsInstancias[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
-                        nome: ong.nome,
-                        descricao: ong.descricao,
-                        imagem: ong.foto,
-                        id: ong.id,
-                        iconTipo: iconesOng.firstWhere(
-                          (item) => item["tipo"] == categoriaNome
-                        )['icon-white'],
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) {
+                          Usuario().favoritas.removeWhere((item) => item.id == ong.id);
+                          var user = Usuario().toJson();
+                          userRepository.updateUserFavoritas(user['favoritas']);
+                        },
+                        child: OngCard(
+                          nome: ong.nome,
+                          descricao: ong.descricao,
+                          imagem: ong.foto,
+                          id: ong.id,
+                          iconTipo: iconesOng.firstWhere(
+                            (item) => item["tipo"] == categoriaNome
+                          )['icon-white'],
+                        ),
                       );
                     },
                   );
@@ -675,6 +687,8 @@ Widget titleFavoritas() {
     padding: EdgeInsets.all(15.0),
     child: Row(
       children: [
+        Icon(Icons.favorite_border, color: Color(0xFF28730E), size: 40,),
+        SizedBox(width: 5,),
         Text(
           'Favoritas',
           style: TextStyle(
@@ -701,6 +715,32 @@ Widget buscaVazia() {
         ),
         Text(
           'Você ainda não favoritou nenhuma instituição que corresponda a essa pesquisa!',
+          style: TextStyle(color: Color(0xFF28730E)),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget nenhumaFavorita() {
+  return const Padding(
+    padding: EdgeInsets.all(30),
+    child: Column(
+      children: [
+        Icon(Icons.heart_broken, color: Color.fromARGB(172, 110, 184, 85), size: 100,),
+        Text(
+          'Nada aqui...',
+          style: TextStyle(
+            color: Color(0xFF28730E),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+
+        Text(
+          'Favorite instituições e as veja nessa página!',
           style: TextStyle(color: Color(0xFF28730E)),
           textAlign: TextAlign.center,
         ),

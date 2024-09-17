@@ -265,10 +265,6 @@ class _FavButtonState extends State<FavButton> {
                       const Icon(Icons.favorite, color: Color(0xFFe74c3c), size: 30)
                   ),
                   onPressed: () async {
-                    //mudar cor depois
-                    // checar se a ong ja esta favoritada
-                    
-                    // atualizar lista local de favoritas do usuario
                     try {
 
 
