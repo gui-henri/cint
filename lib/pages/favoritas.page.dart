@@ -117,18 +117,31 @@ class _FavoritasPageState extends State<FavoritasPage> {
                          ongsFiltradas.contains(categoriaNome);
                 }).toList();
 
-                if ((ongsFiltradas.isNotEmpty) && searchandfilterSnapshot.isEmpty) {
+/*                 if ((ongsFiltradas.isNotEmpty) && searchandfilterSnapshot.isEmpty) {
                   return Center(
-                    child: buscaVazia(),
+                    child: Text('aaaaaaaa'),
                   );
                 }
-                else if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
-                  return ListView.builder(
+                else */ if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
+                  return filteredSnapshot.isEmpty ?
+                  buscaVazia() :
+                  ListView.builder(
                     itemCount: filteredSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = filteredSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                      child: OngCard(
                         id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
@@ -136,7 +149,7 @@ class _FavoritasPageState extends State<FavoritasPage> {
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
-                      );
+                      ));
                     },
                   );
                 } else if (digitando.isNotEmpty && ongsFiltradas.isEmpty) {
@@ -146,7 +159,18 @@ class _FavoritasPageState extends State<FavoritasPage> {
                       itemBuilder: (context, index) {
                         final ong = searchSnapshot[index];
                         final categoriaNome = categoriaMap[ong.idCategoria];
-                        return OngCard(
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                        child: OngCard(
                           id: ong.id,
                           nome: ong.nome,
                           descricao: ong.descricao,
@@ -154,7 +178,7 @@ class _FavoritasPageState extends State<FavoritasPage> {
                           iconTipo: iconesOng.firstWhere(
                             (item) => item["tipo"] == categoriaNome
                           )['icon-white'],
-                        );
+                        ));
                       },
                     );
                     } else {
@@ -168,7 +192,18 @@ class _FavoritasPageState extends State<FavoritasPage> {
                     itemBuilder: (context, index) {
                       final ong = searchandfilterSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                      child: OngCard(
                         id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
@@ -176,6 +211,7 @@ class _FavoritasPageState extends State<FavoritasPage> {
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
+                      ),
                       );
                     },
                   );
