@@ -43,7 +43,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           child: Stack(children: [
                             titleBack(context, 'Minhas Ofertas', '/home', null),
                             Container(
-                              padding: const EdgeInsets.only(top: 70),
+                              padding: Usuario().posts.isEmpty ? const EdgeInsets.only(top: 0) : const EdgeInsets.only(top: 70),
                               child: ListaMeusPosts(),
                             )
                           ]),),
@@ -69,6 +69,7 @@ Widget semOfertas() {
     padding: EdgeInsets.all(30),
     child: Column(
       children: [
+        Icon(Icons.post_add_outlined, color: Color.fromARGB(172, 110, 184, 85), size: 150,),
         Text(
           'Ainda não há ofertas!',
           style: TextStyle(

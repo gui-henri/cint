@@ -28,10 +28,22 @@ class UserRepository {
   }
 
 
-  updateUserPosts(data) async {
+/*   updateUserPosts(data) async {
     await Supabase.instance.client
             .from('usuario')
             .update({'posts':data})
+            .eq('id', Usuario().id);
+  } */
+
+  updateUserPosts(data) async {
+    var lista = [];
+    for (var post in data) {
+      lista.add(post.id);
+      print('aaa: $post');
+    }
+    await Supabase.instance.client
+            .from('usuario')
+            .update({'posts':lista})
             .eq('id', Usuario().id);
   }
 

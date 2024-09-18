@@ -5,36 +5,12 @@ import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AnunciosRepository {
-  Future<String> createPost(nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio,  fotos) async {
-    final response = await Supabase.instance.client
-                            .from('anuncio')
-                            .insert([{'nome_produto' : '$nome', 
-                            'quantidade' : '$quantidade', 
-                            'condicao' : '$condicao', 
-                            'categoria' : '$categoria', 
-                            'telefone' : '$telefone',
-                            'informacao_relevante' : '$informacaoRelevante',
-                            'texto_anuncio' : '$textoAnuncio',
-                            //'tipo_id' : '$tipoId',
-                            'fotos' : '$fotos',
-                            'user_email': '${supabase.auth.currentSession?.user.email}'}])
-                            .select('id')
-                            .single();
-    return response['id'].toString();
-  }
 
   criarPost(data) async {
     await Supabase.instance.client
             .from('anuncio')
             .insert([data]);
   }
-
-/*   updatePost(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio, icon, fotos) async {
-    await Supabase.instance.client
-            .from('anuncio')
-            .update({'nome_produto' : nome, 'quantidade' : quantidade, 'condicao' : condicao, 'categoria' : categoria, 'telefone' : telefone, 'informacao_relevante' : informacaoRelevante, 'texto_anuncio' : textoAnuncio, 'tipo_id': icon, 'fotos' : fotos})
-            .eq('id', id);
-  } */
 
 updatePost(id, PostOferta postOferta) async {
   await Supabase.instance.client

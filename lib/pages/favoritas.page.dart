@@ -87,7 +87,15 @@ class _FavoritasPageState extends State<FavoritasPage> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text('Nenhuma categoria encontrada'));
                 } else if (Usuario().favoritas.isEmpty){
-                  return nenhumaFavorita();
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 80.0),
+                        child: nenhumaFavorita(),
+                      ),
+                    ],
+                  );
                 }
 
                 final categoriasSnapshot = snapshot.data!['futureCategorias']!;
@@ -117,12 +125,7 @@ class _FavoritasPageState extends State<FavoritasPage> {
                          ongsFiltradas.contains(categoriaNome);
                 }).toList();
 
-/*                 if ((ongsFiltradas.isNotEmpty) && searchandfilterSnapshot.isEmpty) {
-                  return Center(
-                    child: Text('aaaaaaaa'),
-                  );
-                }
-                else */ if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
+                if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
                   return filteredSnapshot.isEmpty ?
                   buscaVazia() :
                   ListView.builder(
@@ -770,7 +773,7 @@ Widget nenhumaFavorita() {
     padding: EdgeInsets.all(30),
     child: Column(
       children: [
-        Icon(Icons.heart_broken, color: Color.fromARGB(172, 110, 184, 85), size: 100,),
+        Icon(Icons.heart_broken, color: Color.fromARGB(172, 110, 184, 85), size: 150,),
         Text(
           'Nada aqui...',
           style: TextStyle(

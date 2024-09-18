@@ -18,13 +18,12 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
 
   final AnunciosRepository rep = AnunciosRepository();
   final UserRepository repUser = UserRepository();        
-  List postIds = [];
 
   @override
   void initState() {
     super.initState();
     meusPosts = rep.gerarPosts(); // Inicializado no initState
-    print('Entro na lista de posts.');
+    print('Entrou na lista de posts.');
   }
 
   @override
@@ -37,18 +36,22 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Erro: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          postIds.clear();
-          repUser.updateUserPosts(postIds);
-          return Center(child: semOfertas()); // Exibir um indicador se não houver ofertas
+
+          return Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                semOfertas(),
+              ],
+            ),
+          ); // Exibir um indicador se não houver ofertas
         } else {
           final postsInstancias = snapshot.data!;
-{        Usuario().update(posts: postsInstancias);
-        postIds.clear();
-        for (var post in Usuario().posts) {
-          postIds.add(post.id);
-        }
-        print('tdspsts: $postIds');
-        repUser.updateUserPosts(postIds);}
+          Usuario().update(posts: postsInstancias);
+          var user = Usuario().toJson();
+          repUser.updateUserPosts(user['posts']);
+          
+
         print('usuario posts: ${Usuario().posts}');
           return Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
@@ -56,7 +59,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 30),
               separatorBuilder: (context, index) => const SizedBox(height: 20),
-              itemCount: postsInstancias.length,
+              itemCount: Usuario().posts.length,
               itemBuilder: (context, index) {
                 return Column(
                   children: [
@@ -64,18 +67,18 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                       key: UniqueKey(),
                       onDismissed: (direction) async {
                         // Deletar fotos do post
-                        for (var foto in postsInstancias[index].fotosPost) {
+                        for (var foto in Usuario().posts[index].fotosPost) {
                           await rep.deleteFoto(foto);
                         }
 
                         // Deletar o post do banco de dados
-                        await rep.deletePost(postsInstancias[index].id);
-                        
+                        await rep.deletePost(Usuario().posts[index].id);
 
                         // Atualizar o estado da lista
                         setState(() {
-                          postsInstancias.removeAt(index);
-                        });
+                          Usuario().posts.removeAt(index);
+                          repUser.updateUserPosts(user['posts']);
+                        }); 
                       },
                       background: Container(
                         decoration: BoxDecoration(
@@ -104,10 +107,10 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                         ),
                       ),
                       child: PostCard(
-                        oferta: postsInstancias[index],
+                        oferta: Usuario().posts[index],
                         deletar: () {
                           setState(() {
-                            postsInstancias.removeAt(index);
+                            Usuario().posts.removeAt(index);
                           });
                         },
                         editar: () {
@@ -116,8 +119,8 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                             '/anuncio_form',
                             arguments: [
                               true,
-                              postsInstancias[index].id,
-                              postsInstancias[index],
+                              Usuario().posts[index].id,
+                              Usuario().posts[index],
                             ],
                           );
                         },
@@ -125,7 +128,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                           Navigator.pushNamed(
                             context,
                             '/editar_form',
-                            arguments: postsInstancias[index],
+                            arguments: Usuario().posts[index],
                           );
                         },
                       ),

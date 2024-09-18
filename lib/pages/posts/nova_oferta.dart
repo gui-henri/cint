@@ -130,6 +130,8 @@ class _NovaOfertaState extends State<NovaOferta> {
                   print('postNovo: ${postNovo.usuario}');
                   print('usuario nome: ${Usuario().nome}');
                   await rep.criarPost(postNovo.toJson());
+
+                  Usuario().posts.add(postNovo);
                   
 
                 }

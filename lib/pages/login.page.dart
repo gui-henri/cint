@@ -94,7 +94,8 @@ if (response.session != null) {
         print('usuariologado: $usuarioLogadoJson');
         // Atualiza o estado compartilhado do Usuario
         Usuario.fromJson(usuarioLogadoJson[0]);
-          print('usuario: ${Usuario().email}'); 
+          if (Usuario().posts.length > 0)
+          print('usuario: ${Usuario().posts[0].textoPrincipal}'); 
       }
     } catch (e) {
       print('Erro ao carregar usuário: $e');
