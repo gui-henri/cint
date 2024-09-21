@@ -23,7 +23,6 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
   void initState() {
     super.initState();
     meusPosts = rep.gerarPosts(); // Inicializado no initState
-    print('Entrou na lista de posts.');
   }
 
   @override
@@ -32,18 +31,16 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
       future: meusPosts, // Usa o Future inicializado no initState
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Erro: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
 
-          return Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                semOfertas(),
-              ],
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              semOfertas(),
+            ],
           ); // Exibir um indicador se não houver ofertas
         } else {
           final postsInstancias = snapshot.data!;
@@ -54,7 +51,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
 
         print('usuario posts: ${Usuario().posts}');
           return Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(top: 70, left: 20, right: 20),
             child: ListView.separated(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 30),

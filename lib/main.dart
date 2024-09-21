@@ -1,3 +1,4 @@
+import 'package:cint/objetos/condicao_e_categoria.dart';
 import 'package:cint/objetos/posts.dart';
 import 'package:cint/objetos/user.dart';
 import 'package:cint/repositorys/user.repository.dart';
@@ -21,6 +22,11 @@ void main() async {
   );
   final listaOngs = ListaInstituicoes();
   await listaOngs.loadOngs();
+  
+
+  final listaCondicoes = ListaCondicoes();
+  await listaCondicoes.loadCondicoes();
+  print('lasdasd: ${listaCondicoes.listaCondicoes}');
 /*   final listaPosts = ListaMinhasOfertas();
   await listaPosts.loadPosts(); */
 

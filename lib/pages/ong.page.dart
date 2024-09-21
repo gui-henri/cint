@@ -266,8 +266,6 @@ class _FavButtonState extends State<FavButton> {
                   ),
                   onPressed: () async {
                     try {
-
-
                       if (isFavorited) {
                         Usuario().favoritas.removeWhere((item) => item.id == widget.instituicao.id);
                         setState(() {
@@ -282,7 +280,6 @@ class _FavButtonState extends State<FavButton> {
                       var user = Usuario().toJson();
                       userRepository.updateUserFavoritas(user['favoritas']);
                     } catch(e) {print('erro de fav: $e');}
-                    print('Ong adicionada! ${Usuario().favoritas}');
                   },
                 );
   }

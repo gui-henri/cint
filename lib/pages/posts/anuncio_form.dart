@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cint/components/dropdown.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/condicao_e_categoria.dart';
 import 'package:cint/objetos/posts.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -181,7 +183,9 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   @override
   Widget build(BuildContext context) {
-
+    //for (var condicao in ListaCondicoes().listaCondicoes) {
+      print('condicao: ${ListaCondicoes().listaCondicoes}');
+    //}
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -236,8 +240,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
                         _controllerProduto),
                     CampoTexto(
                         'Quantidade do produto', true, _controllerQuantidade),
-                    CampoTexto(
-                        'Condições do produto', true, _controllerCondicoes),
+                    DropDownWidget(listItems: ListaCondicoes().listaCondicoes),
                     CampoTexto(
                         'Categoria do produto', true, _controllerCategoria),
                     CampoTexto(
@@ -332,9 +335,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
           postof.quantidade = int.parse(_controllerQuantidade.text);
           postof.condicoes = _controllerCondicoes.text;
           postof.categoria = _controllerCategoria.text;
-          /* postof.textoPrincipal = (args[2] as PostOferta).textoPrincipal;
-          icon: (args[2] as PostOferta).icon;
-          fotosPost: fotosKeys */
           
           if (mounted) {
             Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);

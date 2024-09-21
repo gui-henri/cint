@@ -1,5 +1,6 @@
 import 'package:cint/components/post_oferta.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/condicao_e_categoria.dart';
 import 'package:cint/objetos/posts.dart';
 import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -107,5 +108,18 @@ updatePost(id, PostOferta postOferta) async {
     print('idFoto: $idFoto');
     final response = await supabase.storage.from('anuncio').remove(['${supabase.auth.currentUser!.id}/$idFoto']);
     return response;
+  }
+
+  getCondicoes() async {
+    List<Condicao> lista = [];
+    final condicoes = await Supabase.instance.client
+                            .from('condicoes_produto')
+                            .select('id, condicao');
+    print('aaaaaaakkkkkkk: $condicoes');
+    for (var condicao in condicoes) {
+      lista.add(Condicao.fromJson(condicao));
+      print('cocndicoes: ${condicao['condicao']}');
+    }
+    return lista;
   }
 }

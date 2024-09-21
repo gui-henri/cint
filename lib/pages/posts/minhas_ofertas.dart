@@ -43,7 +43,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
           child: Stack(children: [
                             titleBack(context, 'Minhas Ofertas', '/home', null),
                             Container(
-                              padding: Usuario().posts.isEmpty ? const EdgeInsets.only(top: 0) : const EdgeInsets.only(top: 70),
+                              //padding: const EdgeInsets.only(top: 70),
                               child: ListaMeusPosts(),
                             )
                           ]),),

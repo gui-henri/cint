@@ -39,7 +39,6 @@ class UserRepository {
     var lista = [];
     for (var post in data) {
       lista.add(post.id);
-      print('aaa: $post');
     }
     await Supabase.instance.client
             .from('usuario')
@@ -51,7 +50,6 @@ class UserRepository {
     var lista = [];
     for (var ong in data) {
       lista.add(ong.id);
-      print('aaa: $ong');
     }
     await Supabase.instance.client
             .from('usuario')
