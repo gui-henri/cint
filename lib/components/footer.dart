@@ -23,7 +23,7 @@ class Footer extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed('/home');
+              Navigator.of(context).pushNamed('/favoritas');
             },
             child: const Icon(
               Icons.favorite_border,

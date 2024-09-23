@@ -80,7 +80,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                       background: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: Colors.redAccent,
+                          color: const Color.fromARGB(50, 255, 82, 82),
                         ),
                         child: const Align(
                           alignment: Alignment.centerLeft,
@@ -93,7 +93,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                       secondaryBackground: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: Colors.redAccent,
+                          color: const Color.fromARGB(50, 255, 82, 82),
                         ),
                         child: const Align(
                           alignment: Alignment.centerRight,

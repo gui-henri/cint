@@ -1,7 +1,10 @@
 import 'package:cint/components/adress_box.dart';
 import 'package:cint/components/footer.dart';
 import 'package:cint/components/necessidades.dart';
+import 'package:cint/objetos/instituicao.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:cint/repositorys/ong.repository.dart';
+import 'package:cint/repositorys/user.repository.dart';
 import 'package:flutter/material.dart';
 
 class OngArguments {
@@ -29,6 +32,7 @@ class OngPageState extends State<OngPage> {
     final ongRepository = OngRepository();
     late final ong = ongRepository.getOneWithPhotos(args.ongId);
     late var necessidades = ongRepository.getNecessidades(args.ongId);
+    final userRepository = UserRepository();
 
     return FutureBuilder(
       future: ong,
@@ -54,6 +58,10 @@ class OngPageState extends State<OngPage> {
           snapshot.data![0]['foto'],
           fit: BoxFit.fill,
         );
+
+        
+        final instituicao = Instituicao.fromJson(snapshot.data![0]);
+
 
         return Scaffold(
           appBar: PreferredSize(
@@ -95,19 +103,7 @@ class OngPageState extends State<OngPage> {
                   ),
                   onPressed: () {},
                 ),
-                IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.fromBorderSide(BorderSide(color: Colors.black)),
-                    ),
-                    height: 80,
-                    child: const Icon(Icons.favorite_border, color: Color(0xFFe74c3c), size: 30),
-                  ),
-                  onPressed: () {},
-                ),
+                FavButton(instituicao: instituicao),
               ],
             ),
           ),
@@ -232,5 +228,62 @@ class OngPageState extends State<OngPage> {
           bottomNavigationBar: const Footer(),
         );
       });
+  }
+}
+
+
+class FavButton extends StatefulWidget {
+  final Instituicao instituicao;
+  const FavButton({super.key, required this.instituicao});
+
+  @override
+  State<FavButton> createState() => _FavButtonState();
+}
+
+class _FavButtonState extends State<FavButton> {
+  bool isFavorited = false;
+  final userRepository = UserRepository();
+  @override
+  Widget build(BuildContext context) {
+        for (var ong in Usuario().favoritas) {
+          if (ong.id == widget.instituicao.id) {
+            isFavorited = true;
+            print('TRUE');
+          }
+        }
+    return                 IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.fromBorderSide(BorderSide(color: Colors.black)),
+                    ),
+                    height: 80,
+                    child: !isFavorited ? 
+                      const Icon(Icons.favorite_border, color: Color(0xFFe74c3c), size: 30) :
+                      const Icon(Icons.favorite, color: Color(0xFFe74c3c), size: 30)
+                  ),
+                  onPressed: () async {
+                    try {
+
+
+                      if (isFavorited) {
+                        Usuario().favoritas.removeWhere((item) => item.id == widget.instituicao.id);
+                        setState(() {
+                          isFavorited = false;
+                        });
+                      }
+                      else
+                      {Usuario().favoritas.add(widget.instituicao);
+                        setState(() {
+                          isFavorited = true;
+                        });}
+                      var user = Usuario().toJson();
+                      userRepository.updateUserFavoritas(user['favoritas']);
+                    } catch(e) {print('erro de fav: $e');}
+                    print('Ong adicionada! ${Usuario().favoritas}');
+                  },
+                );
   }
 }

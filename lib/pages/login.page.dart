@@ -82,7 +82,7 @@ if (response.session != null) {
     }
     try {
       if (!contaJaExiste) {
-        final usuarioLogado = Usuario(id: user!.id, nome: fullName, titulo: 0, nota: 0, meta: 0, endereco: '', foto: profileImageUrl, posts: [], email: email);
+        final usuarioLogado = Usuario(id: user!.id, nome: fullName, titulo: 0, nota: 0, meta: 0, endereco: '', foto: profileImageUrl, posts: [], email: email, favoritas: []);
         await repUser.criarUser(usuarioLogado.toJson());
       }
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:cint/objetos/instituicao.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:cint/pages/ong.page.dart';
 import 'package:flutter/material.dart';
 import '../components/header.dart';
@@ -6,23 +7,25 @@ import '../components/footer.dart';
 import '../components/icones_ong.dart';
 import 'package:cint/repositorys/ong.repository.dart';
 
-class ExplorarPage extends StatefulWidget {
+import '../repositorys/user.repository.dart';
 
-  const ExplorarPage({super.key});
+class FavoritasPage extends StatefulWidget {
 
-  static const routeName = '/explorar';
+  const FavoritasPage({super.key});
+
+  static const routeName = '/favoritas';
 
   @override
-  State<ExplorarPage> createState() => _ExplorarPageState();
+  State<FavoritasPage> createState() => _FavoritasPageState();
 }
 
-class _ExplorarPageState extends State<ExplorarPage> {
+class _FavoritasPageState extends State<FavoritasPage> {
   List<String> ongsFiltradas = [];
   late String textoPesquisado = '';
   late String digitando = '';
 
   late Future<List<Map<String, dynamic>>> futureCategorias;
-  late List<Instituicao> ongsInstancias = ListaInstituicoes().ongsInstancias;
+  List<Instituicao> ongsInstancias = Usuario().favoritas;
 
   @override
   void initState() {
@@ -33,6 +36,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userRepository = UserRepository();
     Future<Map<String, List<Map<String, dynamic>>>> fetchData() async {
       final data1 = await futureCategorias;
       return {
@@ -54,6 +58,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
 
     return Scaffold(
       appBar: Header(
+        telaPesquisada: '/favoritas',
         showTextField: true,
         textoSalvo: digitando,
         atualizarBusca: (value) {
@@ -67,7 +72,7 @@ class _ExplorarPageState extends State<ExplorarPage> {
       body: Column(
         children: [
           Row(children: [
-            titleExplorar(),
+            titleFavoritas(),
             const Spacer(),
             botaoFiltrar(),
           ]),
@@ -81,6 +86,8 @@ class _ExplorarPageState extends State<ExplorarPage> {
                   return const Center(child: Text('Erro ao carregar categorias'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text('Nenhuma categoria encontrada'));
+                } else if (Usuario().favoritas.isEmpty){
+                  return nenhumaFavorita();
                 }
 
                 final categoriasSnapshot = snapshot.data!['futureCategorias']!;
@@ -110,13 +117,31 @@ class _ExplorarPageState extends State<ExplorarPage> {
                          ongsFiltradas.contains(categoriaNome);
                 }).toList();
 
-                if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
-                  return ListView.builder(
+/*                 if ((ongsFiltradas.isNotEmpty) && searchandfilterSnapshot.isEmpty) {
+                  return Center(
+                    child: Text('aaaaaaaa'),
+                  );
+                }
+                else */ if (ongsFiltradas.isNotEmpty && digitando.isEmpty) {
+                  return filteredSnapshot.isEmpty ?
+                  buscaVazia() :
+                  ListView.builder(
                     itemCount: filteredSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = filteredSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                      child: OngCard(
                         id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
@@ -124,33 +149,61 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
-                      );
+                      ));
                     },
                   );
                 } else if (digitando.isNotEmpty && ongsFiltradas.isEmpty) {
-                  return ListView.builder(
-                    itemCount: searchSnapshot.length,
-                    itemBuilder: (context, index) {
-                      final ong = searchSnapshot[index];
-                      final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
-                        id: ong.id,
-                        nome: ong.nome,
-                        descricao: ong.descricao,
-                        imagem: ong.foto,
-                        iconTipo: iconesOng.firstWhere(
-                          (item) => item["tipo"] == categoriaNome
-                        )['icon-white'],
-                      );
-                    },
-                  );
+                  if (searchSnapshot.isNotEmpty)
+                  {  return ListView.builder(
+                      itemCount: searchSnapshot.length,
+                      itemBuilder: (context, index) {
+                        final ong = searchSnapshot[index];
+                        final categoriaNome = categoriaMap[ong.idCategoria];
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                        child: OngCard(
+                          id: ong.id,
+                          nome: ong.nome,
+                          descricao: ong.descricao,
+                          imagem: ong.foto,
+                          iconTipo: iconesOng.firstWhere(
+                            (item) => item["tipo"] == categoriaNome
+                          )['icon-white'],
+                        ));
+                      },
+                    );
+                    } else {
+                    return Center(
+                      child: buscaVazia(),
+                    );
+                  }
                 } else if (digitando.isNotEmpty && ongsFiltradas.isNotEmpty) {
                   return ListView.builder(
                     itemCount: searchandfilterSnapshot.length,
                     itemBuilder: (context, index) {
                       final ong = searchandfilterSnapshot[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                      child: OngCard(
                         id: ong.id,
                         nome: ong.nome,
                         descricao: ong.descricao,
@@ -158,23 +211,38 @@ class _ExplorarPageState extends State<ExplorarPage> {
                         iconTipo: iconesOng.firstWhere(
                           (item) => item["tipo"] == categoriaNome
                         )['icon-white'],
+                      ),
                       );
                     },
                   );
                 } else {
-                  return ListView.builder(
+                  return Usuario().favoritas.isEmpty ?
+                  nenhumaFavorita() :
+                  ListView.builder(
                     itemCount: ongsInstancias.length,
                     itemBuilder: (context, index) {
                       final ong = ongsInstancias[index];
                       final categoriaNome = categoriaMap[ong.idCategoria];
-                      return OngCard(
-                        nome: ong.nome,
-                        descricao: ong.descricao,
-                        imagem: ong.foto,
-                        id: ong.id,
-                        iconTipo: iconesOng.firstWhere(
-                          (item) => item["tipo"] == categoriaNome
-                        )['icon-white'],
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) async {
+                          setState(() {
+                            Usuario().favoritas.removeWhere((item) => item.id == ong.id);// Remove a ONG da lista e atualiza a tela
+                          });
+                          var user = Usuario().toJson();
+                          await userRepository.updateUserFavoritas(user['favoritas']);
+                          
+
+                        },
+                        child: OngCard(
+                          nome: ong.nome,
+                          descricao: ong.descricao,
+                          imagem: ong.foto,
+                          id: ong.id,
+                          iconTipo: iconesOng.firstWhere(
+                            (item) => item["tipo"] == categoriaNome
+                          )['icon-white'],
+                        ),
                       );
                     },
                   );
@@ -656,17 +724,67 @@ class _OngCardState extends State<OngCard> {
   }
 }
 
-Widget titleExplorar() {
-  return Padding(
-    padding: const EdgeInsets.all(15.0),
+Widget titleFavoritas() {
+  return const Padding(
+    padding: EdgeInsets.all(15.0),
     child: Row(
       children: [
-        Image.asset('assets/icons/icon-explore.png'),
-        const SizedBox(width: 5,),
-        const Text(
-          'Instituições',
+        Icon(Icons.favorite_border, color: Color(0xFF28730E), size: 40,),
+        SizedBox(width: 5,),
+        Text(
+          'Favoritas',
           style: TextStyle(
               fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buscaVazia() {
+  return const Padding(
+    padding: EdgeInsets.all(30),
+    child: Column(
+      children: [
+        Text(
+          'Sem resultados...',
+          style: TextStyle(
+            color: Color(0xFF28730E),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'Você ainda não favoritou nenhuma instituição que corresponda a essa pesquisa!',
+          style: TextStyle(color: Color(0xFF28730E)),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget nenhumaFavorita() {
+  return const Padding(
+    padding: EdgeInsets.all(30),
+    child: Column(
+      children: [
+        Icon(Icons.heart_broken, color: Color.fromARGB(172, 110, 184, 85), size: 100,),
+        Text(
+          'Nada aqui...',
+          style: TextStyle(
+            color: Color(0xFF28730E),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+
+        Text(
+          'Favorite instituições e as veja nessa página!',
+          style: TextStyle(color: Color(0xFF28730E)),
+          textAlign: TextAlign.center,
         ),
       ],
     ),

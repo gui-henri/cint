@@ -1,4 +1,5 @@
 import 'package:cint/components/post_oferta.dart';
+import 'package:cint/objetos/instituicao.dart';
 import 'package:cint/objetos/posts.dart';
 import 'package:cint/repositorys/user.repository.dart';
 
@@ -13,6 +14,7 @@ class Usuario {
   static String? _foto;
   static List<PostOferta> _posts = [];
   static String _email = '';
+  static List<Instituicao> _favoritas = [];
 
   // Construtor padrão que permite modificar o estado
   Usuario({
@@ -25,6 +27,7 @@ class Usuario {
     String? foto,
     List<PostOferta>? posts,
     String? email,
+    List<Instituicao>? favoritas,
   }) {
     _id = id ?? _id;
     _nome = nome ?? _nome;
@@ -35,6 +38,7 @@ class Usuario {
     _foto = foto ?? _foto;
     _posts = posts ?? _posts;
     _email = email ?? _email;
+    _favoritas = favoritas ?? _favoritas;
   }
 
   // Getters para acessar as propriedades estáticas
@@ -47,9 +51,19 @@ class Usuario {
   String? get foto => _foto;
   List<PostOferta> get posts => _posts;
   String get email => _email;
+  List<Instituicao> get favoritas => _favoritas;
 
   // Método para atualizar os valores a partir de um JSON
   factory Usuario.fromJson(Map<String, dynamic> json) {
+    List<Instituicao> listaFavs = [];
+    for (var ong in json['favoritas']) {
+      for (var instancia in ListaInstituicoes().ongsInstancias) {
+        if (instancia.id == ong) {
+          listaFavs.add(instancia);
+          print('ONGS favoritas: ${instancia.nome}');
+        }
+      }
+    }
     return Usuario(
       id: json['id'],
       nome: json['nome'],
@@ -60,6 +74,7 @@ class Usuario {
       foto: json['foto'],
       posts: [],
       email: json['user_email'],
+      favoritas: listaFavs
     );
   }
 
@@ -74,7 +89,8 @@ class Usuario {
       'meta': meta,
       'foto': foto,
       'posts': posts,
-      'user_email': email
+      'user_email': email,
+      'favoritas' : favoritas
     };
   }
 

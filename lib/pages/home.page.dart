@@ -197,14 +197,10 @@ class _HomePageState extends State<HomePage> {
       future: calcularDistanciaMaisProxima(),
       builder: (context, _) {
         if (indexMaisProxima == null) {
-          print('aa ${ongsInstancias}');
           return Center(child: CircularProgressIndicator());
         }
-    print(ongsInstancias[indexMaisProxima!].nome);
     Random random = Random();
     final numRandom = 0 + random.nextInt((ongsInstancias.length - 1) - 0 + 1);
-    //final numRandom =2;
-    print('random: $numRandom');
     return FutureBuilder<List<double>>(
       future: rep.getCoordinates(ongsInstancias[indexMaisProxima!].endereco, dotenv.env['MAPS_KEY']),
       builder: (context, coordinatesSnapshot) {
