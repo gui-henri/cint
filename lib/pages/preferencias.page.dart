@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../components/icones_ong.dart';
 
-class Apresentacao4 extends StatefulWidget {
-  const Apresentacao4({super.key});
+class PreferenciasPage extends StatefulWidget {
+  const PreferenciasPage({super.key});
 
-  static const routeName = '/apresentacao4';
+  static const routeName = '/preferencias';
 
   @override
-  State<Apresentacao4> createState() => _Apresentacao4State();
+  State<PreferenciasPage> createState() => _PreferenciasPageState();
 }
 
-class _Apresentacao4State extends State<Apresentacao4> {
+class _PreferenciasPageState extends State<PreferenciasPage> {
   List<int> selectedIndexes = []; 
   final supabase = Supabase.instance.client;
 
@@ -94,7 +94,7 @@ class _Apresentacao4State extends State<Apresentacao4> {
         }
       }
 
-      Navigator.pushReplacementNamed(context, '/apresentacao5');
+      Navigator.popAndPushNamed(context, '/perfil');
     } catch (e) {
       print('Erro ao salvar preferências: $e');
     }
@@ -143,7 +143,7 @@ class _Apresentacao4State extends State<Apresentacao4> {
               child: SizedBox(
                 width: 100,
                 child: TextButton(
-                  onPressed: () => {Navigator.pushReplacementNamed(context, '/apresentacao5')}, // Chama a função para salvar as preferências
+                  onPressed: () => {Navigator.popAndPushNamed(context, '/perfil')}, // Chama a função para salvar as preferências
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(

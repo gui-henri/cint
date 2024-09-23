@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cint/main.dart';
 
 import '../../components/footer.dart';
 import '../../components/header.dart';
@@ -20,7 +21,7 @@ class _DesempenhoState extends State<Desempenho> {
   final List<String> frequencyOptions = ['1 vez', '2 vezes', '3 vezes', '4 vezes', '5 vezes'];
   final List<String> periodOptions = ['por dia', 'por semana', 'por mês', 'por ano'];
 
-  final double progress = 0.15;
+  final double progress = 0.60;
 
   bool isButtonEnabled = false;
 
@@ -31,20 +32,66 @@ class _DesempenhoState extends State<Desempenho> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _loadMeta();
+  }
+
+  Future<void> _loadMeta() async {
+  final user = supabase.auth.currentUser;
+
+  if (user != null) {
+    final response = await supabase
+        .from('usuario')
+        .select('meta')
+        .eq('id', user.id)
+        .single();
+
+    if (response != null) {
+      final userData = response;
+      setState(() {
+        selectedFrequency = '${userData['meta']} vez${userData['meta'] > 1 ? 'es' : ''}';
+      });
+    } else {
+      print('Nenhum dado encontrado para o usuário.');
+    }
+  }
+}
+
+  int _getNumericFrequency(String? frequency) {
+    if (frequency == null) return 1;
+    return int.tryParse(frequency.split(' ')[0]) ?? 1;
+  }
+
+Future<void> _saveMeta() async {
+  final user = supabase.auth.currentUser;
+  int metaValue = _getNumericFrequency(selectedFrequency);
+
+  if (user != null) {
+    final response = await supabase
+        .from('usuario') 
+        .update({'meta': metaValue}) 
+        .eq('id', user.id); 
+
+  }
+
+  Navigator.pop(context);
+}
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Header(
         atualizarBusca: (value) {},
       ),
       bottomNavigationBar: const Footer(),
-      body:Stack(
+      body: Stack(
         children: [
-        
-        ListView(
-          padding: const EdgeInsets.only(top: 80, left: 20, right: 20,),
-          children: <Widget>[
-            const Text(
-                'Faltam 15 ações para ganhar a próxima insígnia e desbloquear um novo título!',
+          ListView(
+            padding: const EdgeInsets.only(top: 80, left: 20, right: 20,),
+            children: <Widget>[
+              const Text(
+                'Faltam 2 doações para ganhar a próxima insígnia e desbloquear um novo título!',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -52,6 +99,7 @@ class _DesempenhoState extends State<Desempenho> {
                 ),
               ),
               const SizedBox(height: 20),
+
               Container(
                 padding: const EdgeInsets.fromLTRB(13, 10, 0, 10), // Espaçamento interno do container
                 decoration: BoxDecoration(
@@ -79,7 +127,6 @@ class _DesempenhoState extends State<Desempenho> {
                       ),
                     ),
                     const SizedBox(width: 10),
-
                     // Barra de Progresso
                     Expanded(
                       child: Stack(
@@ -120,6 +167,7 @@ class _DesempenhoState extends State<Desempenho> {
                   ],
                 ),
               ),
+
               const SizedBox(height: 40),
               const Text(
                 'Editar Meta',
@@ -134,7 +182,7 @@ class _DesempenhoState extends State<Desempenho> {
 
               Row(
                 children: [
-                  // Primeiro Dropdown (Menor)
+                  // Dropdown de Frequência
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -148,14 +196,13 @@ class _DesempenhoState extends State<Desempenho> {
                             color: Colors.black.withOpacity(0.2),
                             spreadRadius: 0.5,
                             blurRadius: 4,
-                            offset: const Offset(0, 5), // Shadow position
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
                       child: DropdownButton<String>(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         value: selectedFrequency,
-                        
                         isExpanded: true,
                         underline: const SizedBox(),
                         onChanged: (String? newValue) {
@@ -173,7 +220,7 @@ class _DesempenhoState extends State<Desempenho> {
                       ),
                     ),
                   ),
-                  // Segundo Dropdown (Maior)
+                  // Dropdown de Período
                   Expanded(
                     flex: 2,
                     child: Container(
@@ -187,7 +234,7 @@ class _DesempenhoState extends State<Desempenho> {
                             color: Colors.black.withOpacity(0.2),
                             spreadRadius: 0.5,
                             blurRadius: 4,
-                            offset: const Offset(0, 5), // Shadow position
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
@@ -216,44 +263,41 @@ class _DesempenhoState extends State<Desempenho> {
               ),
             ],
           ),
-           Positioned(
-                bottom: 30.0,
-                right: 40.0,
-                left: 40.0,
-                child: SizedBox(
-                  child: TextButton(
-                    onPressed: isButtonEnabled
-                          ? () async {
-                              // Ação do botão
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                          : null, // Desabilita o botão se não estiver habilitado
-                    style: ButtonStyle(
-                      padding: WidgetStateProperty.all<EdgeInsetsGeometry?>(
-                        const EdgeInsets.symmetric(vertical: 10.0),
-                      ),
-                      backgroundColor: WidgetStateProperty.all<Color>( isButtonEnabled ? const Color(0xFF28730E) : const Color.fromARGB(127, 39, 115, 14)),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(
-                            width: 1,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Editar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold
+          Positioned(
+            bottom: 30.0,
+            right: 40.0,
+            left: 40.0,
+            child: SizedBox(
+              child: TextButton(
+                onPressed: isButtonEnabled ? _saveMeta : null,
+                style: ButtonStyle(
+                  padding: WidgetStateProperty.all<EdgeInsetsGeometry?>(
+                    const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
+                  backgroundColor: WidgetStateProperty.all<Color>(
+                    isButtonEnabled ? const Color(0xFF28730E) : const Color.fromARGB(127, 39, 115, 14),
+                  ),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(
+                        width: 1,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
                 ),
+                child: const Text(
+                  'Editar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+            ),
+          ),
           titleBack(context, 'Desempenho', '/perfil', null),
         ],
       ),

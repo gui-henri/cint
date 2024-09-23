@@ -188,7 +188,7 @@ class _PerfilPageState extends State<PerfilPage> {
                         children: [
                           CustomTextButton(
                             text: 'Preferências de Instituições',
-                            onPressed: () => {Navigator.pushReplacementNamed(context, '/apresentacao4')},
+                            onPressed: () => {Navigator.pushReplacementNamed(context, '/preferencias')},
                           ),
                           const SizedBox(height: 8.0),
                           SizedBox(

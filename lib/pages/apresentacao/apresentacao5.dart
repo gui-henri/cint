@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../components/icones_ong.dart';
+import 'package:cint/main.dart';
 
 class Apresentacao5 extends StatefulWidget {
   const Apresentacao5({super.key});
@@ -16,6 +17,27 @@ class _Apresentacao5State extends State<Apresentacao5> {
 
   final List<String> frequencyOptions = ['1 vez', '2 vezes', '3 vezes', '4 vezes', '5 vezes'];
   final List<String> periodOptions = ['por dia', 'por semana', 'por mês', 'por ano'];
+
+
+  int _getNumericFrequency(String? frequency) {
+    if (frequency == null) return 1;
+    return int.tryParse(frequency.split(' ')[0]) ?? 1;
+  }
+
+Future<void> _saveMeta() async {
+  final user = supabase.auth.currentUser;
+  int metaValue = _getNumericFrequency(selectedFrequency);
+
+  if (user != null) {
+    final response = await supabase
+        .from('usuario') 
+        .update({'meta': metaValue}) 
+        .eq('id', user.id); 
+
+  }
+
+  Navigator.popAndPushNamed(context, '/home');
+}
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +159,7 @@ Cumpra sua meta para subir de categoria mais rápido e desbloquear novas insígn
             child: SizedBox(
               child: TextButton(
                 onPressed: () async {
-                  Navigator.pushReplacementNamed(context, '/home');
+                  _saveMeta();
                 },
                 style: ButtonStyle(
                   padding: WidgetStateProperty.all<EdgeInsetsGeometry?>(

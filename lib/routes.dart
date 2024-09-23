@@ -17,6 +17,7 @@ import 'package:cint/pages/ongsmap.page.dart';
 import 'package:cint/pages/perfil.page.dart';
 import 'package:cint/pages/posts/anuncio_form.dart';
 import 'package:cint/pages/posts/minhas_ofertas.dart';
+import 'package:cint/pages/preferencias.page.dart';
 import 'package:flutter/material.dart';
 import 'package:cint/pages/login.page.dart';
 import 'package:cint/pages/posts/nova_oferta.dart';
@@ -49,4 +50,5 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       DoarInicio.routeName: (context) => const DoarInicio(),
       Comprovante.routeName: (context) => const Comprovante(),
       FavoritasPage.routeName: (context) => const FavoritasPage(),
+      PreferenciasPage.routeName: (context) => const PreferenciasPage(),
     };
