@@ -7,8 +7,15 @@ class DropDownWidget extends StatefulWidget {
   final Function(String) onValueChanged;
   final String textoInicial;
   final String label;
+  Color cor;
 
-  const DropDownWidget({super.key, required this.listItems, required this.controller, required this.onValueChanged, required this.textoInicial, required this.label});
+  DropDownWidget({super.key, required this.listItems,
+   required this.controller,
+   required this.onValueChanged, 
+   required this.textoInicial, 
+   required this.label,
+   this.cor = Colors.white,
+   });
 
   @override
   _DropDownWidgetState createState() => _DropDownWidgetState();
@@ -16,18 +23,19 @@ class DropDownWidget extends StatefulWidget {
 
 class _DropDownWidgetState extends State<DropDownWidget> {
   String? selectedItem;
-  
-
+  late Color cor;
   @override
   void initState() {
     super.initState();
     // Definir o primeiro item como selecionado por padrão
     selectedItem = widget.controller.text.isNotEmpty ? widget.controller.text : widget.textoInicial;
+    cor = widget.cor;
     
   }
 
   @override
   Widget build(BuildContext context) {print('txtxxtt: ${widget.controller.text}');
+    
     return Column(
       children: [
         Row(
@@ -48,7 +56,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
           margin: const EdgeInsets.only(right: 8.0),
           padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cor,
             borderRadius: BorderRadius.circular(20.0),
             border: Border.all(width: 1),
             boxShadow: [
@@ -61,6 +69,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             ],
           ),
           child: DropdownButton<String>(
+            
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             value: selectedItem,
             isExpanded: true,
@@ -71,6 +80,11 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                 widget.controller.text = selectedItem!;
                 print('selectedItem: ${selectedItem}');
                 widget.onValueChanged(selectedItem!);
+                if (selectedItem == widget.listItems[0]) {
+                  cor = widget.cor;
+                } else {
+                  cor = const Color(0xFFF6F4EB);
+                }
               });
             },
             items: widget.listItems.map<DropdownMenuItem<String>>((String value) {

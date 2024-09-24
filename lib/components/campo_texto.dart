@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 Widget CampoTexto(
-    String label, bool obrigatorio, TextEditingController controller,
-    {int size = 200, var keyboard = TextInputType.text}) {
+    String label, bool obrigatorio, TextEditingController controller, 
+    {int size = 200, var keyboard = TextInputType.text, bool recebeInt = false}) {
   return Column(children: [
     Row(
       children: [
@@ -43,6 +43,14 @@ Widget CampoTexto(
         if (value!.isEmpty) {
           if (obrigatorio == true) {
             return "* Campo obrigatório";
+          }
+        }
+        if (value.isNotEmpty) {
+          if (recebeInt) {
+            
+            if (int.tryParse(value) == null) {
+              return "Esse campo aceita apenas valores numéricos";
+            }
           }
         }
         return null;

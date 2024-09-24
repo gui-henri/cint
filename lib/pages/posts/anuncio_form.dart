@@ -184,30 +184,32 @@ class _AnuncioFormState extends State<AnuncioForm> {
 
   // Função callback que será passada para o StatefulWidget
   void _handleValueChanged(String novoValor) {
-    
-    setState(() {
+    if (isEditing)   
+{    setState(() {
       final dadosPost = args[2] as PostOferta;
       _controllerCondicoes.text = novoValor;
       print('aaaa: ${_controllerCondicoes.text}');
       dadosPost.condicoes = _controllerCondicoes.text;
       print('adsfsdfaa!!!!: ${dadosPost.condicoes}');
-    });
+    });}
   }
 
   void _handleCategoriaChanged(String novoValor) {
-    
-    setState(() {
+    if (isEditing)
+    {setState(() {
       final dadosPost = args[2] as PostOferta;
       _controllerCategoria.text = novoValor;
       print('bbbb: ${_controllerCategoria.text}');
       dadosPost.categoria = _controllerCategoria.text;
-    });
+    });}
   }
 
   @override
   Widget build(BuildContext context) {
     final condicaoInicial = (args[2] != null) ? (args[2] as PostOferta).condicoes : ListaCondicoes().listaCondicoes[0];
     final categoriaInicial = (args[2] != null) ? (args[2] as PostOferta).categoria : ListaCategorias().listaCategorias[0];
+    Color corCondicaoDropdown = Colors.white;
+    Color corCategoriaDropdown = Colors.white;
 
     return Scaffold(
       appBar: AppBar(
@@ -226,7 +228,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
               for (var foto in fotosKeys) {
                 rep.deleteFoto(foto);
               }
-                  
             }
             setState(() {
               isEditing = false;
@@ -262,10 +263,10 @@ class _AnuncioFormState extends State<AnuncioForm> {
                     CampoTexto('Informe o produto a ser doado', true,
                         _controllerProduto),
                     CampoTexto(
-                        'Quantidade do produto', true, _controllerQuantidade),
-                    DropDownWidget(listItems: ListaCondicoes().listaCondicoes, controller: _controllerCondicoes, onValueChanged: _handleValueChanged, textoInicial: condicaoInicial, label: 'Condições',),
+                        'Quantidade do produto', true, _controllerQuantidade, recebeInt: true),
+                    DropDownWidget(listItems: ListaCondicoes().listaCondicoes, controller: _controllerCondicoes, onValueChanged: _handleValueChanged, textoInicial: condicaoInicial, label: 'Condições', cor: corCondicaoDropdown,),
                     const SizedBox(height: 10,),
-                    DropDownWidget(listItems: ListaCategorias().listaCategorias, controller: _controllerCategoria, onValueChanged: _handleCategoriaChanged, textoInicial: categoriaInicial, label: 'Categoria',),
+                    DropDownWidget(listItems: ListaCategorias().listaCategorias, controller: _controllerCategoria, onValueChanged: _handleCategoriaChanged, textoInicial: categoriaInicial, label: 'Categoria', cor: corCategoriaDropdown,),
                     const SizedBox(height: 10,),
                     CampoTexto(
                         'Telefone para contato',
