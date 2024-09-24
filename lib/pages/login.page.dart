@@ -84,6 +84,7 @@ if (response.session != null) {
       if (!contaJaExiste) {
         final usuarioLogado = Usuario(id: user!.id, nome: fullName, titulo: 0, nota: 0, meta: 0, endereco: '', foto: profileImageUrl, posts: [], email: email, favoritas: []);
         await repUser.criarUser(usuarioLogado.toJson());
+        Navigator.pushNamed(context, '/ApresentacaoPage');
       }
     } catch (e) {
       print('Erro ao criar usuário: $e');
@@ -96,6 +97,7 @@ if (response.session != null) {
         Usuario.fromJson(usuarioLogadoJson[0]);
           if (Usuario().posts.length > 0)
           print('usuario: ${Usuario().posts[0].textoPrincipal}'); 
+          Navigator.pushNamed(context, '/home');
       }
     } catch (e) {
       print('Erro ao carregar usuário: $e');
