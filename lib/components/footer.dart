@@ -41,16 +41,16 @@ class Footer extends StatelessWidget {
               size: 38,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed('/home');
-            },
-            child: const Icon(
-              Icons.chat_outlined,
-              color: Colors.white,
-              size: 38,
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     Navigator.of(context).pushNamed('/home');
+          //   },
+          //   child: const Icon(
+          //     Icons.chat_outlined,
+          //     color: Colors.white,
+          //     size: 38,
+          //   ),
+          // ),
           GestureDetector(
             onTap: () {
               Navigator.of(context).pushNamed('/perfil');
