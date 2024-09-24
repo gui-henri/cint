@@ -122,4 +122,17 @@ updatePost(id, PostOferta postOferta) async {
     }
     return lista;
   }
+
+  getCategorias() async {
+    List<Categoria> lista = [];
+    final categorias = await Supabase.instance.client
+                            .from('categoria_produto')
+                            .select('id, categoria');
+    print('kkkkkkkaaaaaa: $categorias');
+    for (var categoria in categorias) {
+      lista.add(Categoria.fromJson(categoria));
+      print('catetgortias: ${categoria['categoria']}');
+    }
+    return lista;
+  }
 }

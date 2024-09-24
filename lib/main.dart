@@ -27,8 +27,11 @@ void main() async {
   final listaCondicoes = ListaCondicoes();
   await listaCondicoes.loadCondicoes();
   print('lasdasd: ${listaCondicoes.listaCondicoes}');
-/*   final listaPosts = ListaMinhasOfertas();
-  await listaPosts.loadPosts(); */
+
+  final listaCategorias = ListaCategorias();
+  await listaCategorias.loadCategorias();
+  print('categoriass: ${listaCategorias.listaCategorias}');
+
 
   runApp(const MyApp());
 }

@@ -29,7 +29,7 @@ class AnuncioForm extends StatefulWidget {
 }
 
 class _AnuncioFormState extends State<AnuncioForm> {
-  late PostOferta dadosPostEditado;
+  late PostOferta dadosPost;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _controllerProduto = TextEditingController();
   final TextEditingController _controllerQuantidade = TextEditingController();
@@ -49,10 +49,12 @@ class _AnuncioFormState extends State<AnuncioForm> {
       isEditing = args[0] as bool;
       if (isEditing) {
         final dadosPost = args[2] as PostOferta;
+        print('controllerCondicoes: ${_controllerCondicoes.text}');
+        print('controllerCategoria: ${_controllerCategoria.text}');
 
           _controllerProduto.text = dadosPost.produto;
           _controllerQuantidade.text = dadosPost.quantidade.toString();
-
+          _controllerCondicoes.text = dadosPost.condicoes.toString();
           _controllerCategoria.text = dadosPost.categoria.toString();
           _controllerTelefone.text = dadosPost.telefone;
           _controllerInfo.text = dadosPost.info;
@@ -184,17 +186,29 @@ class _AnuncioFormState extends State<AnuncioForm> {
   void _handleValueChanged(String novoValor) {
     
     setState(() {
+      final dadosPost = args[2] as PostOferta;
       _controllerCondicoes.text = novoValor;
       print('aaaa: ${_controllerCondicoes.text}');
+      dadosPost.condicoes = _controllerCondicoes.text;
+      print('adsfsdfaa!!!!: ${dadosPost.condicoes}');
+    });
+  }
+
+  void _handleCategoriaChanged(String novoValor) {
+    
+    setState(() {
+      final dadosPost = args[2] as PostOferta;
+      _controllerCategoria.text = novoValor;
+      print('bbbb: ${_controllerCategoria.text}');
+      dadosPost.categoria = _controllerCategoria.text;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final dadosPost = (args[2] != null) ? (args[2] as PostOferta).condicoes : ListaCondicoes().listaCondicoes[0];
-    //for (var condicao in ListaCondicoes().listaCondicoes) {
-      print('condicao: ${ListaCondicoes().listaCondicoes}');
-    //}
+    final condicaoInicial = (args[2] != null) ? (args[2] as PostOferta).condicoes : ListaCondicoes().listaCondicoes[0];
+    final categoriaInicial = (args[2] != null) ? (args[2] as PostOferta).categoria : ListaCategorias().listaCategorias[0];
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -249,9 +263,10 @@ class _AnuncioFormState extends State<AnuncioForm> {
                         _controllerProduto),
                     CampoTexto(
                         'Quantidade do produto', true, _controllerQuantidade),
-                    DropDownWidget(listItems: ListaCondicoes().listaCondicoes, controller: _controllerCondicoes, onValueChanged: _handleValueChanged, textoInicial: dadosPost),
-                    CampoTexto(
-                        'Categoria do produto', true, _controllerCategoria),
+                    DropDownWidget(listItems: ListaCondicoes().listaCondicoes, controller: _controllerCondicoes, onValueChanged: _handleValueChanged, textoInicial: condicaoInicial, label: 'Condições',),
+                    const SizedBox(height: 10,),
+                    DropDownWidget(listItems: ListaCategorias().listaCategorias, controller: _controllerCategoria, onValueChanged: _handleCategoriaChanged, textoInicial: categoriaInicial, label: 'Categoria',),
+                    const SizedBox(height: 10,),
                     CampoTexto(
                         'Telefone para contato',
                         false,
