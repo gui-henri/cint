@@ -125,29 +125,12 @@ class _OngsMapState extends State<OngsMap> {
         final latitude = coordinates[0];
         final longitude = coordinates[1];
 
-
-/*         // Atualizar os marcadores
-        markers.clear();
-        markers.add(
-          Marker(
-            markerId: MarkerId(ongsInstancias[currentIndex].id),
-            position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(
-              title: ongsInstancias[currentIndex].nome,
-              snippet: 'Endereço: ${ongsInstancias[currentIndex].endereco}',
-            ),
-          ),
-        ); */
-
       return GoogleMap(
                                 initialCameraPosition: CameraPosition(
                                   target: LatLng(latitude, longitude),
                                   zoom: 10,
                                 ),
                                 markers: markers, // Adiciona marcadores aqui
-                               /*  onMapCreated: (controller) {
-                                  // Se necessário, adicione mais configuração aqui
-                                },  */
                               );
       });})
     );

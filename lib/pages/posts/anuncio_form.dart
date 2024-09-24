@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:cint/components/dropdown.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/condicao_e_categoria.dart';
 import 'package:cint/objetos/posts.dart';
+import 'package:cint/objetos/user.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -26,7 +29,7 @@ class AnuncioForm extends StatefulWidget {
 }
 
 class _AnuncioFormState extends State<AnuncioForm> {
-  late PostOferta dadosPostEditado;
+  late PostOferta dadosPost;
   final _formKey = GlobalKey<FormState>();
   TextEditingController _controllerProduto = TextEditingController();
   final TextEditingController _controllerQuantidade = TextEditingController();
@@ -44,10 +47,11 @@ class _AnuncioFormState extends State<AnuncioForm> {
       super.didChangeDependencies();
       args = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
       isEditing = args[0] as bool;
-      if (args[2]!=null) {
-        //final linha = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', args[1]);
+      if (isEditing) {
         final dadosPost = args[2] as PostOferta;
-        //setState(() {
+        print('controllerCondicoes: ${_controllerCondicoes.text}');
+        print('controllerCategoria: ${_controllerCategoria.text}');
+
           _controllerProduto.text = dadosPost.produto;
           _controllerQuantidade.text = dadosPost.quantidade.toString();
           _controllerCondicoes.text = dadosPost.condicoes.toString();
@@ -55,7 +59,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
           _controllerTelefone.text = dadosPost.telefone;
           _controllerInfo.text = dadosPost.info;
           fotosKeys = dadosPost.fotosPost;
-        //});
       }
     }
 
@@ -179,8 +182,34 @@ class _AnuncioFormState extends State<AnuncioForm> {
     overlay.insert(overlayEntry);
   }
 
+  // Função callback que será passada para o StatefulWidget
+  void _handleValueChanged(String novoValor) {
+    if (isEditing)   
+{    setState(() {
+      final dadosPost = args[2] as PostOferta;
+      _controllerCondicoes.text = novoValor;
+      print('aaaa: ${_controllerCondicoes.text}');
+      dadosPost.condicoes = _controllerCondicoes.text;
+      print('adsfsdfaa!!!!: ${dadosPost.condicoes}');
+    });}
+  }
+
+  void _handleCategoriaChanged(String novoValor) {
+    if (isEditing)
+    {setState(() {
+      final dadosPost = args[2] as PostOferta;
+      _controllerCategoria.text = novoValor;
+      print('bbbb: ${_controllerCategoria.text}');
+      dadosPost.categoria = _controllerCategoria.text;
+    });}
+  }
+
   @override
   Widget build(BuildContext context) {
+    final condicaoInicial = (args[2] != null) ? (args[2] as PostOferta).condicoes : ListaCondicoes().listaCondicoes[0];
+    final categoriaInicial = (args[2] != null) ? (args[2] as PostOferta).categoria : ListaCategorias().listaCategorias[0];
+    Color corCondicaoDropdown = Colors.white;
+    Color corCategoriaDropdown = Colors.white;
 
     return Scaffold(
       appBar: AppBar(
@@ -199,7 +228,6 @@ class _AnuncioFormState extends State<AnuncioForm> {
               for (var foto in fotosKeys) {
                 rep.deleteFoto(foto);
               }
-                  
             }
             setState(() {
               isEditing = false;
@@ -235,11 +263,11 @@ class _AnuncioFormState extends State<AnuncioForm> {
                     CampoTexto('Informe o produto a ser doado', true,
                         _controllerProduto),
                     CampoTexto(
-                        'Quantidade do produto', true, _controllerQuantidade),
-                    CampoTexto(
-                        'Condições do produto', true, _controllerCondicoes),
-                    CampoTexto(
-                        'Categoria do produto', true, _controllerCategoria),
+                        'Quantidade do produto', true, _controllerQuantidade, recebeInt: true),
+                    DropDownWidget(listItems: ListaCondicoes().listaCondicoes, controller: _controllerCondicoes, onValueChanged: _handleValueChanged, textoInicial: condicaoInicial, label: 'Condições', cor: corCondicaoDropdown,),
+                    const SizedBox(height: 10,),
+                    DropDownWidget(listItems: ListaCategorias().listaCategorias, controller: _controllerCategoria, onValueChanged: _handleCategoriaChanged, textoInicial: categoriaInicial, label: 'Categoria', cor: corCategoriaDropdown,),
+                    const SizedBox(height: 10,),
                     CampoTexto(
                         'Telefone para contato',
                         false,
@@ -322,7 +350,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
         }
 
         } else {
-          print('oioioioi : ${_controllerProduto.text},');
+          print('oioioioi : ${_controllerCondicoes.text},');
           var idPost = args[1];
           final postof = args[2] as PostOferta;
           postof.telefone = _controllerTelefone.text;
@@ -332,10 +360,7 @@ class _AnuncioFormState extends State<AnuncioForm> {
           postof.quantidade = int.parse(_controllerQuantidade.text);
           postof.condicoes = _controllerCondicoes.text;
           postof.categoria = _controllerCategoria.text;
-          /* postof.textoPrincipal = (args[2] as PostOferta).textoPrincipal;
-          icon: (args[2] as PostOferta).icon;
-          fotosPost: fotosKeys */
-          
+          print('abcdgfhegfhegfh: ${postof.condicoes}');
           if (mounted) {
             Navigator.pushNamed(context, '/nova_oferta', arguments: [fotosKeys, idPost, postof]);
           }

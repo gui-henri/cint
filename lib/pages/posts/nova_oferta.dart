@@ -58,17 +58,16 @@ class _NovaOfertaState extends State<NovaOferta> {
   Widget build(BuildContext context) {
     print('changed: $_hasChanged');
     final arguments = ModalRoute.of(context)!.settings.arguments as List;
-    final postNovo = arguments[2] as PostOferta;
+    final meuPost = arguments[2] as PostOferta;
     final fotosPost = arguments[0];
     
     if (isEditing) {
       if (arguments[2]!=null) {
         final postEditado = arguments[2] as PostOferta;
-        print(postEditado);
         if (!_hasChanged) {
           _controller.text = postEditado.textoPrincipal;
-        } else {print('uaaa');}
-      } else {print('nao tem 2');}
+        }
+      }
     }
 
     final user = supabase.auth.currentUser;
@@ -78,9 +77,7 @@ class _NovaOfertaState extends State<NovaOferta> {
     String primeiroNome = nomes.first;
     String ultimoNome = nomes.length > 1 ? nomes.last : "";
     final userName = '$primeiroNome $ultimoNome';
-    //final List<PostOferta> postsInstancias = ListaMinhasOfertas();
 
-    final linhaPost = supabase.from('anuncio').stream(primaryKey: ['id']).eq('id', arguments[1]);
     // Define a lista de categorias
     final categories = [
       'Crianças',
@@ -112,39 +109,30 @@ class _NovaOfertaState extends State<NovaOferta> {
               setState(() {
                 invalido = (_formKey.currentState!.validate());
               });
-              
-              print('arguments: $arguments');
-              print('texto: ${_controller.text}');
-              print('está editando: $isEditing');
+
               (_formKey.currentState!.validate());
               if (selectedIconCategory != null && _formKey.currentState!.validate()) {
                 if (isEditing == false) {
                   setState(() {
-                    postNovo.textoPrincipal = _controller.text;
-                    postNovo.icon = categories.indexOf(selectedIconCategory)+1;
-                    postNovo.usuario = Usuario().id;
+                    meuPost.textoPrincipal = _controller.text;
+                    meuPost.icon = categories.indexOf(selectedIconCategory)+1;
+                    meuPost.usuario = Usuario().id;
                   });
-                  
-                  
-
-                  print('postNovo: ${postNovo.usuario}');
-                  print('usuario nome: ${Usuario().nome}');
-                  await rep.criarPost(postNovo.toJson());
-                  
-
+                  await rep.criarPost(meuPost.toJson());
+                  Usuario().posts.add(meuPost);
                 }
                 if (isEditing) {
                   setState(() {
-                    postNovo.textoPrincipal = _controller.text;
-                    postNovo.icon = categories.indexOf(selectedIconCategory)+1;
+                    meuPost.textoPrincipal = _controller.text;
+                    meuPost.icon = categories.indexOf(selectedIconCategory)+1;
                   });
                   await rep.updatePost(
-                    postNovo.id,
-                    postNovo
+                    meuPost.id,
+                    meuPost
                     );
                 }
 
-                Navigator.pushNamed(context, '/minhasofertas', arguments: [postNovo, selectedIconCategory]);
+                Navigator.pushNamed(context, '/minhasofertas');
               } else {
                 if (selectedIconImage == null) {
                   Future.delayed(const Duration(seconds: 1), () {

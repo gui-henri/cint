@@ -27,7 +27,6 @@ class _ApresentacaoPageState extends State<ApresentacaoPage> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    _checkFirstTime();
   }
 
   Future<void> _checkFirstTime() async {

@@ -1,40 +1,17 @@
 import 'package:cint/components/post_oferta.dart';
 import 'package:cint/main.dart';
+import 'package:cint/objetos/condicao_e_categoria.dart';
 import 'package:cint/objetos/posts.dart';
 import 'package:cint/objetos/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AnunciosRepository {
-  Future<String> createPost(nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio,  fotos) async {
-    final response = await Supabase.instance.client
-                            .from('anuncio')
-                            .insert([{'nome_produto' : '$nome', 
-                            'quantidade' : '$quantidade', 
-                            'condicao' : '$condicao', 
-                            'categoria' : '$categoria', 
-                            'telefone' : '$telefone',
-                            'informacao_relevante' : '$informacaoRelevante',
-                            'texto_anuncio' : '$textoAnuncio',
-                            //'tipo_id' : '$tipoId',
-                            'fotos' : '$fotos',
-                            'user_email': '${supabase.auth.currentSession?.user.email}'}])
-                            .select('id')
-                            .single();
-    return response['id'].toString();
-  }
 
   criarPost(data) async {
     await Supabase.instance.client
             .from('anuncio')
             .insert([data]);
   }
-
-/*   updatePost(id, nome, quantidade, condicao, categoria, telefone, informacaoRelevante, textoAnuncio, icon, fotos) async {
-    await Supabase.instance.client
-            .from('anuncio')
-            .update({'nome_produto' : nome, 'quantidade' : quantidade, 'condicao' : condicao, 'categoria' : categoria, 'telefone' : telefone, 'informacao_relevante' : informacaoRelevante, 'texto_anuncio' : textoAnuncio, 'tipo_id': icon, 'fotos' : fotos})
-            .eq('id', id);
-  } */
 
 updatePost(id, PostOferta postOferta) async {
   await Supabase.instance.client
@@ -131,5 +108,31 @@ updatePost(id, PostOferta postOferta) async {
     print('idFoto: $idFoto');
     final response = await supabase.storage.from('anuncio').remove(['${supabase.auth.currentUser!.id}/$idFoto']);
     return response;
+  }
+
+  getCondicoes() async {
+    List<Condicao> lista = [];
+    final condicoes = await Supabase.instance.client
+                            .from('condicoes_produto')
+                            .select('id, condicao');
+    print('aaaaaaakkkkkkk: $condicoes');
+    for (var condicao in condicoes) {
+      lista.add(Condicao.fromJson(condicao));
+      print('cocndicoes: ${condicao['condicao']}');
+    }
+    return lista;
+  }
+
+  getCategorias() async {
+    List<Categoria> lista = [];
+    final categorias = await Supabase.instance.client
+                            .from('categoria_produto')
+                            .select('id, categoria');
+    print('kkkkkkkaaaaaa: $categorias');
+    for (var categoria in categorias) {
+      lista.add(Categoria.fromJson(categoria));
+      print('catetgortias: ${categoria['categoria']}');
+    }
+    return lista;
   }
 }

@@ -28,10 +28,21 @@ class UserRepository {
   }
 
 
-  updateUserPosts(data) async {
+/*   updateUserPosts(data) async {
     await Supabase.instance.client
             .from('usuario')
             .update({'posts':data})
+            .eq('id', Usuario().id);
+  } */
+
+  updateUserPosts(data) async {
+    var lista = [];
+    for (var post in data) {
+      lista.add(post.id);
+    }
+    await Supabase.instance.client
+            .from('usuario')
+            .update({'posts':lista})
             .eq('id', Usuario().id);
   }
 
@@ -39,7 +50,6 @@ class UserRepository {
     var lista = [];
     for (var ong in data) {
       lista.add(ong.id);
-      print('aaa: $ong');
     }
     await Supabase.instance.client
             .from('usuario')
