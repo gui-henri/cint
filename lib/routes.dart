@@ -23,8 +23,6 @@ import 'package:cint/pages/login.page.dart';
 import 'package:cint/pages/posts/nova_oferta.dart';
 import 'pages/explorar.page.dart';
 
-import 'pages/posts/editar_form.dart';
-
 
 Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       LoginPage.routeName: (context) => const LoginPage(),
@@ -39,7 +37,6 @@ Map<String, Widget Function(dynamic)> instanceRoutes(BuildContext context) => {
       MinhasOfertas.routeName: (context) => const MinhasOfertas(),
       NovaOferta.routeName: (context) => const NovaOferta(),
       AnuncioForm.routeName: (context) => AnuncioForm(),
-      EditarForm.routeName: (context) => const EditarForm(),
       ExplorarPage.routeName: (context) => const ExplorarPage(),
       LoginDevPage.routeName: (context) => const LoginDevPage(),
       OngPage.routeName: (context) => const OngPage(),

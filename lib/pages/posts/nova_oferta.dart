@@ -97,6 +97,7 @@ class _NovaOfertaState extends State<NovaOferta> {
 
     return Scaffold(
         appBar: Header(
+          showTextField: false,
           atualizarBusca: (value) {},
         ),
         bottomNavigationBar: const Footer(),

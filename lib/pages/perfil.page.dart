@@ -77,6 +77,7 @@ class _PerfilPageState extends State<PerfilPage> {
     final userName = '$primeiroNome $ultimoNome';
     return Scaffold(
       appBar: Header(
+        showTextField: false,
         atualizarBusca: (value) {}, 
       ),
       bottomNavigationBar: const Footer(),

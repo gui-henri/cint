@@ -35,6 +35,7 @@ class _MinhasOfertasState extends State<MinhasOfertas> {
     print('user: ${Usuario().id}');
     return Scaffold(
       appBar: Header(
+        showTextField: false,
         atualizarBusca: (value) {},
       ),
       bottomNavigationBar: const Footer(),

@@ -124,7 +124,7 @@ class _ListaMeusPostsState extends State<ListaMeusPosts> {
                         detalhes: () {
                           Navigator.pushNamed(
                             context,
-                            '/editar_form',
+                            '/anuncio_form',
                             arguments: Usuario().posts[index],
                           );
                         },
